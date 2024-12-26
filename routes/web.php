@@ -30,6 +30,7 @@ use App\Livewire\Purchase\PurchaseAopDetail;
 use App\Livewire\Purchase\PurchaseNonAop;
 use App\Livewire\Purchase\PurchaseNonAopDetail;
 use App\Livewire\ReportMarketing\MonitoringDks;
+use App\Livewire\StockMovement\IndexStockMovement;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -104,6 +105,9 @@ Route::middleware('auth')->group(function () {
         // GOODS RECEIPT NON AOP
         Route::get('/goods-receipt/non', GoodsReceiptNonAop::class)->name('goods.non.index');
         Route::get('/goods-receipt/non/{invoiceNon}', GoodsReceiptNonAopDetail::class)->name('goods.non.detail');
+
+        // STOCK MOVEMENT
+        Route::get('/stock-movement', IndexStockMovement::class)->name('stock-movement.index');
     });
 
     /**

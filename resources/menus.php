@@ -139,4 +139,11 @@ return [
         "active" => Request::is('comparator*'),
         "children" => []
     ],
+    [
+        "label" => "Stock Movement",
+        "icon" => "bx bx-file",
+        "route" => "stock-movement.index",
+        "active" => Request::is('stock-movement*'),
+        "children" => []
+    ],
 ];
