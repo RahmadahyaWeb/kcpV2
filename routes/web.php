@@ -88,7 +88,7 @@ Route::middleware('auth')->group(function () {
      * head-warehouse
      * storer
      */
-    Route::middleware('role:storer|head-warehouse|super-user')->group(function () {
+    Route::middleware('role:storer|head-warehouse|super-user|inventory')->group(function () {
         // COMPARATOR
         Route::get('/comparator', IndexComparator::class)->name('comparator.index');
 
