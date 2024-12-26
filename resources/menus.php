@@ -8,18 +8,21 @@ return [
         "icon" => "bx bx-home-smile",
         "route" => "dashboard",
         "active" => Request::is('dashboard'),
+        "roles" => ['super-user', 'admin', 'head-marketing', 'salesman', 'storer', 'head-warehouse', 'inventory', 'finance', 'ar', 'supervisor-area', 'fakturis'],
         "children" => []
     ],
 
     // MASTER
     [
         "label" => "Master",
+        "roles" => ['super-user', 'admin'],
         "header" => true
     ],
     [
         "label" => "Toko",
         "icon" => "bx bx-store",
         "route" => "master-toko.index",
+        "roles" => ['super-user', 'admin'],
         "active" => Request::is('master/toko*'),
         "children" => []
     ],
@@ -27,19 +30,22 @@ return [
         "label" => "Users",
         "icon" => "bx bx-user",
         "route" => "users.index",
+        "roles" => ['super-user'],
         "active" => Request::is('master/users*'),
         "children" => []
     ],
 
-    // MARKETING
+    // // MARKETING
     [
         "label" => "Marketing",
+        "roles" => ['super-user', 'admin', 'head-marketing', 'supervisor-area', 'salesman'],
         "header" => true
     ],
     [
         "label" => "DKS Scan",
         "icon" => "bx bx-qr-scan",
         "route" => "dks.index",
+        "roles" => ['super-user', 'admin', 'salesman', 'head-marketing'],
         "active" => Request::is('dks/scan*'),
         "children" => []
     ],
@@ -47,6 +53,7 @@ return [
         "label" => "Invoice",
         "icon" => "bx bxs-receipt",
         "route" => "invoice.index",
+        "roles" => ['super-user', 'admin', 'fakturis', 'head-marketing'],
         "active" => Request::is('invoice*'),
         "children" => []
     ],
@@ -54,6 +61,7 @@ return [
         "label" => "Report Marketing",
         "icon" => "bx bx-layout",
         "route" => null,
+        "roles" => ['super-user', 'admin', 'head-marketing', 'supervisor-area'],
         "active" => Request::is('report*'),
         "children" => [
             [
@@ -64,15 +72,17 @@ return [
         ]
     ],
 
-    // FINANCE
+    // // FINANCE
     [
         "label" => "Finance",
+        "roles" => ['super-user', 'finance', 'ar'],
         "header" => true
     ],
     [
         "label" => "Pembelian",
         "icon" => "bx bx-store",
         "route" => null,
+        "roles" => ['super-user', 'finance'],
         "active" => Request::is('purchase*'),
         "children" => [
             [
@@ -91,6 +101,7 @@ return [
         "label" => "Customer Payment",
         "icon" => "bx bx-note",
         "route" => "customer-payment.index",
+        "roles" => ['super-user', 'ar'],
         "active" => Request::is('customer-payment*'),
         "children" => []
     ],
@@ -98,6 +109,7 @@ return [
         "label" => "Daftar Piutang",
         "icon" => "bx bx-list-ul",
         "route" => "piutang.index",
+        "roles" => ['super-user', 'finance', 'ar'],
         "active" => Request::is('piutang*'),
         "children" => []
     ],
@@ -105,12 +117,14 @@ return [
     // WAREHOUSE
     [
         "label" => "Warehouse",
+        "roles" => ['super-user', 'storer', 'head-warehouse', 'inventory'],
         "header" => true
     ],
     [
         "label" => "Goods Receipt",
         "icon" => "bx bxs-receipt",
         "route" => null,
+        "roles" => ['super-user', 'head-warehouse', 'inventory'],
         "active" => Request::is('goods-receipt*'),
         "children" => [
             [
@@ -129,6 +143,7 @@ return [
         "label" => "Delivery Order",
         "icon" => "bx bx-package",
         "route" => "delivery-order.index",
+        "roles" => ['super-user', 'head-warehouse', 'inventory'],
         "active" => Request::is('delivery-order*'),
         "children" => []
     ],
@@ -136,6 +151,7 @@ return [
         "label" => "Comparator",
         "icon" => "bx bx-scan",
         "route" => "comparator.index",
+        "roles" => ['super-user', 'head-warehouse', 'inventory', 'storer'],
         "active" => Request::is('comparator*'),
         "children" => []
     ],
@@ -143,6 +159,7 @@ return [
         "label" => "Stock Movement",
         "icon" => "bx bx-file",
         "route" => "stock-movement.index",
+        "roles" => ['super-user', 'head-warehouse', 'inventory'],
         "active" => Request::is('stock-movement*'),
         "children" => []
     ],
