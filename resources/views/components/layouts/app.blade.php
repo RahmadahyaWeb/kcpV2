@@ -72,6 +72,9 @@
         #layout-menu {
             overflow-y: auto;
             overflow-x: hidden;
+        }
+
+        .menu-inner{
             padding-bottom: 20px;
             margin-bottom: 20px;
         }
