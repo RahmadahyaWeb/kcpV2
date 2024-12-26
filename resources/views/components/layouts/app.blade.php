@@ -74,7 +74,7 @@
             overflow-x: hidden;
         }
 
-        .menu-inner .menu-item:last-child {
+        .last-item {
             padding-bottom: 100px;
         }
 
