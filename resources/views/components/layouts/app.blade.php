@@ -74,9 +74,8 @@
             overflow-x: hidden;
         }
 
-        #layout-menu .menu-inner {
-            padding-bottom: 20px;
-            /* Sesuaikan nilai padding sesuai kebutuhan */
+        .menu-inner .menu-item:last-child {
+            padding-bottom: 100px;
         }
 
         /* Hide scrollbar for Chrome, Safari and Opera */
