@@ -71,7 +71,9 @@
 
         #layout-menu {
             overflow-y: auto;
-            overflow-x: hidden
+            overflow-x: hidden;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
         }
 
         /* Hide scrollbar for Chrome, Safari and Opera */
