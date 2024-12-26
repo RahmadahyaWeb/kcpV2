@@ -5,7 +5,7 @@
     <div class="card">
         <!-- Card Header with Synchronization Button -->
         <div class="card-header">
-            <b>Data Delivery Order</b>
+            Data Delivery Order
         </div>
 
         <!-- Card Body with Filters -->
