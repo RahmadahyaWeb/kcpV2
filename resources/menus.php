@@ -140,6 +140,20 @@ return [
         ]
     ],
     [
+        "label" => "Stock Part",
+        "icon" => "bx bx-file",
+        "route" => null,
+        "roles" => ['super-user', 'head-warehouse', 'inventory', 'storer'],
+        "active" => Request::is('stock-part*'),
+        "children" => [
+            [
+                "label" => "Rak",
+                "route" => "stock-part.rak.index",
+                "active" => Request::is('stock-part/rak*')
+            ],
+        ]
+    ],
+    [
         "label" => "Delivery Order",
         "icon" => "bx bx-package",
         "route" => "delivery-order.index",

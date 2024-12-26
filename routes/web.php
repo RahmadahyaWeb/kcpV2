@@ -31,6 +31,7 @@ use App\Livewire\Purchase\PurchaseNonAop;
 use App\Livewire\Purchase\PurchaseNonAopDetail;
 use App\Livewire\ReportMarketing\MonitoringDks;
 use App\Livewire\StockMovement\IndexStockMovement;
+use App\Livewire\StockPart\IndexStockPartRak;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -90,6 +91,9 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:storer|head-warehouse|super-user')->group(function () {
         // COMPARATOR
         Route::get('/comparator', IndexComparator::class)->name('comparator.index');
+
+        // STOCK PART RAK
+        Route::get('/stock-part/rak', IndexStockPartRak::class)->name('stock-part.rak.index');
     });
 
     /**
