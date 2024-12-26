@@ -1,4 +1,4 @@
-<ul class="menu-inner py-1">
+<ul class="menu-inner">
     @foreach ($menus as $menu)
         @if (isset($menu['header']) && $menu['header'])
             <li class="menu-header small text-uppercase">
