@@ -58,6 +58,9 @@ class MonitoringDks extends Component
             ->when($this->fromDate && $this->toDate, function ($query) {
                 return $query->whereBetween('in_data.tgl_kunjungan', [$this->fromDate, $this->toDate]);
             })
+            ->when($this->kd_toko, function ($query) {
+                return $query->where('in_data.kd_toko', $this->kd_toko);
+            })
             ->when($this->user_sales, function ($query) {
                 return $query->where('in_data.user_sales', $this->user_sales);
             })
@@ -71,32 +74,23 @@ class MonitoringDks extends Component
             ->where('status', 'Y')
             ->get();
 
-        // Convert master_toko_kcpinformation menjadi array keyBy berdasarkan kd_toko
-        $masterTokoArray = $master_toko_kcpinformation->keyBy('kd_outlet')->toArray();
+        // Convert $master_toko_kcpinformation to an associative array indexed by kd_toko
+        $masterTokoIndexed = $master_toko_kcpinformation->keyBy('kd_outlet');
 
-        // Misalkan $searchCriteria adalah parameter pencarian yang bisa diubah sesuai kebutuhan
-        $searchCriteria = [
-            'kd_toko' => $this->kd_toko,  // Nilai ini bisa diambil dari input pencarian atau form
-            // Anda bisa menambahkan kriteria lain jika perlu, seperti nama toko, kota, dll
-        ];
+        // Iterate over $items and merge data from $masterTokoIndexed based on kd_toko
+        $mergedItems = $items->map(function ($item) use ($masterTokoIndexed) {
+            // Find the corresponding toko data based on kd_toko
+            $tokoData = $masterTokoIndexed->get($item->kd_toko);
 
-        $mergedItems = $items->filter(function ($item) use ($masterTokoArray, $searchCriteria) {
-            // Cek apakah ada data yang cocok berdasarkan kd_toko dan sesuai dengan $searchCriteria
-            $isMatch = true; // Variabel untuk menandai apakah item cocok dengan kriteria pencarian
-
-            // Jika ada pencarian berdasarkan kd_toko, kita filter
-            if (isset($searchCriteria['kd_toko']) && $item->kd_toko != $searchCriteria['kd_toko']) {
-                $isMatch = false; // Item tidak cocok dengan pencarian
+            // If a match is found, merge the data
+            if ($tokoData) {
+                // You can merge fields here, for example adding the 'status' field from master_toko_kcpinformation
+                $item->nama_toko = $tokoData->nm_outlet; // or any other field you want to merge
+            } else {
+                $item->nama_toko = '';
             }
 
-            // Jika item cocok dengan pencarian, kita lanjutkan untuk menggabungkan data tambahan
-            if ($isMatch && isset($masterTokoArray[$item->kd_toko])) {
-                // Gabungkan data tambahan dari $masterTokoArray ke dalam $item
-                $item->nama_toko = $masterTokoArray[$item->kd_toko]->nm_outlet; // Misalnya menambahkan nama toko
-                // Anda bisa menambahkan field lain sesuai kebutuhan
-            }
-
-            return $isMatch; // Mengembalikan apakah item cocok dengan pencarian
+            return $item;
         });
 
         // Lakukan paginasi setelah data digabungkan
