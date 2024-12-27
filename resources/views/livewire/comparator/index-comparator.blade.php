@@ -6,7 +6,7 @@
         <div class="card-body">
 
             <div class="d-flex gap-2 mb-3 py-4" style="overflow-x: auto; white-space: nowrap;">
-                @hasanyrole('head-warehouse|super-user')
+                @hasanyrole('head-warehouse|super-user|inventory')
                     <button type="button" class="btn btn-sm btn-danger" wire:click="resetComparator"
                         wire:confirm="Yakin ingin reset?">
                         Reset
