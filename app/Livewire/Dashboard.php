@@ -153,10 +153,10 @@ class Dashboard extends Component
 
     public function render()
     {
-        $data = $this->fetch_data_for_graph();
+        // $data = $this->fetch_data_for_graph();
 
-        $this->data = $data;
+        // $this->data = $data;
 
-        return view('livewire.dashboard', compact('data'));
+        return view('livewire.dashboard');
     }
 }
