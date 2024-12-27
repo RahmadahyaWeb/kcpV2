@@ -9,7 +9,7 @@ class DetailCustomerPayment extends Component
 {
     public $no_piutang;
     public $model;
-    public $target= 'potong_piutang';
+    public $target = 'potong_piutang';
     public $customer_payment_header;
     public $customer_payment_details;
 
@@ -35,6 +35,15 @@ class DetailCustomerPayment extends Component
     public static function get_nominal_invoice($no_invoice)
     {
         $kcpinformation = DB::connection('kcpinformation');
+
+        $cek_invoice = $kcpinformation->table('trns_inv_header')
+            ->where('noinv', $no_invoice)
+            ->first();
+
+        if (!$cek_invoice) {
+            session()->flash('error', 'Invoice tidak ditemukan.');
+            return;
+        }
 
         return $kcpinformation->table('trns_inv_header')
             ->where('noinv', $no_invoice)

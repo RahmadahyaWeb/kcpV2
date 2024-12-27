@@ -2,22 +2,22 @@
     <x-alert />
     <x-loading :target="$target" />
 
-    <div class="row g-2 mb-3">
-        @if ($customer_payment_header->status == 'O')
-            <div class="col-md-3 d-grid">
-                <button class="btn btn-success" wire:click="potong_piutang"
-                    wire:confirm="Yakin ingin potong piutang toko?">
-                    Potong Piutang Toko
-                </button>
-            </div>
-        @endif
-    </div>
-
     <div class="card mb-3">
         <div class="card-header">
             Detail Customer Payment: <b>{{ $customer_payment_header->no_piutang }}</b>
         </div>
         <div class="card-body">
+            <div class="row g-2 mb-3">
+                @if ($customer_payment_header->status == 'O')
+                    <div class="col-md-3 d-grid">
+                        <button class="btn btn-success" wire:click="potong_piutang"
+                            wire:confirm="Yakin ingin potong piutang toko?">
+                            Potong Piutang Toko
+                        </button>
+                    </div>
+                @endif
+            </div>
+
             <div class="row mb-3">
                 <div class="col-md-6">
                     @foreach ([
@@ -47,8 +47,8 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead class="table-dark">
+                <table class="table">
+                    <thead">
                         <tr>
                             <th>No Invoice</th>
                             <th>No Piutang</th>
@@ -58,30 +58,30 @@
                             <th>Bank</th>
                             <th>Keterangan</th>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($customer_payment_details as $item)
-                            <tr>
-                                <td>
-                                    <span style="font-size: 0.9375rem; color: #646e78" class="badge p-0">
-                                        {{ $item->noinv }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <span style="font-size: 0.9375rem; color: #646e78" class="badge p-0">
-                                        {{ $item->no_piutang }}
-                                    </span>
-                                </td>
-                                <td>{{ number_format($item->nominal, 0, ',', '.') }}</td>
-                                <td>{{ number_format($model::get_nominal_invoice($item->noinv), 0, ',', '.') }}</td>
-                                <td style="white-space: nowrap">
-                                    {{ $item->no_bg }}
-                                </td>
-                                <td>{{ $item->bank }}</td>
-                                <td>{{ $item->keterangan }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
+                        </thead>
+                        <tbody>
+                            @foreach ($customer_payment_details as $item)
+                                <tr>
+                                    <td>
+                                        <span style="font-size: 0.9375rem; color: #646e78" class="badge p-0">
+                                            {{ $item->noinv }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span style="font-size: 0.9375rem; color: #646e78" class="badge p-0">
+                                            {{ $item->no_piutang }}
+                                        </span>
+                                    </td>
+                                    <td>{{ number_format($item->nominal, 0, ',', '.') }}</td>
+                                    <td>{{ number_format($model::get_nominal_invoice($item->noinv), 0, ',', '.') }}</td>
+                                    <td style="white-space: nowrap">
+                                        {{ $item->no_bg }}
+                                    </td>
+                                    <td>{{ $item->bank }}</td>
+                                    <td>{{ $item->keterangan }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
                 </table>
             </div>
         </div>
