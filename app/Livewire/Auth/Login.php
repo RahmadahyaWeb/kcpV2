@@ -21,7 +21,7 @@ class Login extends Component
         ]);
 
         if (Auth::attempt($validated)) {
-            $this->redirect('dashboard');
+            $this->redirectIntended('dashboard');
         }
 
         $this->addError('username', 'Incorrect username or password.');
