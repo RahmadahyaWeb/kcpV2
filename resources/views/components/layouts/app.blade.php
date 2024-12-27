@@ -17,11 +17,11 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('img/favicon.ico') }}" />
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    {{-- <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
         href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
-        rel="stylesheet" />
+        rel="stylesheet" /> --}}
 
     <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/boxicons.css') }}" />
 
@@ -32,7 +32,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/demo.css') }}" />
 
     <!-- Vendors CSS -->
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+    {{-- <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" /> --}}
 
     <!-- Page CSS -->
 
@@ -109,11 +109,6 @@
                     <a href="/" class="app-brand-link">
                         <span class="app-brand-text demo menu-text fw-bold">KCP APP</span>
                     </a>
-                    {{-- <a href="javascript:void(0);"
-                        class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none"
-                        @click="isMenuExpanded = !isMenuExpanded">
-                        <i class="bx bx-chevron-left bx-sm d-flex align-items-center justify-content-center"></i>
-                    </a> --}}
                 </div>
                 <div class="menu-inner-shadow"></div>
 
@@ -234,7 +229,7 @@
     <script data-navigate-once src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
     <script data-navigate-once src="{{ asset('assets/vendor/libs/popper/popper.js') }}"></script>
     <script data-navigate-once src="{{ asset('assets/vendor/js/bootstrap.js') }}"></script>
-    <script data-navigate-once src="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+    {{-- <script data-navigate-once src="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script> --}}
     {{-- <script data-navigate-once src="{{ asset('assets/vendor/js/menu.js') }}"></script> --}}
 
     <!-- endbuild -->
