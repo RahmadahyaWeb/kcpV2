@@ -12,39 +12,41 @@ class Dashboard extends Component
 
     public function fetch_data_for_graph()
     {
-        $jualQuery = DB::table('kcpinformation.trns_inv_header as a')
+        $kcpinformation = DB::connection('kcpinformation');
+
+        $jualQuery = $kcpinformation->table('trns_inv_header as a')
             ->selectRaw("SUBSTR(a.crea_date, 1, 7) as periode, SUM(b.nominal_total) as jml")
-            ->join('kcpinformation.trns_inv_details as b', 'a.noinv', '=', 'b.noinv')
-            ->join('kcpinformation.mst_part as c', 'b.part_no', '=', 'c.part_no')
+            ->join('trns_inv_details as b', 'a.noinv', '=', 'b.noinv')
+            ->join('mst_part as c', 'b.part_no', '=', 'c.part_no')
             ->whereRaw("SUBSTR(a.crea_date, 1, 4) = '2024'")
             ->where('a.flag_batal', 'N')
             ->where('c.supplier', 'ASTRA OTOPART')
             ->groupByRaw("SUBSTR(a.crea_date, 1, 7)");
 
-        $returQuery = DB::table('kcpinformation.trns_retur_header as a')
+        $returQuery = $kcpinformation->table('trns_retur_header as a')
             ->selectRaw("SUBSTR(a.flag_nota_date, 1, 7) as periode, SUM(b.nominal_total) as retur")
-            ->join('kcpinformation.trns_retur_details as b', 'a.noretur', '=', 'b.noretur')
-            ->join('kcpinformation.mst_part as c', 'b.part_no', '=', 'c.part_no')
+            ->join('trns_retur_details as b', 'a.noretur', '=', 'b.noretur')
+            ->join('mst_part as c', 'b.part_no', '=', 'c.part_no')
             ->whereRaw("SUBSTR(a.flag_nota_date, 1, 4) = '2024'")
             ->where('a.flag_batal', 'N')
             ->where('c.supplier', 'ASTRA OTOPART')
             ->groupByRaw("SUBSTR(a.flag_nota_date, 1, 7)");
 
-        $result_1 = DB::table(DB::raw("({$jualQuery->toSql()}) as jual"))
+        $result_1 = $kcpinformation->table(DB::raw("({$jualQuery->toSql()}) as jual"))
             ->selectRaw("(jual.jml - IFNULL(retur.retur, 0)) as jml")
             ->mergeBindings($jualQuery)
             ->leftJoinSub($returQuery, 'retur', 'jual.periode', '=', 'retur.periode')
             ->orderBy('jual.periode')
             ->get();
 
-        $result_2 = DB::table('kcpinformation.mst_target_produk')
+        $result_2 = $kcpinformation->table('mst_target_produk')
             ->selectRaw("CONCAT(periode, '-', '01') as periode, SUM(jan) as jmlTarget")
             ->where('periode', date('Y'))
             ->whereNotIn('kd_area', [''])
             ->whereNotIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
             ->groupBy('periode')
             ->union(
-                DB::table('kcpinformation.mst_target_produk')
+                $kcpinformation->table('mst_target_produk')
                     ->selectRaw("CONCAT(periode, '-', '02') as periode, SUM(feb) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
@@ -52,7 +54,7 @@ class Dashboard extends Component
                     ->groupBy('periode')
             )
             ->union(
-                DB::table('kcpinformation.mst_target_produk')
+                $kcpinformation->table('mst_target_produk')
                     ->selectRaw("CONCAT(periode, '-', '03') as periode, SUM(mar) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
@@ -60,7 +62,7 @@ class Dashboard extends Component
                     ->groupBy('periode')
             )
             ->union(
-                DB::table('kcpinformation.mst_target_produk')
+                $kcpinformation->table('mst_target_produk')
                     ->selectRaw("CONCAT(periode, '-', '04') as periode, SUM(apr) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
@@ -68,7 +70,7 @@ class Dashboard extends Component
                     ->groupBy('periode')
             )
             ->union(
-                DB::table('kcpinformation.mst_target_produk')
+                $kcpinformation->table('mst_target_produk')
                     ->selectRaw("CONCAT(periode, '-', '05') as periode, SUM(mei) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
@@ -76,7 +78,7 @@ class Dashboard extends Component
                     ->groupBy('periode')
             )
             ->union(
-                DB::table('kcpinformation.mst_target_produk')
+                $kcpinformation->table('mst_target_produk')
                     ->selectRaw("CONCAT(periode, '-', '06') as periode, SUM(jun) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
@@ -84,7 +86,7 @@ class Dashboard extends Component
                     ->groupBy('periode')
             )
             ->union(
-                DB::table('kcpinformation.mst_target_produk')
+                $kcpinformation->table('mst_target_produk')
                     ->selectRaw("CONCAT(periode, '-', '07') as periode, SUM(jul) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
@@ -92,7 +94,7 @@ class Dashboard extends Component
                     ->groupBy('periode')
             )
             ->union(
-                DB::table('kcpinformation.mst_target_produk')
+                $kcpinformation->table('mst_target_produk')
                     ->selectRaw("CONCAT(periode, '-', '08') as periode, SUM(agt) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
@@ -100,7 +102,7 @@ class Dashboard extends Component
                     ->groupBy('periode')
             )
             ->union(
-                DB::table('kcpinformation.mst_target_produk')
+                $kcpinformation->table('mst_target_produk')
                     ->selectRaw("CONCAT(periode, '-', '09') as periode, SUM(spt) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
@@ -108,7 +110,7 @@ class Dashboard extends Component
                     ->groupBy('periode')
             )
             ->union(
-                DB::table('kcpinformation.mst_target_produk')
+                $kcpinformation->table('mst_target_produk')
                     ->selectRaw("CONCAT(periode, '-', '10') as periode, SUM(okt) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
@@ -116,7 +118,7 @@ class Dashboard extends Component
                     ->groupBy('periode')
             )
             ->union(
-                DB::table('kcpinformation.mst_target_produk')
+                $kcpinformation->table('mst_target_produk')
                     ->selectRaw("CONCAT(periode, '-', '11') as periode, SUM(nop) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
@@ -124,7 +126,7 @@ class Dashboard extends Component
                     ->groupBy('periode')
             )
             ->union(
-                DB::table('kcpinformation.mst_target_produk')
+                $kcpinformation->table('mst_target_produk')
                     ->selectRaw("CONCAT(periode, '-', '12') as periode, SUM(des) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
@@ -153,9 +155,9 @@ class Dashboard extends Component
 
     public function render()
     {
-        // $data = $this->fetch_data_for_graph();
+        $data = $this->fetch_data_for_graph();
 
-        // $this->data = $data;
+        $this->data = $data;
 
         return view('livewire.dashboard');
     }

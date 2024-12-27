@@ -1,4 +1,4 @@
-{{-- <div x-data="{
+<div x-data="{
     data: @entangle('data') // Gunakan entangle jika menggunakan Livewire atau set secara langsung
 }" x-init="$nextTick(function () {
     const ctx = document.getElementById('myChart');
@@ -58,7 +58,4 @@
     @push('script')
         <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
     @endpush
-</div> --}}
-<div>
-    dashboard
 </div>
