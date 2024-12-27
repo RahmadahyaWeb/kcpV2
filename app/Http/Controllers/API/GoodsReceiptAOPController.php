@@ -20,6 +20,10 @@ class GoodsReceiptAOPController extends Controller
     public function sendToBosnet(Request $request)
     {
         try {
+            $kcpapplication = DB::connection('mysql');
+
+            $kcpapplication->beginTransaction();
+
             $invoiceAop = $request->invoiceAop;
             $items = $request->items;
 
@@ -59,8 +63,11 @@ class GoodsReceiptAOPController extends Controller
             if ($this->sendDataToBosnet($dataToSent)) {
                 // Update items status in the database
                 $this->updateItemsStatus($invoiceAop, $itemsToUpdate);
+
+                $kcpapplication->commit();
             }
         } catch (Exception $e) {
+            $kcpapplication->rollBack();
             throw new \Exception($e->getMessage());
         }
     }
@@ -118,10 +125,10 @@ class GoodsReceiptAOPController extends Controller
                 'dtmReceipt'                => "2024-10-15 00:00:00",
                 'szRefDn'                   => $invoiceHeader->SPB,
                 'dtmRefDn'                  => $invoiceHeader->billingDocumentDate,
-                'szWarehouseId'             => "KCP01001",
+                'szWarehouseId'             => "GD1",
                 'szStockTypeId'             => "Good Stock",
                 'paymentTermId'             => $paymentTermId,
-                'szWorkplaceId'             => "KCP01001",
+                'szWorkplaceId'             => config('api.workplace_id'),
                 'szCarrierId'               => "",
                 'szVehicleId'               => "",
                 'szDriverId'                => "",

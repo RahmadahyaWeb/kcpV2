@@ -143,7 +143,7 @@ class DeliveryOrderController extends Controller
                 "szCarrierId"       => "",
                 "szRemark"          => "api",
                 "szPaymentTermId"   => "{$paymentTermId} HARI",
-                "szWarehouseId"     => "KCP01001",
+                "szWarehouseId"     => "GD1",
                 "szStockTypeId"     => "Good Stock",
                 'docStatus'         => [
                     'bApplied'      => true,
