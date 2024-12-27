@@ -38,14 +38,14 @@
                         @forelse ($customer_payment_header as $item)
                             <tr>
                                 <td style="white-space: nowrap">
-                                    <a href="{{ route('customer-payment.detail', $item->no_piutang) }}">{{ $item->no_piutang }}
+                                    <a href="{{ route('customer-payment.detail', $item->no_piutang) }}" wire:navigate>{{ $item->no_piutang }}
                                     </a>
                                 </td>
                                 <td>{{ $item->kd_outlet }}</td>
                                 <td>{{ $item->nm_outlet }}</td>
                                 <td>{{ number_format($item->nominal_potong, 0, ',', '.') }}</td>
                                 <td>{{ $item->pembayaran_via }}</td>
-                                <td>{{ $item->crea_date }}</td>
+                                <td style="white-space: nowrap">{{ $item->crea_date }}</td>
                             </tr>
                         @empty
                             <tr>
