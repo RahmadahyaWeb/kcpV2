@@ -93,6 +93,7 @@ class RekapSheet implements WithTitle, WithEvents, WithColumnFormatting
         $sheet->setCellValue('C7', 'Rp. 15.000 / kejadian');
         $sheet->setCellValue('C8', 'Rp. 10.000 / kejadian');
         $sheet->setCellValue('C10', 'Rp. 5.000 / kejadian');
+        $sheet->setCellValue('C11', 'Rp. 10.000 / kejadian');
 
         $styleArray = [
             'alignment' => [
@@ -164,6 +165,8 @@ class RekapSheet implements WithTitle, WithEvents, WithColumnFormatting
         $punishment_istirahat = count($dataIst['punishment_istirahat']);
         $punishment_lupa_ist = count($dataIst['punishment_lupa_ist']);
 
+        $punishmentFrekuensiToko = $this->punishmentFrekuensiToko($user_sales);
+
         $rowNumber = 3;
 
         $columnLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($startColumn);
@@ -208,8 +211,56 @@ class RekapSheet implements WithTitle, WithEvents, WithColumnFormatting
         $sheet->setCellValue($nextColumnLetter3 . ($rowNumber + 7), str_replace('{row}', ($rowNumber) + 2, 5000 * $punishment_lupa_ist));
 
         // BANYAK PUNISHMENT FREKUENSI TOKO
-        $sheet->setCellValue($columnLetter . ($rowNumber + 8), str_replace('{row}', ($rowNumber + 2), 0));
+        $sheet->setCellValue($columnLetter . ($rowNumber + 8), str_replace('{row}', ($rowNumber + 2), $punishmentFrekuensiToko));
+        // BAYAR PUNISHMENT FREKUENSI TOKO
+        $sheet->setCellValue($nextColumnLetter3 . ($rowNumber + 8), str_replace('{row}', ($rowNumber) + 2, 10000 * $punishmentFrekuensiToko));
     }
+
+    public function punishmentFrekuensiToko($user_sales)
+    {
+        $master_toko = DB::connection('kcpinformation')
+            ->table('mst_outlet')
+            ->leftJoin('mst_areatoko', 'mst_areatoko.area_group', '=', 'mst_outlet.area_group_2w')
+            ->leftJoin('mst_area', 'mst_area.kode_kab', '=', 'mst_outlet.kode_kab')
+            ->leftJoin('mst_provinsi', 'mst_provinsi.kode_prp', '=', 'mst_outlet.kode_prp')
+            ->where('mst_outlet.status', 'Y')
+            ->where('mst_areatoko.user_sales', $user_sales)
+            ->get();
+
+        $punishment = 0;
+
+        foreach ($master_toko as $key => $value) {
+            $minimal_kunjungan = $value->frekuensi ?? 0;
+            $kd_toko = $value->kd_outlet;
+
+            if ($value->kd_outlet == 'TQ') {
+                $realisasi_kunjungan_tq = DB::table('trans_dks')
+                    ->where('user_sales', $user_sales)
+                    ->whereBetween('tgl_kunjungan', [$this->fromDate, $this->toDate])
+                    ->where('type', 'in')
+                    ->whereIn('kd_toko', ['TQ', 'TQ2'])
+                    ->count();
+
+                $realisasi_kunjungan = (string) $realisasi_kunjungan_tq;
+            } else {
+                $realisasi_kunjungan_data = DB::table('trans_dks')
+                    ->where('user_sales', $user_sales)
+                    ->whereBetween('tgl_kunjungan', [$this->fromDate, $this->toDate])
+                    ->where('type', 'in')
+                    ->where('kd_toko', $kd_toko)
+                    ->count();
+
+                $realisasi_kunjungan = (string) $realisasi_kunjungan_data;
+            }
+
+            if ($minimal_kunjungan > $realisasi_kunjungan) {
+                $punishment++;
+            }
+        }
+
+        return $punishment;
+    }
+
 
     public function punishmentIstirahat($filtered, $user_sales)
     {
