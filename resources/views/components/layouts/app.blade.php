@@ -99,7 +99,7 @@
         .chartBox {
             height: 100%;
             width: 100%;
-            padding: 20px;
+            padding: 50px;
             border-radius: 0.375rem;
             background: white;
             overflow: auto
@@ -111,7 +111,7 @@
 
         @media screen and (max-width: 768px) {
             .canvas {
-                width: 300%;
+                width: 500%;
             }
         }
     </style>
