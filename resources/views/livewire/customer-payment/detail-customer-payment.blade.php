@@ -29,7 +29,7 @@
             </div>
             <div class="row g-2 mb-3">
                 @if ($customer_payment_header->status == 'O')
-                    <div class="col">
+                    <div class="col-12">
                         <hr>
                     </div>
                     <div class="col d-grid">
