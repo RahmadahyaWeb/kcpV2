@@ -7,9 +7,9 @@
             Master Toko
         </div>
         <div class="card-body">
-            {{-- <div class="d-flex gap-2 mb-3 py-4" style="overflow-x: auto; white-space: nowrap;">
+            <div class="d-flex gap-2 mb-3 py-4" style="overflow-x: auto; white-space: nowrap;">
                 <button type="button" class="btn btn btn-primary" wire:click="sync_lokasi">Sync Lokasi</button>
-            </div> --}}
+            </div>
 
             <div class="row mb-3">
                 <div class="col-md-4 mb-3">

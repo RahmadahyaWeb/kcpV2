@@ -47,6 +47,7 @@ class IndexMasterToko extends Component
                 if ($toko_kcpapplication) {
                     $latitude = $toko_kcpapplication->latitude;
                     $longitude = $toko_kcpapplication->longitude;
+                    $frekuensi = $toko_kcpapplication->frekuensi;
 
                     // Update mst_outlet dengan latitude dan longitude
                     DB::connection('kcpinformation')
@@ -54,7 +55,8 @@ class IndexMasterToko extends Component
                         ->where('kd_outlet', $kode_toko)
                         ->update([
                             'latitude' => $latitude,
-                            'longitude' => $longitude
+                            'longitude' => $longitude,
+                            'frekuensi' => $frekuensi
                         ]);
                 }
             }
