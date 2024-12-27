@@ -40,7 +40,7 @@ class DetailCustomerPayment extends Component
             ->where('noinv', $no_invoice)
             ->first();
 
-        if ($cek_invoice == null) {
+        if (!$cek_invoice || empty($cek_invoice)) {
             session()->flash('error', 'Invoice tidak ditemukan.');
             return;
         }
