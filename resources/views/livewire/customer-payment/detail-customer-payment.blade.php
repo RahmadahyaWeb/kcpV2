@@ -7,18 +7,7 @@
             Detail Customer Payment: <b>{{ $customer_payment_header->no_piutang }}</b>
         </div>
         <div class="card-body">
-            <div class="row g-2 mb-3">
-                @if ($customer_payment_header->status == 'O')
-                    <div class="col-md-3 d-grid">
-                        <button class="btn btn-success" wire:click="potong_piutang"
-                            wire:confirm="Yakin ingin potong piutang toko?">
-                            Potong Piutang Toko
-                        </button>
-                    </div>
-                @endif
-            </div>
-
-            <div class="row mb-3">
+            <div class="row">
                 <div class="col-md-6">
                     @foreach ([
         'No Piutang' => $customer_payment_header->no_piutang,
@@ -37,6 +26,19 @@
                         </div>
                     @endforeach
                 </div>
+            </div>
+            <div class="row g-2 mb-3">
+                @if ($customer_payment_header->status == 'O')
+                    <div class="col">
+                        <hr>
+                    </div>
+                    <div class="col d-grid">
+                        <button class="btn btn-success" wire:click="potong_piutang"
+                            wire:confirm="Yakin ingin potong piutang toko?">
+                            Potong Piutang Toko
+                        </button>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
