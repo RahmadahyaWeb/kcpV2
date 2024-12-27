@@ -90,6 +90,30 @@
             scrollbar-width: none;
             /* Firefox */
         }
+
+        .chartCard {
+            height: 100vh;
+            width: 100%;
+        }
+
+        .chartBox {
+            height: 100%;
+            width: 100%;
+            padding: 20px;
+            border-radius: 0.375rem;
+            background: white;
+            overflow: auto
+        }
+
+        .canvas{
+            height: 100%;
+        }
+
+        @media screen and (max-width: 768px) {
+            .canvas {
+                width: 300%;
+            }
+        }
     </style>
 </head>
 

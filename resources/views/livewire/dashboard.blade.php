@@ -1,6 +1,6 @@
 <div x-data="{
     data: @entangle('data') // Gunakan entangle jika menggunakan Livewire atau set secara langsung
-}" x-init="$nextTick(function () {
+}" x-init="$nextTick(function() {
     const ctx = document.getElementById('myChart');
 
     const labels = [
@@ -14,8 +14,7 @@
         type: 'bar',
         data: {
             labels: labels,
-            datasets: [
-                {
+            datasets: [{
                     label: 'Penjualan',
                     data: data.arrPenjualan,
                     backgroundColor: 'rgba(54, 162, 235, 0.6)', // Warna untuk penjualan
@@ -32,6 +31,7 @@
             ]
         },
         options: {
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
                     display: true,
@@ -46,12 +46,12 @@
         }
     });
 })">
-    <div class="card">
-        <div class="card-header">
-            Penjualan Inc. Retur vs Target Bulanan
-        </div>
-        <div class="card-body">
-            <canvas id="myChart"></canvas>
+
+    <div class="chartCard">
+        <div class="chartBox">
+            <div class="canvas">
+                <canvas id="myChart"></canvas>
+            </div>
         </div>
     </div>
 
