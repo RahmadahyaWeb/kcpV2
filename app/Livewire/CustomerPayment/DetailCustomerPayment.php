@@ -36,15 +36,6 @@ class DetailCustomerPayment extends Component
     {
         $kcpinformation = DB::connection('kcpinformation');
 
-        $cek_invoice = $kcpinformation->table('trns_inv_header')
-            ->where('noinv', $no_invoice)
-            ->first();
-
-        if (!$cek_invoice || empty($cek_invoice)) {
-            session()->flash('error', 'Invoice tidak ditemukan.');
-            return;
-        }
-
         return $kcpinformation->table('trns_inv_header')
             ->where('noinv', $no_invoice)
             ->value('amount_total');
@@ -65,7 +56,7 @@ class DetailCustomerPayment extends Component
         }
 
         if (!$jumlah_details == $pass) {
-            session()->flash('error', 'Nominal pembayaran tidak sesuai dengan nominal invoice.');
+            session()->flash('error', 'Nominal pembayaran tidak sesuai dengan nominal invoice atau invoice tidak ditemukan.');
             return;
         }
 
