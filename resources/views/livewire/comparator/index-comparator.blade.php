@@ -24,7 +24,7 @@
             </div>
 
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table">
                     <thead>
                         <tr>
                             <th>Part Number</th>
