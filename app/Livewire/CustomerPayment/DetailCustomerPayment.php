@@ -41,12 +41,28 @@ class DetailCustomerPayment extends Component
             ->value('amount_total');
     }
 
+    private function cek_invoice($no_invoice)
+    {
+        $kcpinformation = DB::connection('kcpinformation');
+
+        return $kcpinformation->table('trns_inv_header')
+            ->where('noinv', $no_invoice)
+            ->first();
+    }
+
     public function potong_piutang()
     {
         $jumlah_details = count($this->customer_payment_details);
         $pass = 0;
 
         foreach ($this->customer_payment_details as $value) {
+            $cek_invoice = $this->cek_invoice($value->noinv);
+
+            if (is_null($cek_invoice)) {
+                session()->flash('error', 'Invoice tidak ditemukan.');
+                return;
+            }
+
             $nominal_invoice = DetailCustomerPayment::get_nominal_invoice($value->noinv);
             $nominal_potong = $value->nominal;
 
@@ -56,7 +72,7 @@ class DetailCustomerPayment extends Component
         }
 
         if (!$jumlah_details == $pass) {
-            session()->flash('error', 'Nominal pembayaran tidak sesuai dengan nominal invoice atau invoice tidak ditemukan.');
+            session()->flash('error', 'Nominal pembayaran tidak sesuai dengan nominal invoice.');
             return;
         }
 
@@ -127,6 +143,7 @@ class DetailCustomerPayment extends Component
                             DB::raw('payment_summary.total_pembayaran'),
                             DB::raw('return_summary.total_retur')
                         ])
+                        ->where('inv.noinv', $value->noinv)
                         ->leftJoinSub($paymentSummary, 'payment_summary', 'inv.noinv', '=', 'payment_summary.noinv')
                         ->leftJoinSub($returnSummary, 'return_summary', 'inv.noinv', '=', 'return_summary.noinv')
                         ->first();
