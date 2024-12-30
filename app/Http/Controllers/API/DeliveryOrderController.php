@@ -74,8 +74,6 @@ class DeliveryOrderController extends Controller
      */
     private function sendDataToBosnet($data)
     {
-        return true;  // Simulate success
-
         $credential = TokenBosnetController::signInForSecretKey();
 
         if (isset($credential['status'])) {

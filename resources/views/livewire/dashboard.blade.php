@@ -1,5 +1,5 @@
 <div x-data="{
-    data: @entangle('data') // Gunakan entangle jika menggunakan Livewire atau set secara langsung
+    data: @entangle('data')
 }" x-init="$nextTick(function() {
     const ctx = document.getElementById('myChart');
 
@@ -7,8 +7,6 @@
         'January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'
     ];
-
-    console.log(data);
 
     new Chart(ctx, {
         type: 'bar',
