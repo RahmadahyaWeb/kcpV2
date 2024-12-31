@@ -16,7 +16,7 @@
                         <div class="text-truncate">{{ $menu['label'] }}</div>
                     </a>
                     @if (!empty($menu['children']))
-                        <ul class="menu-sub" x-show="isOpen" x-collapse>
+                        <ul class="menu-sub" x-show="isOpen">
                             @foreach ($menu['children'] as $child)
                                 <li class="menu-item {{ $child['active'] ? 'active' : '' }}">
                                     <a href="{{ route($child['route']) }}" class="menu-link" wire:navigate
