@@ -162,7 +162,8 @@ class PurchaseOrderAOPController extends Controller
 
         // KIRIM GRAND TOTAL
         foreach ($invoiceDetails as $detail) {
-            $decAmount = ($detail->price * config('tax.ppn_percentage')) + $detail->price;
+            // $decAmount = ($detail->price * config('tax.ppn_percentage')) + $detail->price; //12.951.649,83
+            $decAmount = round(($detail->price * config('tax.ppn_percentage')) + $detail->price); //12.951.649
 
             $items[] = [
                 'szProductId'          => $detail->materialNumber,

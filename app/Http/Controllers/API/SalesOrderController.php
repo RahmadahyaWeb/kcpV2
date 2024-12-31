@@ -164,7 +164,7 @@ class SalesOrderController extends Controller
                     'dtmDelivery' => date('Y-m-d H:i:s', strtotime($value->crea_date)),
                     'szCustId' => $value->kd_outlet,
                     'decQty' => $value->qty,
-                    'szFromWpId' => 'KCP01001',
+                    'szFromWpId' => config('api.workplace_id'),
                 ],
             ]
         ];
