@@ -21,6 +21,7 @@ class IndexPiutang extends Component
     public $remaining_balance_keseluruhan;
     public $total_piutang_keseluruhan;
     public $total_payment_keseluruhan;
+    public $total_bg;
 
     public function updatedKdOutlet()
     {
@@ -40,34 +41,79 @@ class IndexPiutang extends Component
 
     public function show_all_piutang()
     {
-        // Query untuk mengambil total piutang keseluruhan dari semua toko
-        $query_keseluruhan = DB::connection('kcpinformation')->table('kcpinformation.trns_inv_header AS invoice')
-            ->selectRaw('SUM(invoice.amount_total) AS total_piutang')
-            ->selectRaw('SUM(IFNULL(payment.total_payment, 0)) AS total_payment')
-            ->leftJoin(DB::raw('(SELECT
-                payment_details.noinv,
-                SUM(payment_details.nominal) AS total_payment
-            FROM
-                kcpinformation.trns_pembayaran_piutang_header AS payment_header
-            JOIN
-                kcpinformation.trns_pembayaran_piutang AS payment_details
-                ON payment_header.nopiutang = payment_details.nopiutang
-            WHERE
-                payment_header.flag_batal = "N"
-            GROUP BY
-                payment_details.noinv) AS payment'), 'invoice.noinv', '=', 'payment.noinv')
-            ->where('invoice.flag_batal', 'N')
-            ->where('invoice.flag_pembayaran_lunas', 'N')
+
+        // Subquery untuk pembayaran
+        $paymentSubquery = DB::connection('kcpinformation')
+            ->table('trns_pembayaran_piutang_header as payment_header')
+            ->select('payment_details.noinv', DB::raw('SUM(payment_details.nominal) AS total_payment'))
+            ->join('trns_pembayaran_piutang as payment_details', 'payment_header.nopiutang', '=', 'payment_details.nopiutang')
+            ->where('payment_header.flag_batal', '=', 'N')
+            ->groupBy('payment_details.noinv');
+
+        // Subquery pertama
+        $subquery1 = DB::connection('kcpinformation')
+            ->table('trns_inv_header as invoice')
+            ->selectRaw('
+            SUM(invoice.amount_total) AS total_piutang,
+            SUM(IFNULL(payment.total_payment, 0)) AS total_payment,
+            NULL AS no_bg,
+            NULL AS area_inv,
+            NULL AS kd_outlet,
+            NULL AS nm_outlet,
+            NULL AS nominal_bg,
+            NULL AS crea_date,
+            NULL AS jth_tempo_bg
+        ')
+            ->leftJoinSub($paymentSubquery, 'payment', 'invoice.noinv', '=', 'payment.noinv')
+            ->where('invoice.flag_batal', '=', 'N')
+            ->where('invoice.flag_pembayaran_lunas', '=', 'N')
             ->whereRaw('invoice.amount_total <> IFNULL(payment.total_payment, 0)');
 
-        // Eksekusi query untuk mendapatkan total piutang dan total pembayaran
-        $totals_keseluruhan = $query_keseluruhan->first();
+        // Subquery kedua
+        $subquery2 = DB::connection('kcpinformation')
+            ->table('trns_pembayaran_piutang_header as a')
+            ->selectRaw('
+                NULL AS total_piutang,
+                0 AS total_payment,
+                a.no_bg,
+                a.area_piutang AS area_inv,
+                a.kd_outlet,
+                a.nm_outlet,
+                SUM(a.nominal_potong) AS nominal_bg,
+                b.crea_date,
+                a.jth_tempo_bg
+            ')
+            ->leftJoin('trns_bg_header as b', function ($join) {
+                $join->on('a.no_bg', '=', 'b.from_bg')
+                    ->where('b.flag_batal', '=', 'N');
+            })
+            ->where(function ($query) {
+                $query->whereRaw("(a.pembayaran_via = 'BG' AND IFNULL(b.from_bg, '-') = '-')")
+                    ->orWhereRaw("(a.pembayaran_via = 'BG' AND DATE_FORMAT(b.crea_date, '%Y-%m-%d') = '2025-01-01')");
+            })
+            ->groupBy('a.no_bg');
 
-        $this->total_piutang_keseluruhan = $totals_keseluruhan->total_piutang;
-        $this->total_payment_keseluruhan = $totals_keseluruhan->total_payment;
+        // Gabungkan kedua subquery
+        $combinedQuery = $subquery1
+            ->unionAll($subquery2);
+
+        // Query utama
+        $result = DB::connection('kcpinformation')
+            ->table(DB::raw("({$combinedQuery->toSql()}) AS combined_data"))
+            ->mergeBindings($combinedQuery)
+            ->selectRaw('
+                SUM(total_piutang) AS total_piutang,
+                SUM(total_payment) AS total_payment,
+                SUM(nominal_bg) AS nominal_bg
+            ')
+            ->first();
+
+        $this->total_piutang_keseluruhan = $result->total_piutang;
+        $this->total_payment_keseluruhan = $result->total_payment;
+        $this->total_bg = $result->nominal_bg;
 
         // Hitung sisa piutang keseluruhan
-        $this->remaining_balance_keseluruhan = $this->total_piutang_keseluruhan - $this->total_payment_keseluruhan;
+        $this->remaining_balance_keseluruhan = $this->total_piutang_keseluruhan - $this->total_payment_keseluruhan + $this->total_bg;
     }
 
     public function render()
