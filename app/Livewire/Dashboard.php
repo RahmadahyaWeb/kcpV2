@@ -18,7 +18,7 @@ class Dashboard extends Component
             ->selectRaw("SUBSTR(a.crea_date, 1, 7) as periode, SUM(b.nominal_total) as jml")
             ->join('trns_inv_details as b', 'a.noinv', '=', 'b.noinv')
             ->join('mst_part as c', 'b.part_no', '=', 'c.part_no')
-            ->whereRaw("SUBSTR(a.crea_date, 1, 4) = '2024'")
+            ->whereRaw("SUBSTR(a.crea_date, 1, 4) = '2025'")
             ->where('a.flag_batal', 'N')
             ->where('c.supplier', 'ASTRA OTOPART')
             ->groupByRaw("SUBSTR(a.crea_date, 1, 7)");
@@ -27,7 +27,7 @@ class Dashboard extends Component
             ->selectRaw("SUBSTR(a.flag_nota_date, 1, 7) as periode, SUM(b.nominal_total) as retur")
             ->join('trns_retur_details as b', 'a.noretur', '=', 'b.noretur')
             ->join('mst_part as c', 'b.part_no', '=', 'c.part_no')
-            ->whereRaw("SUBSTR(a.flag_nota_date, 1, 4) = '2024'")
+            ->whereRaw("SUBSTR(a.flag_nota_date, 1, 4) = '2025'")
             ->where('a.flag_batal', 'N')
             ->where('c.supplier', 'ASTRA OTOPART')
             ->groupByRaw("SUBSTR(a.flag_nota_date, 1, 7)");
