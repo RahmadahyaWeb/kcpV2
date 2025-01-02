@@ -18,25 +18,27 @@
             @if ($remaining_balance_keseluruhan)
                 <div class="row mb-3">
                     <div class="col">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Total Piutang</th>
-                                    <th>Total Pembayaran</th>
-                                    <th>Sisa Piutang</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="white-space: nowrap">
-                                        {{ number_format($total_piutang_keseluruhan, 0, ',', '.') }}</td>
-                                    <td style="white-space: nowrap">
-                                        {{ number_format($total_payment_keseluruhan, 0, ',', '.') }}</td>
-                                    <td style="white-space: nowrap">
-                                        {{ number_format($remaining_balance_keseluruhan, 0, ',', '.') }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Total Piutang</th>
+                                        <th>Total Pembayaran</th>
+                                        <th>Sisa Piutang</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="white-space: nowrap">
+                                            {{ number_format($total_piutang_keseluruhan, 0, ',', '.') }}</td>
+                                        <td style="white-space: nowrap">
+                                            {{ number_format($total_payment_keseluruhan, 0, ',', '.') }}</td>
+                                        <td style="white-space: nowrap">
+                                            {{ number_format($remaining_balance_keseluruhan, 0, ',', '.') }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             @endif
