@@ -336,7 +336,7 @@ class DetailInvoice extends Component
             ->table('trns_ach_toko_bonus')
             ->where('kd_outlet', $this->header->kd_outlet)
             ->where('nominal', '>', 0)
-            ->whereYear('crea_date', 2024)
+            ->whereYear('crea_date', 2025)
             ->get();
 
         $this->kd_outlet = $this->header->kd_outlet;
