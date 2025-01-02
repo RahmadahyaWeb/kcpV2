@@ -28,9 +28,12 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>{{ number_format($total_piutang_keseluruhan, 0, ',', '.') }}</td>
-                                    <td>{{ number_format($total_payment_keseluruhan, 0, ',', '.') }}</td>
-                                    <td>{{ number_format($remaining_balance_keseluruhan, 0, ',', '.') }}</td>
+                                    <td style="white-space: nowrap">
+                                        {{ number_format($total_piutang_keseluruhan, 0, ',', '.') }}</td>
+                                    <td style="white-space: nowrap">
+                                        {{ number_format($total_payment_keseluruhan, 0, ',', '.') }}</td>
+                                    <td style="white-space: nowrap">
+                                        {{ number_format($remaining_balance_keseluruhan, 0, ',', '.') }}</td>
                                 </tr>
                             </tbody>
                         </table>
