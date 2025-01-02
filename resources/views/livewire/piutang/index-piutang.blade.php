@@ -4,6 +4,44 @@
 
     <div class="card mb-3">
         <div class="card-header">
+            Total Overall Accounts Receivable
+        </div>
+        <div class="card-body">
+            @if (!$remaining_balance_keseluruhan)
+                <div class="d-flex gap-2 mb-3 py-4" style="overflow-x: auto; white-space: nowrap;">
+                    <button type="button" class="btn btn btn-primary" wire:click="show_all_piutang">
+                        Tampilkan semua piutang
+                    </button>
+                </div>
+            @endif
+
+            @if ($remaining_balance_keseluruhan)
+                <div class="row mb-3">
+                    <div class="col">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Total Piutang</th>
+                                    <th>Total Pembayaran</th>
+                                    <th>Sisa Piutang</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ number_format($total_piutang_keseluruhan, 0, ',', '.') }}</td>
+                                    <td>{{ number_format($total_payment_keseluruhan, 0, ',', '.') }}</td>
+                                    <td>{{ number_format($remaining_balance_keseluruhan, 0, ',', '.') }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endif
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-header">
             Data Accounts Receivable
         </div>
         <div class="card-body">

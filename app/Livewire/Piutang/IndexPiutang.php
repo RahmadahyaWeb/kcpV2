@@ -12,12 +12,15 @@ class IndexPiutang extends Component
 
     protected $paginationTheme = 'bootstrap';
 
-    public $target = 'selected_kd_outlet, kd_outlet, show_detail';
+    public $target = 'selected_kd_outlet, kd_outlet, show_detail, show_all_piutang';
     public $kd_outlet = '';
     public $selected_kd_outlet;
     public $show = false;
     public $items;
     public $kalkulasi_total_piutang;
+    public $remaining_balance_keseluruhan;
+    public $total_piutang_keseluruhan;
+    public $total_payment_keseluruhan;
 
     public function updatedKdOutlet()
     {
@@ -33,6 +36,38 @@ class IndexPiutang extends Component
     public function show_detail()
     {
         $this->show = !$this->show;
+    }
+
+    public function show_all_piutang()
+    {
+        // Query untuk mengambil total piutang keseluruhan dari semua toko
+        $query_keseluruhan = DB::connection('kcpinformation')->table('kcpinformation.trns_inv_header AS invoice')
+            ->selectRaw('SUM(invoice.amount_total) AS total_piutang')
+            ->selectRaw('SUM(IFNULL(payment.total_payment, 0)) AS total_payment')
+            ->leftJoin(DB::raw('(SELECT
+                payment_details.noinv,
+                SUM(payment_details.nominal) AS total_payment
+            FROM
+                kcpinformation.trns_pembayaran_piutang_header AS payment_header
+            JOIN
+                kcpinformation.trns_pembayaran_piutang AS payment_details
+                ON payment_header.nopiutang = payment_details.nopiutang
+            WHERE
+                payment_header.flag_batal = "N"
+            GROUP BY
+                payment_details.noinv) AS payment'), 'invoice.noinv', '=', 'payment.noinv')
+            ->where('invoice.flag_batal', 'N')
+            ->where('invoice.flag_pembayaran_lunas', 'N')
+            ->whereRaw('invoice.amount_total <> IFNULL(payment.total_payment, 0)');
+
+        // Eksekusi query untuk mendapatkan total piutang dan total pembayaran
+        $totals_keseluruhan = $query_keseluruhan->first();
+
+        $this->total_piutang_keseluruhan = $totals_keseluruhan->total_piutang;
+        $this->total_payment_keseluruhan = $totals_keseluruhan->total_payment;
+
+        // Hitung sisa piutang keseluruhan
+        $this->remaining_balance_keseluruhan = $this->total_piutang_keseluruhan - $this->total_payment_keseluruhan;
     }
 
     public function render()
@@ -95,7 +130,7 @@ class IndexPiutang extends Component
             'list_toko'     => $list_toko,
             'items'         => $this->items,
             'total_payment' => $total_payment,
-            'total_piutang' => $total_piutang
+            'total_piutang' => $total_piutang,
         ]);
     }
 }
