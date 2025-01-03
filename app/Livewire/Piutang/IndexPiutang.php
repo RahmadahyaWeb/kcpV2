@@ -14,7 +14,7 @@ class IndexPiutang extends Component
 
     public $target = 'selected_kd_outlet, kd_outlet, show_detail, show_all_piutang';
     public $kd_outlet = '';
-    public $selected_kd_outlet;
+    public $selected_kd_outlet = 's3';
     public $show = false;
     public $items;
     public $kalkulasi_total_piutang;
@@ -71,27 +71,28 @@ class IndexPiutang extends Component
 
         // Subquery kedua
         $subquery2 = DB::connection('kcpinformation')
-            ->table('trns_pembayaran_piutang_header as a')
+            ->table('trns_pembayaran_piutang_header as piutang_header')
             ->selectRaw('
                 NULL AS total_piutang,
                 0 AS total_payment,
-                a.no_bg,
-                a.area_piutang AS area_inv,
-                a.kd_outlet,
-                a.nm_outlet,
-                SUM(a.nominal_potong) AS nominal_bg,
-                b.crea_date,
-                a.jth_tempo_bg
+                piutang_header.no_bg AS no_bg,
+                piutang_header.area_piutang AS area_invoice,
+                piutang_header.kd_outlet AS outlet_code,
+                piutang_header.nm_outlet AS outlet_name,
+                SUM(piutang_header.nominal_potong) AS bg_nominal,
+                bg_header.crea_date AS creation_date,
+                piutang_header.jth_tempo_bg AS bg_due_date
             ')
-            ->leftJoin('trns_bg_header as b', function ($join) {
-                $join->on('a.no_bg', '=', 'b.from_bg')
-                    ->where('b.flag_batal', '=', 'N');
+            ->leftJoin('trns_bg_header as bg_header', function ($join) {
+                $join->on('piutang_header.no_bg', '=', 'bg_header.from_bg')
+                    ->where('bg_header.flag_batal', '=', 'N');
             })
             ->where(function ($query) {
-                $query->whereRaw("(a.pembayaran_via = 'BG' AND IFNULL(b.from_bg, '-') = '-')")
-                    ->orWhereRaw("(a.pembayaran_via = 'BG' AND DATE_FORMAT(b.crea_date, '%Y-%m-%d') = '2025-01-01')");
+                $query->whereRaw("(piutang_header.pembayaran_via = 'BG' AND IFNULL(bg_header.from_bg, '-') = '-')")
+                    ->orWhereRaw("(piutang_header.pembayaran_via = 'BG' AND DATE_FORMAT(bg_header.crea_date, '%Y-%m-%d') = ?)", [date('Y-m-d')]);
             })
-            ->groupBy('a.no_bg');
+            ->groupBy('piutang_header.no_bg');
+
 
         // Gabungkan kedua subquery
         $combinedQuery = $subquery1
