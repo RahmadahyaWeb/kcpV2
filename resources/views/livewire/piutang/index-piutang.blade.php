@@ -24,7 +24,6 @@
                                     <tr>
                                         <th>Total Piutang</th>
                                         <th>Total Pembayaran</th>
-                                        <th>Total BG</th>
                                         <th>Sisa Piutang</th>
                                     </tr>
                                 </thead>
@@ -34,8 +33,6 @@
                                             {{ number_format($total_piutang_keseluruhan, 0, ',', '.') }}</td>
                                         <td style="white-space: nowrap">
                                             {{ number_format($total_payment_keseluruhan, 0, ',', '.') }}</td>
-                                        <td style="white-space: nowrap">
-                                            {{ number_format($total_bg, 0, ',', '.') }}</td>
                                         <td style="white-space: nowrap">
                                             {{ number_format($remaining_balance_keseluruhan, 0, ',', '.') }}</td>
                                     </tr>
