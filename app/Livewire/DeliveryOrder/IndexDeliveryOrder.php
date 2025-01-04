@@ -37,13 +37,14 @@ class IndexDeliveryOrder extends Component
     {
         if ($this->status == 'KCP') {
             $items = DB::connection('kcpinformation')
-                ->table('trns_lkh_header')
-                ->where('status', 'C')
-                ->where('terima_ar', 'N')
-                ->where('flag_batal', 'N')
-                ->where('no_lkh', 'like', '%' . $this->no_lkh . '%')
-                ->orderBy('crea_date', 'desc')
-                ->paginate(20);
+            ->table('trns_lkh_header')
+            ->where('status', 'C')
+            ->where('terima_ar', 'N')
+            ->where('flag_batal', 'N')
+            ->where('no_lkh', 'like', '%' . $this->no_lkh . '%')
+            ->whereDate('crea_date', '>=', '2025-01-04') // initial bosnet
+            ->orderBy('crea_date', 'desc')
+            ->paginate(20);
         } else {
             $items = DB::table('do_bosnet')
                 ->paginate(20);
