@@ -112,7 +112,7 @@ class PurchaseOrderNONController extends Controller
 
             $payload = $data;
 
-            $url = 'http://103.54.218.250:3000/API/OC/NGE/v1/PUR/FPo/SaveFPo';
+            $url = 'https://omnichannel.ngecosystem.com/API/OC/NGE/v1/PUR/FPo/SaveFPo';
 
             $response = Http::withHeaders([
                 'Token' => $token

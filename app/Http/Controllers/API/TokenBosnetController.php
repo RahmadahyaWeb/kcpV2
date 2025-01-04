@@ -18,7 +18,7 @@ class TokenBosnetController extends Controller
         ];
 
         // Endpoint tujuan
-        $url = 'http://103.54.218.250:3000/API/OC/NGE/v1/SM/Auth/SignInForSecretKey';
+        $url = 'https://omnichannel.ngecosystem.com/API/OC/NGE/v1/SM/Auth/SignInForSecretKey';
 
         try {
             // Kirim POST request menggunakan Http client Laravel
