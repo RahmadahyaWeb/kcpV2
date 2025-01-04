@@ -38,7 +38,7 @@ return [
     // // MARKETING
     [
         "label" => "Marketing",
-        "roles" => ['super-user', 'admin', 'head-marketing', 'supervisor-area', 'salesman'],
+        "roles" => ['super-user', 'admin', 'head-marketing', 'supervisor-area', 'salesman', 'fakturis'],
         "header" => true
     ],
     [
