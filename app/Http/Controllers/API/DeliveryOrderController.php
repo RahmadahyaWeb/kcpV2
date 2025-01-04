@@ -127,7 +127,7 @@ class DeliveryOrderController extends Controller
             "fdoData"   => [
                 "szDoId"            => $item->noinv,
                 "szFSoId"           => $item->noso,
-                "szLogisticType"    => "INV",
+                "szLogisticType"    => "POS",
                 "szOrderTypeId"     => "JUAL",
                 "dtmDelivery"       => Carbon::parse($item->crea_date)->toDateTimeString(),
                 "szCustId"          => $item->kd_outlet,
