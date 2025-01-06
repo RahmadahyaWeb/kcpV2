@@ -11,6 +11,14 @@
                 <a href="{{ route('users.create') }}" class="btn btn-primary" wire:navigate>Create User</a>
             </div>
 
+            <div class="row mb-3 g-2">
+                <div class="col-md-4">
+                    <label class="form-label">Nama / Username</label>
+                    <input type="text" class="form-control" wire:model.live.debounce.150ms="search"
+                        placeholder="Cari berdasarkan nama user / username" wire:loading.attr="disabled">
+                </div>
+            </div>
+
             <div class="table-responsive">
                 <table class="table">
                     <thead>

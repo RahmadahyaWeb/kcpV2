@@ -12,11 +12,21 @@ class IndexUser extends Component
 {
     use WithPagination, WithoutUrlPagination;
 
-    public $target="";
+    public $target = "search";
+    public $search;
 
     public function render()
     {
-        $users = User::with('roles')->orderBy('name', 'asc')->paginate();
+        $search = $this->search;
+
+        $users = User::with('roles')
+            ->when($search, function ($query) use ($search) {
+                return $query->where('username', 'like', '%' . $search . '%')
+                    ->orWhere('name', 'like', '%' . $search . '%');
+            })
+            ->orderBy('name', 'asc')
+            ->paginate();
+
 
         return view('livewire.master.index-user', compact(
             'users'
