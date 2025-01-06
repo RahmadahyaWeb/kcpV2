@@ -15,7 +15,7 @@
                 <div class="col-md-4">
                     <label class="form-label">Nama / Username</label>
                     <input type="text" class="form-control" wire:model.live.debounce.150ms="search"
-                        placeholder="Cari berdasarkan nama user / username" wire:loading.attr="disabled">
+                        placeholder="Cari berdasarkan nama user / username">
                 </div>
             </div>
 
