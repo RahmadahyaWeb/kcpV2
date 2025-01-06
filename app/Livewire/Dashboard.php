@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Lazy;
 use Livewire\Component;
@@ -9,6 +10,7 @@ use Livewire\Component;
 class Dashboard extends Component
 {
     public $data;
+    public $performance;
 
     public function fetch_data_for_graph()
     {
@@ -153,9 +155,115 @@ class Dashboard extends Component
         ];
     }
 
+    public function fetch_monthly_target()
+    {
+        $date_month = date('Y-m');
+
+        // Get total sales
+        $sales = DB::connection('kcpinformation')->table('trns_inv_header as a')
+            ->join('trns_inv_details as b', 'a.noinv', '=', 'b.noinv')
+            ->join('mst_part as c', 'b.part_no', '=', 'c.part_no')
+            ->where('c.supplier', '=', 'ASTRA OTOPART')
+            ->where('a.flag_batal', '=', 'N')
+            ->whereRaw("DATE_FORMAT(a.crea_date, '%Y-%m') = ?", [$date_month])
+            ->sum('b.nominal_total');
+
+        // Get total returns
+        $returns = DB::connection('kcpinformation')->table('trns_retur_header as a')
+            ->join('trns_retur_details as b', 'a.noretur', '=', 'b.noretur')
+            ->join('mst_part as c', 'b.part_no', '=', 'c.part_no')
+            ->where('c.supplier', '=', 'ASTRA OTOPART')
+            ->where('a.flag_batal', '=', 'N')
+            ->whereRaw("DATE_FORMAT(a.flag_nota_date, '%Y-%m') = ?", [$date_month])
+            ->sum('b.nominal_total');
+
+        // Calculate final amount
+        $finalAmount = $sales - ($returns ?? 0);
+
+        $initial_target = $this->getMonthlyTargets();
+
+        $month = substr(date("Y-m"), 5, 2);
+        if ($month == '01') {
+            $bulan = 0;
+        } elseif ($month == '02') {
+            $bulan = 1;
+        } elseif ($month == '03') {
+            $bulan = 2;
+        } elseif ($month == '04') {
+            $bulan = 3;
+        } elseif ($month == '05') {
+            $bulan = 4;
+        } elseif ($month == '06') {
+            $bulan = 5;
+        } elseif ($month == '07') {
+            $bulan = 6;
+        } elseif ($month == '08') {
+            $bulan = 7;
+        } elseif ($month == '09') {
+            $bulan = 8;
+        } elseif ($month == '10') {
+            $bulan = 9;
+        } elseif ($month == '11') {
+            $bulan = 10;
+        } elseif ($month == '12') {
+            $bulan = 11;
+        }
+
+        $target = $initial_target[$bulan]->jmlTarget;
+
+        if ($target == 0) {
+            $performance = array(0);
+        } else {
+            $performance = round(($finalAmount / $target) * 100, 0);
+        }
+
+        return intval($performance);
+    }
+
+    public function getMonthlyTargets()
+    {
+        $months = [
+            ['column' => 'jan', 'month' => '01'],
+            ['column' => 'feb', 'month' => '02'],
+            ['column' => 'mar', 'month' => '03'],
+            ['column' => 'apr', 'month' => '04'],
+            ['column' => 'mei', 'month' => '05'],
+            ['column' => 'jun', 'month' => '06'],
+            ['column' => 'jul', 'month' => '07'],
+            ['column' => 'agt', 'month' => '08'],
+            ['column' => 'spt', 'month' => '09'],
+            ['column' => 'okt', 'month' => '10'],
+            ['column' => 'nop', 'month' => '11'],
+            ['column' => 'des', 'month' => '12']
+        ];
+
+        $queries = [];
+
+        foreach ($months as $month) {
+            $query = DB::connection('kcpinformation')->table('mst_target_produk')
+                ->selectRaw("CONCAT(periode, '-', ?) as periode, SUM(" . $month['column'] . ") as jmlTarget", [$month['month']])
+                ->where('periode', date('Y'))
+                ->whereRaw('kd_area <> ?', ['']);
+
+            $queries[] = $query;
+        }
+
+        // Combine all queries using union
+        $finalQuery = array_reduce($queries, function ($carry, $query) {
+            if (!$carry) {
+                return $query;
+            }
+            return $carry->union($query);
+        });
+
+        return $finalQuery->get();
+    }
+
     public function render()
     {
         $data = $this->fetch_data_for_graph();
+
+        $this->performance = $this->fetch_monthly_target();
 
         $this->data = $data;
 

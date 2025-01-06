@@ -1,5 +1,20 @@
 <div x-data="{ data: @entangle('data') }" x-init="$nextTick(() => initializeChart(data))">
 
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    Pencapaian Bulan {{ \Carbon\Carbon::now()->locale('id')->isoFormat('MMMM') }}
+                </div>
+                <div class="card-body">
+                    <span class="text-center d-block fs-1 fw-bold">
+                        {{ $performance }} %
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="chartCard">
         <div class="chartBox">
             <div class="canvas">
