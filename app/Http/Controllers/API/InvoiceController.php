@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class InvoiceController extends Controller
 {
@@ -41,6 +42,8 @@ class InvoiceController extends Controller
                             'status_invoice' => 'BOSNET',
                             'invoice_send_to_bosnet' => now()
                         ]);
+
+                    Log::info("berhasil kirim invoice: $invoice->noinv");
                 } else {
                     DB::rollBack();
                     DB::table('invoice_bosnet')

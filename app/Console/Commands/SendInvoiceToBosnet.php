@@ -30,7 +30,6 @@ class SendInvoiceToBosnet extends Command
         try {
             $controller = new InvoiceController();
             $controller->sendToBosnet();
-            Log::info('Invoices successfully sent to Bosnet.');
         } catch (\Exception $e) {
             Log::error('Error: ' . $e->getMessage());
         }
