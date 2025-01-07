@@ -23,7 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->trustProxies(at: '*');
     })
     ->withSchedule(function (Schedule $schedule) {
-        $schedule->call(new SendInvoiceToBosnet())->everyFifteenSeconds();
+        $schedule->call('app:send-invoice-to-bosnet')->everyFifteenSeconds();
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
