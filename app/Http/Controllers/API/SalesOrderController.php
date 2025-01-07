@@ -183,6 +183,12 @@ class SalesOrderController extends Controller
      */
     private function prepareDataToSend($header, $paymentTermId, $decDPPTotal, $decTaxTotal, $items)
     {
+        if (empty($header->user_sales) || $header->user_sales === '') {
+            $user_sales = 'admcounter';
+        } else {
+            $user_sales = $header->user_sales;
+        }
+
         return [
             'szAppId' => "BDI.KCP",
             'fSoData' => [
@@ -196,7 +202,7 @@ class SalesOrderController extends Controller
                 'szStatus'          => "OPE",
                 'szCcyId'           => "IDR",
                 'szCcyRateId'       => "BI",
-                'szSalesId'         => $header->user_sales ?? 'admcounter',
+                'szSalesId'         => $user_sales,
                 'docStatus'         => [
                     'bApplied'      => true,
                     'szWorkplaceId' => config('api.workplace_id')
