@@ -184,7 +184,7 @@ class SalesOrderController extends Controller
     private function prepareDataToSend($header, $paymentTermId, $decDPPTotal, $decTaxTotal, $items)
     {
         if (empty($header->user_sales) || $header->user_sales === '') {
-            $user_sales = 'admcounter';
+            $user_sales = 'admincounter';
         } else {
             $user_sales = $header->user_sales;
         }
