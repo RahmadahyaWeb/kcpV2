@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Invoice;
 
+use App\Http\Controllers\API\InvoiceController;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -15,6 +16,13 @@ class IndexInvoiceBosnet extends Component
     public $noso = '';
     public $noinv = '';
     public $status = '';
+
+    public function send_inv_to_bosnet()
+    {
+        $controller = new InvoiceController();
+
+        $controller->sendToBosnet();
+    }
 
     public function render()
     {

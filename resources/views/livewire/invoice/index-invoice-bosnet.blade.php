@@ -8,6 +8,12 @@
         </div>
 
         <div class="card-body">
+            <div class="d-flex gap-2 mb-3 py-4" style="overflow-x: auto; white-space: nowrap;">
+                <button type="button" class="btn btn btn-danger" wire:click="send_inv_to_bosnet" wire:confirm="Yakin ingin kirim semua invoice ke BOSNET?">
+                    Kirim Invoice
+                </button>
+            </div>
+
             <!-- Filter Section -->
             <div class="row mb-3 g-2">
                 <div class="col-md-4">
@@ -46,8 +52,8 @@
                         @forelse ($invoices as $invoice)
                             <tr>
                                 <td style="white-space: nowrap">
-                                    <a
-                                    href="{{ route('invoice.detail', $invoice->noinv) }}" wire:navigate>{{ $invoice->noinv }}</a>
+                                    <a href="{{ route('invoice.detail', $invoice->noinv) }}"
+                                        wire:navigate>{{ $invoice->noinv }}</a>
                                 </td>
                                 <td style="white-space: nowrap">
                                     {{ $invoice->noso }}
