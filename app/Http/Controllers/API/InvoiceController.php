@@ -20,43 +20,47 @@ class InvoiceController extends Controller
             })
             ->get();
 
-        foreach ($invoices as $invoice) {
-            try {
-                DB::beginTransaction();
+        if ($invoices->isEmpty()) {
+            Log::info('Tidak ada invoice.');
+        } else {
+            foreach ($invoices as $invoice) {
+                try {
+                    DB::beginTransaction();
 
-                $item = DB::connection('kcpinformation')
-                    ->table('trns_inv_header')
-                    ->where('noinv', $invoice->noinv)
-                    ->first();
-
-                // Iterate through items and send data to BOSNET
-                $dataToSend = $this->prepareBosnetData($item);
-
-                // Send data to BOSNET and check if the response is successful
-                $response = $this->sendDataToBosnet($dataToSend);
-
-                if ($response) {
-                    DB::table('invoice_bosnet')
+                    $item = DB::connection('kcpinformation')
+                        ->table('trns_inv_header')
                         ->where('noinv', $invoice->noinv)
-                        ->update([
-                            'status_invoice' => 'BOSNET',
-                            'invoice_send_to_bosnet' => now()
-                        ]);
+                        ->first();
 
-                    Log::info("berhasil kirim invoice: $invoice->noinv");
-                } else {
-                    DB::rollBack();
-                    DB::table('invoice_bosnet')
-                        ->where('noinv', $invoice->noinv)
-                        ->update([
-                            'status_invoice' => 'FAILED',
-                            'invoice_send_to_bosnet' => now()
-                        ]);
+                    // Iterate through items and send data to BOSNET
+                    $dataToSend = $this->prepareBosnetData($item);
+
+                    // Send data to BOSNET and check if the response is successful
+                    $response = $this->sendDataToBosnet($dataToSend);
+
+                    if ($response) {
+                        DB::table('invoice_bosnet')
+                            ->where('noinv', $invoice->noinv)
+                            ->update([
+                                'status_invoice' => 'BOSNET',
+                                'invoice_send_to_bosnet' => now()
+                            ]);
+
+                        Log::info("berhasil kirim invoice: $invoice->noinv");
+                    } else {
+                        DB::rollBack();
+                        DB::table('invoice_bosnet')
+                            ->where('noinv', $invoice->noinv)
+                            ->update([
+                                'status_invoice' => 'FAILED',
+                                'invoice_send_to_bosnet' => now()
+                            ]);
+                    }
+
+                    DB::commit();
+                } catch (\Exception $e) {
+                    throw new \Exception($e->getMessage());
                 }
-
-                DB::commit();
-            } catch (\Exception $e) {
-                throw new \Exception($e->getMessage());
             }
         }
     }
