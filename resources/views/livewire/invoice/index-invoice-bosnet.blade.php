@@ -44,8 +44,10 @@
                             <th>No Invoice</th>
                             <th>No SO</th>
                             <th>Nominal Invoice + PPn (Rp)</th>
-                            <th>Status</th>
+                            <th>Status SO</th>
                             <th>Sent to Bosnet</th>
+                            <th>Status INV</th>
+                            <th>Sent invoice to bosnet</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -67,6 +69,15 @@
                                 </td>
                                 <td>
                                     {{ $invoice->send_to_bosnet }}
+                                </td>
+                                <td>
+                                    <span
+                                        class="badge text-bg-{{ $invoice->status_invoice == 'KCP' ? 'success' : 'warning' }}">
+                                        {{ $invoice->status_invoice }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {{ $invoice->invoice_send_to_bosnet }}
                                 </td>
                             </tr>
                         @empty
