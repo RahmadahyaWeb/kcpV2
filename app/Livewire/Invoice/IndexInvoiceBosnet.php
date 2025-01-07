@@ -22,6 +22,7 @@ class IndexInvoiceBosnet extends Component
             ->where('noso', 'like', '%' . $this->noso . '%')
             ->where('noinv', 'like', '%' . $this->noinv . '%')
             ->where('status_bosnet', 'like', '%' . $this->status . '%')
+            ->orderBy('noinv', 'desc')
             ->paginate(20);
 
         return view('livewire.invoice.index-invoice-bosnet', compact('invoices'));
