@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 /**
@@ -195,7 +196,7 @@ class SalesOrderController extends Controller
                 'szStatus'          => "OPE",
                 'szCcyId'           => "IDR",
                 'szCcyRateId'       => "BI",
-                'szSalesId'         => $header->user_sales,
+                'szSalesId'         => $header->user_sales ?? Auth::user()->username,
                 'docStatus'         => [
                     'bApplied'      => true,
                     'szWorkplaceId' => config('api.workplace_id')
