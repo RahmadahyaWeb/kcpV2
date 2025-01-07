@@ -196,7 +196,7 @@ class SalesOrderController extends Controller
                 'szStatus'          => "OPE",
                 'szCcyId'           => "IDR",
                 'szCcyRateId'       => "BI",
-                'szSalesId'         => $header->user_sales,
+                'szSalesId'         => $header->user_sales ?? 'admcounter',
                 'docStatus'         => [
                     'bApplied'      => true,
                     'szWorkplaceId' => config('api.workplace_id')
