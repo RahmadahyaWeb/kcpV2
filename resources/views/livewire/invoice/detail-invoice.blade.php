@@ -42,7 +42,6 @@
         'No Invoice' => $header->noinv,
         'No Sales Order' => $header->noso,
         'Toko' => $header->nm_outlet,
-        'Sales' => $header->user_sales ? $loggedInUser : '',
         'Amount' => 'Rp ' . number_format($header->amount, 0, ',', '.'),
         'Amount Discount' => 'Rp ' . number_format($header->amount_disc, 0, ',', '.'),
         'Support Program' => 'Rp ' . number_format($nominalSuppProgram, 0, ',', '.'),

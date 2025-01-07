@@ -356,7 +356,6 @@ class DetailInvoice extends Component
             'sumTotalNominal' => $sumTotalNominal,
             'sumTotalDPP' => $sumTotalDPP,
             'sumTotalDisc' => $sumTotalDisc,
-            'loggedInUser' => Auth::user()->name,
         ]);
     }
 }
