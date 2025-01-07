@@ -1,5 +1,7 @@
 <?php
 
+use App\Console\Commands\SendInvoiceToBosnet;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -19,6 +21,9 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->trustProxies(at: '*');
+    })
+    ->withSchedule(function (Schedule $schedule) {
+        $schedule->call(new SendInvoiceToBosnet())->everyFifteenSeconds();
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
