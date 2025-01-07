@@ -11,7 +11,7 @@ class IndexInvoiceBosnet extends Component
 {
     use WithPagination;
 
-    public $target = 'noso, noinv, status';
+    public $target = 'noso, noinv, status, send_inv_to_bosnet';
 
     public $noso = '';
     public $noinv = '';
@@ -19,9 +19,13 @@ class IndexInvoiceBosnet extends Component
 
     public function send_inv_to_bosnet()
     {
-        $controller = new InvoiceController();
+        try {
+            $controller = new InvoiceController();
 
-        $controller->sendToBosnet();
+            $controller->sendToBosnet();
+        } catch (\Exception $e) {
+            session()->flash('error', 'Error: ' . $e->getMessage());
+        }
     }
 
     public function render()

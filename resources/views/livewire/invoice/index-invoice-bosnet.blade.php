@@ -1,4 +1,5 @@
 <div>
+    <x-alert />
     <x-loading :target="$target" />
 
     <div class="card">
