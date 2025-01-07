@@ -122,6 +122,12 @@ class InvoiceController extends Controller
         // Generate the list of sales order items
         $items = $this->generateSalesOrderItems($item, $decDPPTotal, $decTaxTotal);
 
+        if (empty($item->user_sales) || $item->user_sales === '') {
+            $user_sales = 'admincounter';
+        } else {
+            $user_sales = $item->user_sales;
+        }
+
         return [
             "szAppId"               => "BDI.KCP",
             "fdoData"   => [
@@ -137,7 +143,7 @@ class InvoiceController extends Controller
                 "szCcyRateId"       => "BI",
                 "szVehicleId"       => "",
                 "szDriverId"        => "",
-                "szSalesId"         => $item->user_sales,
+                "szSalesId"         => $user_sales,
                 "szCarrierId"       => "DC",
                 "szRemark"          => "api",
                 "szPaymentTermId"   => "{$paymentTermId} HARI",
