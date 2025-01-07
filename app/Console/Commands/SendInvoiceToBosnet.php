@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Http\Controllers\API\InvoiceController;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class SendInvoiceToBosnet extends Command
 {
@@ -29,9 +30,9 @@ class SendInvoiceToBosnet extends Command
         try {
             $controller = new InvoiceController();
             $controller->sendToBosnet();
-            $this->info('Invoices successfully sent to Bosnet.');
+            Log::info('Invoices successfully sent to Bosnet.');
         } catch (\Exception $e) {
-            $this->error('Error: ' . $e->getMessage());
+            Log::error('Error: ' . $e->getMessage());
         }
     }
 }
