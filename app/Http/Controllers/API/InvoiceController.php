@@ -53,14 +53,6 @@ class InvoiceController extends Controller
 
                 DB::commit();
             } catch (\Exception $e) {
-                DB::rollBack();
-                DB::table('invoice_bosnet')
-                    ->where('noinv', $invoice->noinv)
-                    ->update([
-                        'status_invoice' => 'FAILED',
-                        'invoice_send_to_bosnet' => now()
-                    ]);
-
                 throw new \Exception($e->getMessage());
             }
         }
