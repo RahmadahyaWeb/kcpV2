@@ -355,7 +355,8 @@ class DetailInvoice extends Component
             'invoice_status' => $invoice_status,
             'sumTotalNominal' => $sumTotalNominal,
             'sumTotalDPP' => $sumTotalDPP,
-            'sumTotalDisc' => $sumTotalDisc
+            'sumTotalDisc' => $sumTotalDisc,
+            'loggedInUser' => Auth::user()->name,
         ]);
     }
 }
