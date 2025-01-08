@@ -30,6 +30,8 @@ use App\Livewire\Purchase\PurchaseAopDetail;
 use App\Livewire\Purchase\PurchaseNonAop;
 use App\Livewire\Purchase\PurchaseNonAopDetail;
 use App\Livewire\ReportMarketing\MonitoringDks;
+use App\Livewire\ReturInvoice\DetailReturInvoice;
+use App\Livewire\ReturInvoice\IndexReturInvoice;
 use App\Livewire\StockMovement\IndexStockMovement;
 use App\Livewire\StockPart\IndexStockPartRak;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -112,6 +114,10 @@ Route::middleware('auth')->group(function () {
 
         // STOCK MOVEMENT
         Route::get('/stock-movement', IndexStockMovement::class)->name('stock-movement.index');
+
+        // RETUR INVOICE
+        Route::get('/retur/invoice', IndexReturInvoice::class)->name('retur.invoice.index');
+        Route::get('/retur/invoice/{no_retur}', DetailReturInvoice::class)->name('retur.invoice.detail');
     });
 
     /**
