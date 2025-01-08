@@ -31,7 +31,7 @@
                         wire:model.live.debounce.1000ms="noinv">
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Status</label>
+                    <label class="form-label">Status SO</label>
                     <select wire:model.change="status" class="form-select">
                         <option value="">Pilih Status</option>
                         <option value="KCP">KCP</option>
@@ -86,7 +86,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center">No Data</td>
+                                <td colspan="8" class="text-center">No Data</td>
                             </tr>
                         @endforelse
                     </tbody>
