@@ -227,9 +227,17 @@ class DetailCustomerPayment extends Component
 
         $noinv_string = implode(',', $formatted_noinv);
 
-        dd($noinv_string);
+        $noinv_array = explode(',', $noinv_string);
 
+        $retur_items = DB::connection('kcpinformation')
+            ->table('trns_retur_details')
+            ->whereIn('noinv', $noinv_array)
+            ->get();
 
-        return view('livewire.customer-payment.detail-customer-payment');
+        dd($retur_items);
+
+        return view('livewire.customer-payment.detail-customer-payment', compact(
+            'retur_items'
+        ));
     }
 }
