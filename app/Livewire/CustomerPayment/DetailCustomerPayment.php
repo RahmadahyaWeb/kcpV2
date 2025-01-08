@@ -218,8 +218,6 @@ class DetailCustomerPayment extends Component
             abort(404);
         }
 
-        dd($this->customer_payment_details);
-
         return view('livewire.customer-payment.detail-customer-payment');
     }
 }
