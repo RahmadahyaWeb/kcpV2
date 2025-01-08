@@ -54,7 +54,8 @@ class DetailCustomerPayment extends Component
             ->first();
     }
 
-    private static function formatInvoiceNumber($no_invoice) {
+    private static function formatInvoiceNumber($no_invoice)
+    {
         if (strpos($no_invoice, '/') !== false) {
             return str_replace('/', '-', $no_invoice);
         } else {
@@ -217,6 +218,15 @@ class DetailCustomerPayment extends Component
         if (!$this->customer_payment_header) {
             abort(404);
         }
+
+        $invoices = DB::table('customer_payment_details')
+            ->where('no_piutang', $this->no_piutang)
+            ->pluck('noinv');
+
+        $noinv_string = implode(',', $invoices->toArray());
+
+        dd($noinv_string);
+
 
         return view('livewire.customer-payment.detail-customer-payment');
     }
