@@ -127,8 +127,6 @@ class IndexPiutang extends Component
             // Ambil data untuk tabel
             $this->items = $query->get();
 
-            dd($this->items);
-
             // Hitung total piutang dan total pembayaran jika tidak ada data
             $totals = $query->selectRaw('SUM(invoice.amount_total) AS total_piutang')
                 ->selectRaw('SUM(IFNULL(payment.total_payment, 0)) AS total_payment')
