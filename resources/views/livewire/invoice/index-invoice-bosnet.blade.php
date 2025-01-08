@@ -9,11 +9,14 @@
         </div>
 
         <div class="card-body">
-            <div class="d-flex gap-2 mb-3 py-4" style="overflow-x: auto; white-space: nowrap;">
-                <button type="button" class="btn btn btn-danger" wire:click="send_inv_to_bosnet" wire:confirm="Yakin ingin kirim semua invoice ke BOSNET?">
-                    Kirim Invoice
-                </button>
-            </div>
+            @hasanyrole('super-user')
+                <div class="d-flex gap-2 mb-3 py-4" style="overflow-x: auto; white-space: nowrap;">
+                    <button type="button" class="btn btn btn-danger" wire:click="send_inv_to_bosnet"
+                        wire:confirm="Yakin ingin kirim semua invoice ke BOSNET?">
+                        Kirim Invoice
+                    </button>
+                </div>
+            @endhasanyrole
 
             <!-- Filter Section -->
             <div class="row mb-3 g-2">
