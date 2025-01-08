@@ -99,10 +99,6 @@ class PurchaseOrderNONController extends Controller
      */
     private function sendDataToBosnet($data)
     {
-        // return true;
-
-        dd($data);
-
         $credential = TokenBosnetController::signInForSecretKey();
 
         if (isset($credential['status'])) {
