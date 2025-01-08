@@ -205,7 +205,7 @@ class GoodsReceiptNONController extends Controller
      */
     public function sendDataToBosnet($data)
     {
-        return true;
+        dd($data);
 
         $credential = TokenBosnetController::signInForSecretKey();
 
