@@ -101,6 +101,8 @@ class PurchaseOrderNONController extends Controller
     {
         // return true;
 
+        dd($data);
+
         $credential = TokenBosnetController::signInForSecretKey();
 
         if (isset($credential['status'])) {
