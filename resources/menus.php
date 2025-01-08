@@ -58,6 +58,14 @@ return [
         "children" => []
     ],
     [
+        "label" => "Retur",
+        "icon" => "bx bx-package",
+        "route" => "retur.invoice.index",
+        "roles" => ['super-user', 'admin'],
+        "active" => Request::is('retur*'),
+        "children" => []
+    ],
+    [
         "label" => "Report Marketing",
         "icon" => "bx bx-layout",
         "route" => null,
