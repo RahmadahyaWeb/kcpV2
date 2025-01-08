@@ -123,7 +123,7 @@ class GoodsReceiptNONController extends Controller
                 'szPoId'                    => $invoiceHeader->invoiceNon,
                 'szFPoReceipt_sId'          => $no_gr,
                 'dtmReceipt'                => now(),
-                'szRefDn'                   => $invoiceHeader->SPB,
+                'szRefDn'                   => $invoiceHeader->invoiceNon,
                 'dtmRefDn'                  => $invoiceHeader->billingDocumentDate,
                 'szWarehouseId'             => "GD1",
                 'szStockTypeId'             => "Good Stock",
