@@ -34,20 +34,32 @@ class DetailCustomerPayment extends Component
 
     public static function get_nominal_invoice($no_invoice)
     {
+        $no_invoice_formatted = DetailCustomerPayment::formatInvoiceNumber($no_invoice);
+
         $kcpinformation = DB::connection('kcpinformation');
 
         return $kcpinformation->table('trns_inv_header')
-            ->where('noinv', $no_invoice)
+            ->where('noinv', $no_invoice_formatted)
             ->value('amount_total');
     }
 
     private function cek_invoice($no_invoice)
     {
+        $no_invoice_formatted = $this->formatInvoiceNumber($no_invoice);
+
         $kcpinformation = DB::connection('kcpinformation');
 
         return $kcpinformation->table('trns_inv_header')
-            ->where('noinv', $no_invoice)
+            ->where('noinv', $no_invoice_formatted)
             ->first();
+    }
+
+    private function formatInvoiceNumber($no_invoice) {
+        if (strpos($no_invoice, '/') !== false) {
+            return str_replace('/', '-', $no_invoice);
+        } else {
+            return $no_invoice;
+        }
     }
 
     public function potong_piutang()
