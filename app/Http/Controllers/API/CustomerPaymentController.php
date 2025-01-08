@@ -65,7 +65,7 @@ class CustomerPaymentController extends Controller
 
                 // Cek apakah pembayaran_via = 'TRANSFER'
                 if ($headerData['pembayaran_via'] === 'TRANSFER') {
-                    $bank = implode(', ', array_column($headerData['bank'], 'nama_bank'));
+                    $bank = implode(', ', array_column($headerData['bank'], 'bank_name'));
                     $headerData['bank'] = $bank;
                 } else {
                     $headerData['bank'] = '';
@@ -79,7 +79,7 @@ class CustomerPaymentController extends Controller
                 foreach ($header['details'] as $detail) {
                     // Cek apakah pembayaran_via = 'TRANSFER' untuk detail
                     if ($detail['pembayaran_via'] === 'TRANSFER' || $detail['pembayaran_via'] === 'BG') {
-                        $detailBank = implode(', ', array_column($detail['bank'], 'nama_bank'));
+                        $detailBank = implode(', ', array_column($detail['bank'], 'bank_name'));
                         $detail['bank'] = $detailBank;
                     } else {
                         $detail['bank'] = '';
