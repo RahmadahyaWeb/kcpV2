@@ -127,9 +127,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/purchase/non', PurchaseNonAop::class)->name('purchase.non.index');
         Route::get('/purchase/non/create', CreatePurchaseNonAop::class)->name('purchase.non.create');
         Route::get('/purchase/non/{invoiceNon}', PurchaseNonAopDetail::class)->name('purchase.non.detail');
-
-        // PIUTANG
-        Route::get('/piutang', IndexPiutang::class)->name('piutang.index');
     });
 
     /**
@@ -157,6 +154,9 @@ Route::middleware('auth')->group(function () {
         // CUSTOMER PAYMENT
         Route::get('/customer-payment', IndexCustomerPayment::class)->name('customer-payment.index');
         Route::get('/customer-payment/{no_piutang}', DetailCustomerPayment::class)->name('customer-payment.detail');
+
+        // PIUTANG
+        Route::get('/piutang', IndexPiutang::class)->name('piutang.index');
     });
 
     // LOGOUT
