@@ -229,6 +229,8 @@ class DetailCustomerPayment extends Component
 
         $noinv_array = explode(',', $noinv_string);
 
+        dd($noinv_array);
+
         $retur_items = DB::connection('kcpinformation')
             ->table('trns_retur_details')
             ->whereIn('noinv', $noinv_array)
