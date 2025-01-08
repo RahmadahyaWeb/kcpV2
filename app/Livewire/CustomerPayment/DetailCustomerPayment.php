@@ -160,8 +160,6 @@ class DetailCustomerPayment extends Component
                         ->leftJoinSub($returnSummary, 'return_summary', 'inv.noinv', '=', 'return_summary.noinv')
                         ->first();
 
-                    dd($result->total_nominal_invoice <= $result->total_pembayaran);
-
                     if ($result->total_nominal_invoice <= $result->total_pembayaran) {
                         $kcpinformation->table('trns_inv_header')
                             ->where('noinv', $value->noinv)
@@ -170,8 +168,6 @@ class DetailCustomerPayment extends Component
                             ]);
                     }
                 }
-
-                exit;
 
                 $kcpapplication->table('customer_payment_header')
                     ->where('no_piutang', $this->no_piutang)
