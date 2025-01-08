@@ -43,7 +43,7 @@
                         @forelse ($items as $item)
                             <tr>
                                 <td style="white-space: nowrap">
-                                    <a href="{{ route('retur.invoice.detail', ['no_retur' => $item->noretur]) }}">
+                                    <a href="{{ route('retur.invoice.detail', ['no_retur' => $item->noretur]) }}" wire:navigate>
                                         {{ $item->noretur }}
                                     </a>
                                 </td>
