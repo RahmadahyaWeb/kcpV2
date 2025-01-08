@@ -34,7 +34,7 @@ class DetailCustomerPayment extends Component
 
     public static function get_nominal_invoice($no_invoice)
     {
-        $no_invoice_formatted = DetailCustomerPayment::formatInvoiceNumber($no_invoice);
+        $no_invoice_formatted = self::formatInvoiceNumber($no_invoice);
 
         $kcpinformation = DB::connection('kcpinformation');
 
@@ -45,7 +45,7 @@ class DetailCustomerPayment extends Component
 
     private function cek_invoice($no_invoice)
     {
-        $no_invoice_formatted = $this->formatInvoiceNumber($no_invoice);
+        $no_invoice_formatted = self::formatInvoiceNumber($no_invoice);
 
         $kcpinformation = DB::connection('kcpinformation');
 
@@ -54,7 +54,7 @@ class DetailCustomerPayment extends Component
             ->first();
     }
 
-    private function formatInvoiceNumber($no_invoice) {
+    private static function formatInvoiceNumber($no_invoice) {
         if (strpos($no_invoice, '/') !== false) {
             return str_replace('/', '-', $no_invoice);
         } else {
