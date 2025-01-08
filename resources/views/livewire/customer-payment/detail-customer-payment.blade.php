@@ -13,7 +13,7 @@
         'No Piutang' => $customer_payment_header->no_piutang,
         'Kode Toko' => $customer_payment_header->kd_outlet,
         'Nama Toko' => $customer_payment_header->nm_outlet,
-        'Nominal Potong' => $customer_payment_header->nominal_potong,
+        'Nominal Potong' => number_format($customer_payment_header->nominal_potong, 0, ',', '.'),
         'Pembayaran Via' => $customer_payment_header->pembayaran_via,
         'No BG' => $customer_payment_header->no_bg,
         'Jatuh Tempo BG' => $customer_payment_header->tgl_jth_tempo_bg,
