@@ -229,17 +229,6 @@ class DetailCustomerPayment extends Component
 
         $noinv_array = explode(',', $noinv_string);
 
-        // dd($noinv_array);
-
-        $retur_items = DB::connection('kcpinformation')
-            ->table('trns_retur_details')
-            ->where('noretur', 'RTU-202412-00151')
-            ->get();
-
-        dd($retur_items);
-
-        return view('livewire.customer-payment.detail-customer-payment', compact(
-            'retur_items'
-        ));
+        return view('livewire.customer-payment.detail-customer-payment');
     }
 }
