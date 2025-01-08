@@ -233,7 +233,7 @@ class DetailCustomerPayment extends Component
 
         $retur_items = DB::connection('kcpinformation')
             ->table('trns_retur_details')
-            ->where('noinv', 'INV-202412-09849')
+            ->where('noretur', 'RTU-202412-00151')
             ->get();
 
         dd($retur_items);
