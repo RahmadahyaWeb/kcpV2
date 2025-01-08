@@ -25,6 +25,7 @@ class InvoiceController extends Controller
         } else {
             foreach ($invoices as $invoice) {
                 try {
+                    // Mulai transaksi untuk invoice
                     DB::beginTransaction();
 
                     $item = DB::connection('kcpinformation')
@@ -32,10 +33,10 @@ class InvoiceController extends Controller
                         ->where('noinv', $invoice->noinv)
                         ->first();
 
-                    // Iterate through items and send data to BOSNET
+                    // Persiapkan data untuk dikirim ke BOSNET
                     $dataToSend = $this->prepareBosnetData($item);
 
-                    // Send data to BOSNET and check if the response is successful
+                    // Kirim data ke BOSNET
                     $response = $this->sendDataToBosnet($dataToSend);
 
                     if ($response) {
@@ -45,21 +46,31 @@ class InvoiceController extends Controller
                                 'status_invoice' => 'BOSNET',
                                 'invoice_send_to_bosnet' => now()
                             ]);
-
-                        Log::info("berhasil kirim invoice: $invoice->noinv");
+                        Log::info("Berhasil kirim invoice: $invoice->noinv");
                     } else {
-                        DB::rollBack();
+                        // Jika gagal mengirim ke BOSNET, update status menjadi FAILED
                         DB::table('invoice_bosnet')
                             ->where('noinv', $invoice->noinv)
                             ->update([
                                 'status_invoice' => 'FAILED',
                                 'invoice_send_to_bosnet' => now()
                             ]);
+                        Log::error("Gagal kirim invoice: $invoice->noinv");
                     }
 
-                    DB::commit();
+                    DB::commit(); // Commit transaksi setelah berhasil mengupdate status
+
                 } catch (\Exception $e) {
-                    throw new \Exception($e->getMessage());
+                    // Tangani error per invoice, update status ke FAILED dan lanjutkan ke invoice berikutnya
+                    DB::rollBack(); // Rollback transaksi jika ada error
+                    DB::table('invoice_bosnet')
+                        ->where('noinv', $invoice->noinv)
+                        ->update([
+                            'status_invoice' => 'FAILED',
+                            'invoice_send_to_bosnet' => now()
+                        ]);
+                    Log::error('Error occurred for invoice ' . $invoice->noinv . ': ' . $e->getMessage());
+                    continue; // Lanjutkan ke invoice berikutnya
                 }
             }
         }
