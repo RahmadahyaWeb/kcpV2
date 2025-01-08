@@ -20,6 +20,10 @@ class GoodsReceiptNONController extends Controller
     public function sendToBosnet(Request $request)
     {
         try {
+            $kcpapplication = DB::connection('mysql');
+
+            $kcpapplication->beginTransaction();
+
             $invoiceNon = $request->invoiceNon;
             $items = $request->items;
 
@@ -59,8 +63,11 @@ class GoodsReceiptNONController extends Controller
             if ($this->sendDataToBosnet($dataToSent)) {
                 // Update items status in the database
                 $this->updateItemsStatus($invoiceNon, $itemsToUpdate);
+
+                $kcpapplication->commit();
             }
         } catch (Exception $e) {
+            $kcpapplication->rollBack();
             throw new \Exception($e->getMessage());
         }
     }
