@@ -223,7 +223,9 @@ class DetailCustomerPayment extends Component
             ->where('no_piutang', $this->no_piutang)
             ->pluck('noinv');
 
-        $noinv_string = implode(',', $invoices->toArray());
+        $formatted_noinv = array_map([self::class, 'formatInvoiceNumber'], $invoices->toArray());
+
+        $noinv_string = implode(',', $formatted_noinv);
 
         dd($noinv_string);
 
