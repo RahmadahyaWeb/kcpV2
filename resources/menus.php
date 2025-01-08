@@ -157,7 +157,7 @@ return [
         "label" => "Delivery Order",
         "icon" => "bx bx-package",
         "route" => "delivery-order.index",
-        "roles" => ['super-user', 'ar'],
+        "roles" => ['super-user'],
         "active" => Request::is('delivery-order*'),
         "children" => []
     ],
