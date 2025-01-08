@@ -109,7 +109,7 @@ return [
         "label" => "Daftar Piutang",
         "icon" => "bx bx-list-ul",
         "route" => "piutang.index",
-        "roles" => ['super-user', 'finance', 'ar'],
+        "roles" => ['super-user', 'ar'],
         "active" => Request::is('piutang*'),
         "children" => []
     ],
