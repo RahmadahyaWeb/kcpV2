@@ -16,7 +16,7 @@
                         Kirim Invoice
                     </button>
                     <button type="button" class="btn btn btn-danger" wire:click="export">
-                        Kirim Invoice
+                        Export
                     </button>
                 </div>
             @endhasanyrole
