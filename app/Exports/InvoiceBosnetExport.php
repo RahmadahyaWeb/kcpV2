@@ -13,6 +13,10 @@ class InvoiceBosnetExport implements FromCollection
     public function collection()
     {
         return DB::table('invoice_bosnet')
+            ->select([
+                'noinv',
+                'amount_total'
+            ])
             ->orderBy('noinv', 'desc')
             ->get();
     }
