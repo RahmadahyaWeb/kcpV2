@@ -15,7 +15,7 @@
                         wire:confirm="Yakin ingin kirim semua invoice ke BOSNET?">
                         Kirim Invoice
                     </button>
-                    <button type="button" class="btn btn btn-danger" wire:click="export">
+                    <button type="button" class="btn btn btn-success" wire:click="export">
                         Export
                     </button>
                 </div>
