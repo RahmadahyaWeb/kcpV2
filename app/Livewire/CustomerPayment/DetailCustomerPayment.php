@@ -131,8 +131,6 @@ class DetailCustomerPayment extends Component
                             'crea_by'           => $value->crea_by,
                         ]);
 
-                    $kcpinformation->commit();
-
                     // FLAG PEMBAYARAN LUNAS
                     $paymentSummary = DB::connection('kcpinformation')->table('trns_pembayaran_piutang AS pay')
                         ->selectRaw('pay.noinv, SUM(pay.nominal) AS total_pembayaran')
@@ -162,6 +160,8 @@ class DetailCustomerPayment extends Component
                         ->leftJoinSub($paymentSummary, 'payment_summary', 'inv.noinv', '=', 'payment_summary.noinv')
                         ->leftJoinSub($returnSummary, 'return_summary', 'inv.noinv', '=', 'return_summary.noinv')
                         ->first();
+
+                    dd($result);
 
                     if ($result->total_nominal_invoice <= $result->total_pembayaran) {
                         $kcpinformation->table('trns_inv_header')
