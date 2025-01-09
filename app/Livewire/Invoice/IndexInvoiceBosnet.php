@@ -2,10 +2,12 @@
 
 namespace App\Livewire\Invoice;
 
+use App\Exports\InvoiceBosnetExport;
 use App\Http\Controllers\API\InvoiceController;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
 
 class IndexInvoiceBosnet extends Component
 {
@@ -26,6 +28,11 @@ class IndexInvoiceBosnet extends Component
         } catch (\Exception $e) {
             session()->flash('error', 'Error: ' . $e->getMessage());
         }
+    }
+
+    public function export()
+    {
+        return Excel::download(new InvoiceBosnetExport, 'rekap_invoice.xlsx');
     }
 
     public function render()
