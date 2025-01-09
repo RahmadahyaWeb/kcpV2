@@ -54,7 +54,7 @@
                         <tr>
                             <th>No Invoice</th>
                             <th>No Piutang</th>
-                            <th>Nominal</th>
+                            <th>Nominal Potong</th>
                             <th>Nominal Pembayaran Sebelumnya</th>
                             <th>Nominal Invoice</th>
                             <th>No BG</th>
@@ -65,15 +65,11 @@
                         <tbody>
                             @foreach ($customer_payment_details as $item)
                                 <tr>
-                                    <td>
-                                        <span style="font-size: 0.9375rem; color: #646e78" class="badge p-0">
-                                            {{ $item->noinv }}
-                                        </span>
+                                    <td style="white-space: nowrap">
+                                        {{ $item->noinv }}
                                     </td>
-                                    <td>
-                                        <span style="font-size: 0.9375rem; color: #646e78" class="badge p-0">
-                                            {{ $item->no_piutang }}
-                                        </span>
+                                    <td style="white-space: nowrap">
+                                        {{ $item->no_piutang }}
                                     </td>
                                     <td>{{ number_format($item->nominal, 0, ',', '.') }}</td>
                                     <td>
