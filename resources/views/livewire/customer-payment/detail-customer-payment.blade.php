@@ -55,6 +55,7 @@
                             <th>No Invoice</th>
                             <th>No Piutang</th>
                             <th>Nominal</th>
+                            <th>Nominal Pembayaran Sebelumnya</th>
                             <th>Nominal Invoice</th>
                             <th>No BG</th>
                             <th>Bank</th>
@@ -75,6 +76,9 @@
                                         </span>
                                     </td>
                                     <td>{{ number_format($item->nominal, 0, ',', '.') }}</td>
+                                    <td>
+                                        {{ number_format($model::get_nominal_pembayaran($item->noinv), 0, ',', '.') }}
+                                    </td>
                                     <td>{{ number_format($model::get_nominal_invoice($item->noinv), 0, ',', '.') }}</td>
                                     <td style="white-space: nowrap">
                                         {{ $item->no_bg }}

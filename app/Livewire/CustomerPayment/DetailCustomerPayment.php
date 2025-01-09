@@ -63,6 +63,17 @@ class DetailCustomerPayment extends Component
         }
     }
 
+    public static function get_nominal_pembayaran($no_invoice)
+    {
+        $no_invoice_formatted = self::formatInvoiceNumber($no_invoice);
+
+        $kcpinformation = DB::connection('kcpinformation');
+
+        return $kcpinformation->table('trns_pembayaran_piutang')
+            ->where('noinv', $no_invoice_formatted)
+            ->sum('nominal');
+    }
+
     public function potong_piutang()
     {
         $jumlah_details = count($this->customer_payment_details);
@@ -220,16 +231,6 @@ class DetailCustomerPayment extends Component
         if (!$this->customer_payment_header) {
             abort(404);
         }
-
-        $invoices = DB::table('customer_payment_details')
-            ->where('no_piutang', $this->no_piutang)
-            ->pluck('noinv');
-
-        $formatted_noinv = array_map([self::class, 'formatInvoiceNumber'], $invoices->toArray());
-
-        $noinv_string = implode(',', $formatted_noinv);
-
-        $noinv_array = explode(',', $noinv_string);
 
         return view('livewire.customer-payment.detail-customer-payment');
     }
