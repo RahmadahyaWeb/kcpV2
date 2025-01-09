@@ -72,9 +72,13 @@
                                         {{ $item->no_piutang }}
                                     </td>
                                     <td>{{ number_format($item->nominal, 0, ',', '.') }}</td>
-                                    <td>
-                                        {{ number_format($model::get_nominal_pembayaran($item->noinv), 0, ',', '.') }}
-                                    </td>
+                                    @if ($item->status == 'O')
+                                        <td>
+                                            {{ number_format($model::get_nominal_pembayaran($item->noinv), 0, ',', '.') }}
+                                        </td>
+                                    @else
+                                        <td>LUNAS</td>
+                                    @endif
                                     <td>{{ number_format($model::get_nominal_invoice($item->noinv), 0, ',', '.') }}</td>
                                     <td style="white-space: nowrap">
                                         {{ $item->no_bg }}
