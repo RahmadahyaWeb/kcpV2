@@ -18,6 +18,7 @@ class InvoiceController extends Controller
                 $query->where('status_invoice', 'KCP')
                     ->orWhere('status_invoice', 'FAILED');
             })
+            ->where('status_bosnet', 'BOSNET')
             ->get();
 
         if ($invoices->isEmpty()) {
