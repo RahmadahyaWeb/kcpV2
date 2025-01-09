@@ -115,9 +115,11 @@ class DetailCustomerPayment extends Component
                     ]);
 
                 foreach ($this->customer_payment_details as $value) {
+                    $no_invoice = self::formatInvoiceNumber($value->noinv);
+
                     $kcpinformation->table('trns_pembayaran_piutang')
                         ->insert([
-                            'noinv'             => $value->noinv,
+                            'noinv'             => $no_invoice,
                             'nopiutang'         => $value->no_piutang,
                             'kd_outlet'         => $value->kd_outlet,
                             'nm_outlet'         => $value->nm_outlet,
@@ -134,14 +136,14 @@ class DetailCustomerPayment extends Component
                     // FLAG PEMBAYARAN LUNAS
                     $paymentSummary = DB::connection('kcpinformation')->table('trns_pembayaran_piutang AS pay')
                         ->selectRaw('pay.noinv, SUM(pay.nominal) AS total_pembayaran')
-                        ->where('pay.noinv', $value->noinv)
+                        ->where('pay.noinv', $no_invoice)
                         ->where('pay.status', '<>', 'B')
                         ->groupBy('pay.noinv');
 
                     $returnSummary = DB::connection('kcpinformation')->table('trns_retur_details AS ret_detail')
                         ->selectRaw('ret_detail.noinv, SUM(ret_detail.nominal_total) AS total_retur')
                         ->leftJoin('trns_retur_header AS ret_header', 'ret_detail.noretur', '=', 'ret_header.noretur')
-                        ->where('ret_detail.noinv', $value->noinv)
+                        ->where('ret_detail.noinv', $no_invoice)
                         ->groupBy('ret_detail.noinv');
 
                     $result = DB::connection('kcpinformation')->table('trns_inv_header AS inv')
@@ -156,7 +158,7 @@ class DetailCustomerPayment extends Component
                             DB::raw('payment_summary.total_pembayaran'),
                             DB::raw('return_summary.total_retur')
                         ])
-                        ->where('inv.noinv', $value->noinv)
+                        ->where('inv.noinv', $no_invoice)
                         ->leftJoinSub($paymentSummary, 'payment_summary', 'inv.noinv', '=', 'payment_summary.noinv')
                         ->leftJoinSub($returnSummary, 'return_summary', 'inv.noinv', '=', 'return_summary.noinv')
                         ->first();
@@ -165,7 +167,7 @@ class DetailCustomerPayment extends Component
 
                     if ($result->total_nominal_invoice <= $result->total_pembayaran) {
                         $kcpinformation->table('trns_inv_header')
-                            ->where('noinv', $value->noinv)
+                            ->where('noinv', $no_invoice)
                             ->update([
                                 'flag_pembayaran_lunas' => 'Y'
                             ]);
