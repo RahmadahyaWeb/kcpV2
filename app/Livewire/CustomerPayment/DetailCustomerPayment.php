@@ -131,6 +131,8 @@ class DetailCustomerPayment extends Component
                             'crea_by'           => $value->crea_by,
                         ]);
 
+                    $kcpinformation->commit();
+
                     // FLAG PEMBAYARAN LUNAS
                     $paymentSummary = DB::connection('kcpinformation')->table('trns_pembayaran_piutang AS pay')
                         ->selectRaw('pay.noinv, SUM(pay.nominal) AS total_pembayaran')
