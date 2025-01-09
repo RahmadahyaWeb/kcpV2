@@ -28,7 +28,7 @@ class CustomerPaymentController extends Controller
         $validated = $request->validate([
             'headers'                               => 'required|array',
             'headers.*.no_piutang'                  => 'required|string|unique:customer_payment_header,no_piutang',
-            'headers.*.area_piutang'                => 'required|string',
+            'headers.*.area_piutang'                => 'string',
             'headers.*.kd_outlet'                   => 'required|string',
             'headers.*.nm_outlet'                   => 'required|string',
             'headers.*.nominal_potong'              => 'required|numeric',
