@@ -21,6 +21,12 @@ class Login extends Component
         ]);
 
         if (Auth::attempt($validated)) {
+            if (Auth::user()->status != 'active') {
+                $this->addError('username', 'Your account is inactive. Please contact the administrator to activate your account.');
+
+                Auth::logout();
+            }
+
             $this->redirectIntended('dashboard');
         }
 
