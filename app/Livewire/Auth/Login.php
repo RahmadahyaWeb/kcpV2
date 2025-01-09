@@ -25,9 +25,9 @@ class Login extends Component
                 $this->addError('username', 'Your account is inactive. Please contact the administrator to activate your account.');
 
                 Auth::logout();
+            } else {
+                $this->redirectIntended('dashboard');
             }
-
-            $this->redirectIntended('dashboard');
         }
 
         $this->addError('username', 'Incorrect username or password.');
