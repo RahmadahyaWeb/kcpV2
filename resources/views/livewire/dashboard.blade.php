@@ -7,7 +7,7 @@
                     Pencapaian Bulan {{ \Carbon\Carbon::now()->locale('id')->isoFormat('MMMM') }}
                 </div>
                 <div class="card-body">
-                    <span class="text-center d-block fs-1 fw-bold">
+                    <span class="d-block fs-1 fw-bold">
                         {{ $performance }} %
                     </span>
                 </div>
