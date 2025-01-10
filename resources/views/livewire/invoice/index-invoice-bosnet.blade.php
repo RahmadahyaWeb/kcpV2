@@ -9,7 +9,7 @@
                     Total Invoice {{ date('m-Y') }}
                 </div>
                 <div class="card-body">
-                    <span class="d-block fs-2 fw-bold">
+                    <span class="d-block fs-2 fw-bold" style="white-space: nowrap">
                         Rp. {{ number_format($total_invoice, 0, ',', '.') }}
                     </span>
                 </div>
