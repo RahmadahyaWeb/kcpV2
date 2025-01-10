@@ -16,7 +16,7 @@
 
         <x-total-invoice-card :amount="$total_invoice" />
 
-        <x-total-invoice-terbentuk-card :amount="$total_invoice_terbentuk" />
+        <x-total-invoice-terbentuk-card :total="$total_invoice_terbentuk" />
     </div>
 
     <div class="chartCard">
