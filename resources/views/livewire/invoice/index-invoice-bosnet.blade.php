@@ -3,7 +3,7 @@
     <x-loading :target="$target" />
 
     <div class="row mb-3">
-        <x-total-invoice-card :total_invoice="$total_invoice" />
+        <x-total-invoice-card :amount="$total_invoice" />
     </div>
 
     <div class="card">
