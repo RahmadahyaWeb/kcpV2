@@ -13,6 +13,8 @@
                 </div>
             </div>
         </div>
+
+        <x-total-invoice-card :amount="$total_invoice" />
     </div>
 
     <div class="chartCard">
