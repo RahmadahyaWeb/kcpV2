@@ -3,18 +3,7 @@
     <x-loading :target="$target" />
 
     <div class="row mb-3">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    Total Invoice {{ date('m-Y') }}
-                </div>
-                <div class="card-body">
-                    <span class="d-block fs-2 fw-bold">
-                        {{ number_format($total_invoice, 0, ',', '.') }}
-                    </span>
-                </div>
-            </div>
-        </div>
+        <x-total-invoice-card :total_invoice="$total_invoice" />
     </div>
 
     <div class="card">
