@@ -4,6 +4,7 @@ namespace App\Livewire\Invoice;
 
 use App\Exports\InvoiceBosnetExport;
 use App\Http\Controllers\API\InvoiceController;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -44,6 +45,11 @@ class IndexInvoiceBosnet extends Component
             ->orderBy('noinv', 'desc')
             ->paginate(20);
 
-        return view('livewire.invoice.index-invoice-bosnet', compact('invoices'));
+        $total_invoice = DB::table('invoice_bosnet')
+            ->whereDate('crea_date', '>=', Carbon::now()->startOfMonth())
+            ->whereDate('crea_date', '<=', Carbon::now()->endOfMonth())
+            ->sum('amount_total');
+
+        return view('livewire.invoice.index-invoice-bosnet', compact('invoices', 'total_invoice'));
     }
 }
