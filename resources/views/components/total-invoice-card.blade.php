@@ -1,5 +1,5 @@
-<div class="col-md-4">
-    <div class="card">
+<div class="col-md-4 mb-3">
+    <div class="card" style="height: 10rem">
         <div class="card-header">
             Total Invoice {{ date('m-Y') }}
         </div>

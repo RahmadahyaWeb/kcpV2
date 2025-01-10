@@ -1,8 +1,8 @@
 <div x-data="{ data: @entangle('data') }" x-init="$nextTick(() => initializeChart(data))">
 
     <div class="row mb-3">
-        <div class="col-md-4">
-            <div class="card">
+        <div class="col-md-4 mb-3">
+            <div class="card" style="height: 10rem">
                 <div class="card-header">
                     Pencapaian Bulan {{ \Carbon\Carbon::now()->locale('id')->isoFormat('MMMM') }}
                 </div>
