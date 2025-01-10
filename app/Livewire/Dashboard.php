@@ -149,15 +149,9 @@ class Dashboard extends Component
             $arrTarget[] = floatval($vCmdTarget->jmlTarget);
         }
 
-        $total_invoice = DB::table('invoice_bosnet')
-            ->whereDate('crea_date', '>=', Carbon::now()->startOfMonth())
-            ->whereDate('crea_date', '<=', Carbon::now()->endOfMonth())
-            ->sum('amount_total');
-
         return [
             'arrPenjualan'  => $arrPenjualan,
             'arrTarget'     => $arrTarget,
-            'total_invoice' => $total_invoice
         ];
     }
 
@@ -273,6 +267,13 @@ class Dashboard extends Component
 
         $this->data = $data;
 
-        return view('livewire.dashboard');
+        $total_invoice = DB::table('invoice_bosnet')
+            ->whereDate('crea_date', '>=', Carbon::now()->startOfMonth())
+            ->whereDate('crea_date', '<=', Carbon::now()->endOfMonth())
+            ->sum('amount_total');
+
+        return view('livewire.dashboard', compact(
+            'total_invoice'
+        ));
     }
 }
