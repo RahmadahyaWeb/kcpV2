@@ -18,4 +18,4 @@ Route::middleware('auth:sanctum')->post('/stock-movements/store', [StockMovement
 
 
 // DUMMY
-Route::middleware('auth:sanctum')->post('/customer-payment-dummy/store', [CustomerPaymentDummyController::class, 'store']);
+Route::middleware('auth:sanctum')->post('/cspay', [CustomerPaymentDummyController::class, 'store']);
