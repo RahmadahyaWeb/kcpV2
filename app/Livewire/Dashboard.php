@@ -267,15 +267,14 @@ class Dashboard extends Component
 
         $this->data = $data;
 
-        $total_invoice = DB::table('invoice_bosnet')
+        $total_invoice_data = DB::table('invoice_bosnet')
             ->whereDate('crea_date', '>=', Carbon::now()->startOfMonth())
             ->whereDate('crea_date', '<=', Carbon::now()->endOfMonth())
-            ->sum('amount_total');
+            ->selectRaw('sum(amount_total) as total_invoice, count(*) as total_invoice_terbentuk')
+            ->first();
 
-        $total_invoice_terbentuk = DB::table('invoice_bosnet')
-            ->whereDate('crea_date', '>=', Carbon::now()->startOfMonth())
-            ->whereDate('crea_date', '<=', Carbon::now()->endOfMonth())
-            ->count();
+        $total_invoice = $total_invoice_data->total_invoice;
+        $total_invoice_terbentuk = $total_invoice_data->total_invoice_terbentuk;
 
         return view('livewire.dashboard', compact(
             'total_invoice',

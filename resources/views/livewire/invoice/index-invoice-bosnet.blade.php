@@ -2,10 +2,6 @@
     <x-alert />
     <x-loading :target="$target" />
 
-    <div class="row mb-3">
-        <x-total-invoice-card :amount="$total_invoice" />
-    </div>
-
     <div class="card">
         <!-- Card Header -->
         <div class="card-header">

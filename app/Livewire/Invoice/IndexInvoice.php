@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Invoice;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -38,8 +39,19 @@ class IndexInvoice extends Component
             ->groupBy('a.noinv')
             ->get();
 
+        $total_invoice_data = DB::table('invoice_bosnet')
+            ->whereDate('crea_date', '>=', Carbon::now()->startOfMonth())
+            ->whereDate('crea_date', '<=', Carbon::now()->endOfMonth())
+            ->selectRaw('sum(amount_total) as total_invoice, count(*) as total_invoice_terbentuk')
+            ->first();
+
+        $total_invoice = $total_invoice_data->total_invoice;
+        $total_invoice_terbentuk = $total_invoice_data->total_invoice_terbentuk;
+
         return view('livewire.invoice.index-invoice', compact(
-            'invoices'
+            'invoices',
+            'total_invoice',
+            'total_invoice_terbentuk'
         ));
     }
 }
