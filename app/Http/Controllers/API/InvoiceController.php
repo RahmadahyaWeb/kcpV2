@@ -87,7 +87,11 @@ class InvoiceController extends Controller
     {
         $credential = TokenBosnetController::signInForSecretKey();
 
+        $log_controller = LogController::class;
+
         if (isset($credential['status'])) {
+            $log_controller::log_api($data, $credential, false);
+
             throw new \Exception('Connection refused by BOSNET');
         }
 
@@ -102,19 +106,27 @@ class InvoiceController extends Controller
                 'Token' => $token
             ])->post($url, $payload);
 
-            $data = $response->json();
+            $data_json = $response->json();
 
             if ($response->successful()) {
 
-                if ($data['statusCode'] == 500) {
-                    throw new \Exception($data['statusMessage']);
+                if ($data_json['statusCode'] == 500) {
+                    $log_controller::log_api($data, $data_json, false);
+
+                    throw new \Exception($data_json['statusMessage']);
                 } else {
+                    $log_controller::log_api($data, $data_json, true);
+
                     return true;
                 }
             } else {
-                throw new \Exception($data['message']);
+                $log_controller::log_api($data, $data_json, false);
+
+                throw new \Exception($data_json['message']);
             }
         } else {
+            $log_controller::log_api($data, $credential, false);
+
             throw new \Exception('BOSNET not responding');
         }
     }
