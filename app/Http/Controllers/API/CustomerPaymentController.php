@@ -25,6 +25,8 @@ class CustomerPaymentController extends Controller
 
     public function store(Request $request)
     {
+        $log_controller = LogController::class;
+
         $validated = $request->validate([
             'headers'                               => 'required|array',
             'headers.*.no_piutang'                  => 'required|string|unique:customer_payment_header,no_piutang',
@@ -91,18 +93,26 @@ class CustomerPaymentController extends Controller
 
             DB::commit(); // Komit transaksi jika semua berhasil
 
-            return response()->json([
+            $response = [
                 'status'  => 'success',
                 'message' => 'Data stored successfully.',
                 'headers' => $validated['headers'],
-            ], 201);
+            ];
+
+            $log_controller::log_api($validated, $response, true);
+
+            return response()->json($response, 201);
         } catch (\Exception $e) {
             DB::rollBack(); // Rollback transaksi jika terjadi kesalahan
 
-            return response()->json([
-                'status'  => 'error',
-                'error'   => $e->getMessage(),
-            ], 500);
+            $response = [
+                'status' => 'error',
+                'error'  => $e->getMessage(),
+            ];
+
+            $log_controller::log_api($validated, $response, false);
+
+            return response()->json($response, 500);
         }
     }
 }
