@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Http;
 /**
  * Controller to handle Sales Order operations, including sending data to BOSNET.
  */
-class SalesOrderController extends Controller
+class SalesOrderReturController extends Controller
 {
     /**
      * Send the sales order data to BOSNET.
@@ -29,10 +29,12 @@ class SalesOrderController extends Controller
 
         try {
             // Fetch the invoice header
-            $header = DB::table('invoice_bosnet')->where('noinv', $invoice)->first();
+            $header = DB::connection('kcpinformation')->table('trns_inv_header')->where('noinv', $invoice)->first();
             if (!$header) {
                 throw new \Exception('Invoice not found');
             }
+
+            dd($header);
 
             // Calculate payment term
             $paymentTermId = Carbon::parse($header->crea_date)->startOfDay()
@@ -247,8 +249,6 @@ class SalesOrderController extends Controller
             $data_json = $response->json();
 
             if ($response->successful()) {
-
-                dd($data_json['statusCode']);
 
                 if ($data_json['statusCode'] == 500) {
                     $log_controller::log_api($data, $data_json, false);

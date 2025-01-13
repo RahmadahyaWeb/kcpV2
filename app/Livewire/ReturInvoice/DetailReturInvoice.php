@@ -3,6 +3,7 @@
 namespace App\Livewire\ReturInvoice;
 
 use App\Http\Controllers\API\ReturInvoiceController;
+use App\Http\Controllers\API\SalesOrderReturController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -41,8 +42,8 @@ class DetailReturInvoice extends Component
     public function sendToBosnet()
     {
         try {
-            $controller = new ReturInvoiceController();
-            $controller->sendToBosnet(new Request(['no_retur' => $this->header->noretur, 'no_invoice' => $this->header->noinv]));
+            $controller = new SalesOrderReturController();
+            $controller->sendToBosnet(new Request(['invoice' => $this->no_retur]));
 
             session()->flash('success', "Data RETUR berhasil diteruskan ke BOSNET");
         } catch (\Exception $e) {
