@@ -186,6 +186,14 @@ return [
         "children" => []
     ],
     [
+        "label" => "Store Rak",
+        "icon" => "bx bx-scan",
+        "route" => "store-rak.index",
+        "roles" => ['super-user', 'head-warehouse', 'inventory', 'storer'],
+        "active" => Request::is('store-rak*'),
+        "children" => []
+    ],
+    [
         "label" => "Stock Movement",
         "icon" => "bx bx-file",
         "route" => "stock-movement.index",
