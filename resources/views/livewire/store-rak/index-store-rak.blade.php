@@ -85,6 +85,7 @@
                             <th>Kode Rak</th>
                             <th>Scan by</th>
                             <th>Scanned at</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -95,6 +96,9 @@
                                 <td>{{ $item->kd_rak }}</td>
                                 <td>{{ $item->user_id }}</td>
                                 <td>{{ $item->created_at }}</td>
+                                <td>
+                                    <button type="button" wire:click="destroy({{ $item->id }})"></button>
+                                </td>
                             </tr>
                         @empty
                             <tr>

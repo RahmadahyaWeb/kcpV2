@@ -89,6 +89,13 @@ class IndexStoreRak extends Component
         return Excel::download(new StoreRakExport($from_date, $to_date), $filename);
     }
 
+    public function destroy($id)
+    {
+        DB::table('trans_store_rak')
+            ->where('id', $id)
+            ->delete();
+    }
+
     public function render()
     {
         $user = Auth::user();
