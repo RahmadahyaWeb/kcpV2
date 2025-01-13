@@ -17,6 +17,7 @@ class ReturInvoiceController extends Controller
         $no_invoice = $request->no_invoice;
 
         if ($no_retur && $no_invoice) {
+            dd($no_retur);
             $this->sendPartialDataToBosnet($no_retur, $no_invoice);
         } else {
             $this->sendBulkDataToBosnet();
