@@ -213,7 +213,7 @@ class ReturInvoiceController extends Controller
                 "szDoId"            => $item->noinv,
                 "szFSoId"           => $item->noso,
                 "szLogisticType"    => "POS",
-                "szOrderTypeId"     => "RETUR",
+                "szOrderTypeId"     => "JUAL",
                 "dtmDelivery"       => Carbon::parse($item->crea_date)->toDateTimeString(),
                 "szCustId"          => $item->kd_outlet,
                 "decAmount"         => -$decDPPTotal,
@@ -258,7 +258,7 @@ class ReturInvoiceController extends Controller
 
             // Add the item to the list
             $items[] = [
-                'szOrderItemTypeId'  => "RETUR",
+                'szOrderItemTypeId'  => "JUAL",
                 'szProductId'        => $returItem->part_no,
                 'decQty'             => -$returItem->qty,
                 'szUomId'            => "PCS",
