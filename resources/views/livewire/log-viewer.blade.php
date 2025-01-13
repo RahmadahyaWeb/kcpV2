@@ -25,7 +25,7 @@
                 </div>
             </div>
 
-            <div class="table-responsive">
+            <div class="table-responsive" x-data="copyToClipboard()">
                 <table class="table">
                     <thead>
                         <tr>
@@ -39,10 +39,14 @@
                         @forelse ($items as $item)
                             <tr>
                                 <td style="white-space: nowrap">{{ $item->date }}</td>
-                                <td>{{ substr($item->request, 0, 100) }}...</td>
+                                <td>
+                                    <span
+                                        @click="copyText($event)>{{ substr($item->request, 0, 100) }}...</span>
+                                </td>
                                 <td>{{ $item->response }}</td>
                                 <td>
-                                    <span class="badge text-bg-{{ $item->status == '1' ? 'success' : 'danger' }}">
+                                    <span class="badge
+                                        text-bg-{{ $item->status == '1' ? 'success' : 'danger' }}">
                                         @if ($item->status == '1')
                                             SUKSES
                                         @else
@@ -61,4 +65,24 @@
             </div>
         </div>
     </div>
+
+    @push('script')
+        <script>
+            function copyToClipboard() {
+                return {
+                    async copyText(event) {
+                        // Ambil teks dari elemen yang diklik
+                        const text = event.target.innerText;
+
+                        try {
+                            // Menyalin teks langsung ke clipboard
+                            await navigator.clipboard.writeText(text);
+                        } catch (err) {
+                            console.error('Gagal menyalin teks: ', err);
+                        }
+                    }
+                }
+            }
+        </script>
+    @endpush
 </div>
