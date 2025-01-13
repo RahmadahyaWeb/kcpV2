@@ -39,14 +39,10 @@
                         @forelse ($items as $item)
                             <tr>
                                 <td style="white-space: nowrap">{{ $item->date }}</td>
-                                <td>
-                                    <span
-                                        @click="copyText($event)>{{ substr($item->request, 0, 100) }}...</span>
-                                </td>
+                                <td>{{ substr($item->request, 0, 100) }}...</td>
                                 <td>{{ $item->response }}</td>
                                 <td>
-                                    <span class="badge
-                                        text-bg-{{ $item->status == '1' ? 'success' : 'danger' }}">
+                                    <span class="badge text-bg-{{ $item->status == '1' ? 'success' : 'danger' }}">
                                         @if ($item->status == '1')
                                             SUKSES
                                         @else
