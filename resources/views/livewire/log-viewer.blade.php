@@ -25,7 +25,7 @@
                 </div>
             </div>
 
-            <table class="responsive">
+            <div class="table-responsive">
                 <table class="table">
                     <thead>
                         <tr>
@@ -50,7 +50,7 @@
                         @endforelse
                     </tbody>
                 </table>
-            </table>
+            </div>
         </div>
     </div>
 </div>
