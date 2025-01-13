@@ -53,18 +53,18 @@ class IndexStoreRak extends Component
 
                 $kcpapplication->commit();
 
-                $this->dispatch('saved');
-
                 session()->flash('success', "Berhasil scan barcode.");
+                $this->dispatch('saved');
             } else {
                 throw new \Exception('Part number tidak ditemukan.');
             }
         } catch (\Exception $e) {
             $kcpapplication->rollBack();
-
             session()->flash('error', $e->getMessage());
+            $this->dispatch('saved');
         }
 
+        $this->dispatch('saved');
         $this->reset();
     }
 
@@ -77,13 +77,11 @@ class IndexStoreRak extends Component
             ]);
 
         if ($update > 0) {
-            $this->dispatch('saved');
-
             session()->flash('success', "Berhasil update status.");
-        } else {
             $this->dispatch('saved');
-
+        } else {
             session()->flash('error', "Tidak ada data yang diupdate.");
+            $this->dispatch('saved');
         }
     }
 
