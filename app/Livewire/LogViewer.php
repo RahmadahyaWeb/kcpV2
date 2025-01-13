@@ -21,7 +21,6 @@ class LogViewer extends Component
     public function render()
     {
         $items = DB::table('log_api')
-            ->where('status', 'like', '%' . $this->status . '%')
             ->paginate();
 
         return view('livewire.log-viewer', compact(
