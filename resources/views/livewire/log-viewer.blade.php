@@ -60,6 +60,10 @@
                 </table>
             </div>
         </div>
+
+        <div class="card-footer">
+            {{$items->links()}}
+        </div>
     </div>
 
     @push('script')
