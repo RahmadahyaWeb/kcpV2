@@ -37,21 +37,9 @@
                     </thead>
                     <tbody>
                         @forelse ($items as $item)
-                            @php
-                                $data = json_decode($item->request, true);
-                            @endphp
                             <tr>
                                 <td style="white-space: nowrap">{{ $item->date }}</td>
-
-                                <td>
-                                    @if (is_array($data))
-                                        @foreach (array_slice($data, 0, 5) as $key => $value)
-                                            <p><strong>{{ $key }}:</strong> {{ $value }}</p>
-                                        @endforeach
-                                    @else
-                                        {{ substr($item->request, 0, 100) }}...
-                                    @endif
-                                </td>
+                                <td>{{ substr($item->request, 0, 100) }}...</td>
                                 <td>{{ $item->response }}</td>
                                 <td>{{ $item->status }}</td>
                             </tr>
