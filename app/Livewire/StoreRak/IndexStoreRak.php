@@ -93,7 +93,7 @@ class IndexStoreRak extends Component
     {
         $user = Auth::user();
 
-        if ($user->hasRole('inventory')) {
+        if ($user->hasRole('inventory|super-user')) {
             $status = 'finished';
         } else {
             $status = 'unfinished';
@@ -101,8 +101,16 @@ class IndexStoreRak extends Component
 
         $items = DB::table('trans_store_rak')
             ->orderBy('created_at', 'desc')
-            ->where('status', $status)
-            ->paginate(50);
+            ->where('status', $status);
+
+        $from_date = $this->from_date;
+        $to_date = $this->to_date;
+
+        if (!empty($from_date) && !empty($to_date)) {
+            $items = $items->whereBetween('created_at', [$from_date, $to_date]);
+        }
+
+        $items = $items->paginate(50);
 
         return view('livewire.store-rak.index-store-rak', compact('items'));
     }

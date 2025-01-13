@@ -111,6 +111,10 @@
     @push('script')
         @livewireScripts
         <script>
+            document.addEventListener('livewire:navigated', () => {
+                document.getElementById('scan-barcode').focus();
+            })
+
             Livewire.on('qty-saved', () => {
                 document.getElementById('scan-barcode').focus();
                 $('#modal-edit-qty').modal('hide');

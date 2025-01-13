@@ -55,11 +55,12 @@
                         <div class="col-md-6 mb-3">
                             <label for="from_date" class="form-label">Dari Tanggal</label>
                             <input type="date" class="form-control" name="from_date" id="from_date"
-                                wire:model="from_date">
+                                wire:model.change="from_date">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="to_date" class="form-label">Sampai Tanggal</label>
-                            <input type="date" class="form-control" name="to_date" id="to_date" wire:model="to_date">
+                            <input type="date" class="form-control" name="to_date" id="to_date"
+                                wire:model.change="to_date">
                         </div>
                         <div class="col-12 mb-3 d-flex justify-content-end">
                             <button type="submit" class="btn btn-success">Download Excel</button>
@@ -106,13 +107,17 @@
         </div>
 
         <div class="card-footer">
-            {{$items->links()}}
+            {{ $items->links() }}
         </div>
     </div>
 
     @push('script')
         @livewireScripts
         <script>
+            document.addEventListener('livewire:navigated', () => {
+                document.getElementById('part_number').focus();
+            })
+
             Livewire.on('saved', () => {
                 document.getElementById('part_number').focus();
             });
