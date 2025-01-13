@@ -36,8 +36,6 @@ class IndexReturInvoice extends Component
             })
             ->get();
 
-        dd($items);
-
         return view('livewire.retur-invoice.index-retur-invoice', compact(
             'items'
         ));
