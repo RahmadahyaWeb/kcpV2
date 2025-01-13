@@ -18,6 +18,7 @@ use App\Livewire\GoodsReceipt\GoodsReceiptNonAopDetail;
 use App\Livewire\Invoice\DetailInvoice;
 use App\Livewire\Invoice\IndexInvoice;
 use App\Livewire\Invoice\IndexInvoiceBosnet;
+use App\Livewire\LogViewer;
 use App\Livewire\Master\CreateUser;
 use App\Livewire\Master\EditMasterToko;
 use App\Livewire\Master\EditUser;
@@ -52,6 +53,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/master/users', IndexUser::class)->name('users.index');
         Route::get('/master/users/create', CreateUser::class)->name('users.create');
         Route::get('/master/users/edit/{user}', EditUser::class)->name('users.edit');
+
+        // LOG VIEWER
+        Route::get('/master/log-viewer', LogViewer::class)->name('log-viewer.index');
     });
 
     /**

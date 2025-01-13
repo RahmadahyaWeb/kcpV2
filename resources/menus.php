@@ -34,6 +34,14 @@ return [
         "active" => Request::is('master/users*'),
         "children" => []
     ],
+    [
+        "label" => "Monitoring API",
+        "icon" => "bx bx-history",
+        "route" => "log-viewer.index",
+        "roles" => ['super-user'],
+        "active" => Request::is('master/log-viewer*'),
+        "children" => []
+    ],
 
     // // MARKETING
     [
