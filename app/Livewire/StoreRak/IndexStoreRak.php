@@ -18,11 +18,6 @@ class IndexStoreRak extends Component
 
     public function save()
     {
-        // LAKUKAN PENGECEKAN APAKAH DATA TERAKHIR YANG DIINPUT USER
-        // APAKAH SUDAH MEMILIKI KODE RAK ATAU BELUM
-        // JIKA SUDAH MAKA SIMPAN DATA KE DATABASE
-        // JIKA BELUM MAKA THROW ALERT
-
         $this->validate([
             'part_number' => 'required',
             'kd_rak'      => 'required'
@@ -60,10 +55,10 @@ class IndexStoreRak extends Component
             }
         } catch (\Exception $e) {
             $kcpapplication->rollBack();
+
             $this->dispatch('saved');
             $this->reset();
         }
-
     }
 
     public function update_status()
@@ -76,10 +71,8 @@ class IndexStoreRak extends Component
 
         if ($update > 0) {
             session()->flash('success', "Berhasil update status.");
-            $this->dispatch('saved');
         } else {
             session()->flash('error', "Tidak ada data yang diupdate.");
-            $this->dispatch('saved');
         }
     }
 
