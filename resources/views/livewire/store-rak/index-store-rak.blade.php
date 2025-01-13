@@ -97,7 +97,7 @@
                                 <td>{{ $item->user_id }}</td>
                                 <td>{{ $item->created_at }}</td>
                                 <td>
-                                    <button type="button" wire:click="destroy({{ $item->id }})"></button>
+                                    <button type="button" wire:click="destroy({{ $item->id }})" class="btn btn-sm btn-danger">Hapus</button>
                                 </td>
                             </tr>
                         @empty
