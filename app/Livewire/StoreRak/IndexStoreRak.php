@@ -53,19 +53,17 @@ class IndexStoreRak extends Component
 
                 $kcpapplication->commit();
 
-                session()->flash('success', "Berhasil scan barcode.");
                 $this->dispatch('saved');
+                $this->reset();
             } else {
                 throw new \Exception('Part number tidak ditemukan.');
             }
         } catch (\Exception $e) {
             $kcpapplication->rollBack();
-            session()->flash('error', $e->getMessage());
             $this->dispatch('saved');
+            $this->reset();
         }
 
-        $this->dispatch('saved');
-        $this->reset();
     }
 
     public function update_status()

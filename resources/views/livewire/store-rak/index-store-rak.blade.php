@@ -24,7 +24,7 @@
                         <label for="kd_rak" class="form-label">Kode Rak</label>
                         <input type="text" class="form-control @error('kd_rak') is-invalid @enderror" name="kd_rak"
                             id="kd_rak" wire:model="kd_rak" placeholder="Scan kode rak" x-ref="kdRak"
-                            @keydown.enter="$nextTick(() => $wire.call('save'))">
+                            @keyup.enter="$nextTick(() => $wire.call('save'))">
 
                         @error('kd_rak')
                             <div class="invalid-feedback">
