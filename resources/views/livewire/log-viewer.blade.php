@@ -39,7 +39,8 @@
                         @forelse ($items as $item)
                             <tr>
                                 <td style="white-space: nowrap">{{ $item->date }}</td>
-                                <td @click="copyText($event, '{{ addslashes($item->request) }}')">{{ substr($item->request, 0, 100) }}...</td>
+                                <td @click="copyText($event, '{{ addslashes($item->request) }}')">
+                                    {{ substr($item->request, 0, 100) }}...</td>
                                 <td>{{ $item->response }}</td>
                                 <td>
                                     <span class="badge text-bg-{{ $item->status == '1' ? 'success' : 'danger' }}">
@@ -62,7 +63,7 @@
         </div>
 
         <div class="card-footer">
-            {{$items->links()}}
+            {{ $items->links() }}
         </div>
     </div>
 
