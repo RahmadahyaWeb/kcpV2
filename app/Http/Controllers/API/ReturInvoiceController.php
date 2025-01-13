@@ -214,7 +214,7 @@ class ReturInvoiceController extends Controller
                 "szFSoId"           => "",
                 "szLogisticType"    => "POS",
                 "szOrderTypeId"     => "RETUR",
-                "dtmDelivery"       => Carbon::parse($item->crea_date)->toDateTimeString(),
+                "dtmDelivery"       => \Carbon\Carbon::now()->toDateTimeString(),
                 "szCustId"          => $item->kd_outlet,
                 "decAmount"         => -$decDPPTotal,
                 "decTax"            => -$decTaxTotal,
