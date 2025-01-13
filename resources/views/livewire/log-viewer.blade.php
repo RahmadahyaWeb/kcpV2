@@ -69,6 +69,8 @@
                     async copyText(event, fullText) {
                         try {
                             await navigator.clipboard.writeText(fullText);
+
+                            $wire.dispatch('show-toast', 'test')
                         } catch (err) {
                             console.error('Gagal menyalin teks: ', err);
                         }
