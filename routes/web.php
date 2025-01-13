@@ -107,7 +107,7 @@ Route::middleware('auth')->group(function () {
      * head-warehouse
      * inventory
      */
-    Route::middleware('role:inventory|head-warehouse|super-user')->group(function () {
+    Route::middleware('role:inventory|head-warehouse|super-user|admin')->group(function () {
         // GOODS RECEIPT AOP
         Route::get('/goods-receipt/aop', GoodsReceiptAop::class)->name('goods.aop.index');
         Route::get('/goods-receipt/aop/{invoiceAop}', GoodsReceiptAopDetail::class)->name('goods.aop.detail');
