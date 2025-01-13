@@ -41,7 +41,7 @@
                                 <td style="white-space: nowrap">{{ $item->date }}</td>
                                 <td @click="copyText($event, '{{ addslashes($item->request) }}')">
                                     {{ substr($item->request, 0, 100) }}...</td>
-                                <td>{{ $item->response }}</td>
+                                <td>{{ substr($item->response, 0, 300) }}...</td>
                                 <td>
                                     <span class="badge text-bg-{{ $item->status == '1' ? 'success' : 'danger' }}">
                                         @if ($item->status == '1')
