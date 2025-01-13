@@ -6,6 +6,6 @@
 
 @session('error')
     <div class="alert alert-danger" role="alert">
-        {{ session('error') }}
+        {{ substr(session('error'), 0, 250) }}
     </div>
 @endsession
