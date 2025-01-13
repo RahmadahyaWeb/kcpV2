@@ -37,6 +37,8 @@ class ReturInvoiceController extends Controller
             // Persiapkan data untuk dikirim ke BOSNET
             $dataToSend = $this->prepareBosnetData($item, $no_retur);
 
+            dd($dataToSend);
+
             // Kirim data ke BOSNET
             $response = $this->sendDataToBosnet($dataToSend);
 
@@ -105,8 +107,6 @@ class ReturInvoiceController extends Controller
 
                 // Persiapkan data untuk dikirim ke BOSNET
                 $dataToSend = $this->prepareBosnetData($item, $retur->noretur);
-
-                dd($dataToSend);
 
                 // Kirim data ke BOSNET
                 $response = $this->sendDataToBosnet($dataToSend);
