@@ -93,7 +93,7 @@ class IndexStoreRak extends Component
     {
         $user = Auth::user();
 
-        if ($user->hasRole('inventory|super-user')) {
+        if ($user->hasRole('inventory')) {
             $status = 'finished';
         } else {
             $status = 'unfinished';
