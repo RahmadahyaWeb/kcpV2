@@ -70,7 +70,7 @@
                         try {
                             await navigator.clipboard.writeText(fullText);
 
-                            $wire.dispatch('show-toast', 'test')
+                            @this.sendToastNotification();
                         } catch (err) {
                             console.error('Gagal menyalin teks: ', err);
                         }

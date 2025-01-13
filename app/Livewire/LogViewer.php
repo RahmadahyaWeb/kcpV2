@@ -13,6 +13,10 @@ class LogViewer extends Component
     public $target = 'status';
     public $status;
 
+    public function sendToastNotification(){
+        dd('test');
+    }
+
     public function render()
     {
         $items = DB::table('log_api')
