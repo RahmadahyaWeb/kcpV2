@@ -7,10 +7,13 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
 
 class IndexStoreRak extends Component
 {
+    use WithPagination;
+
     public $part_number;
     public $kd_rak;
     public $from_date;
@@ -99,7 +102,7 @@ class IndexStoreRak extends Component
         $items = DB::table('trans_store_rak')
             ->orderBy('created_at', 'desc')
             ->where('status', $status)
-            ->get();
+            ->paginate(50);
 
         return view('livewire.store-rak.index-store-rak', compact('items'));
     }
