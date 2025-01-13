@@ -45,7 +45,7 @@
         <div class="card-body">
             @hasanyrole(['inventory', 'super-user'])
                 <div class="d-flex gap-2 mb-3 py-4" style="overflow-x: auto; white-space: nowrap;">
-                    <button type="button" class="btn btn-sm btn-primary" wire:click="update_status"
+                    <button type="button" class="btn btn-primary" wire:click="update_status"
                         wire:confirm="Yakin ingin update status?">
                         Selesai
                     </button>
