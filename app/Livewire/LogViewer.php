@@ -13,8 +13,9 @@ class LogViewer extends Component
     public $target = 'status';
     public $status;
 
-    public function sendToastNotification(){
-        $this->dispatch('show-toast', 'Berhasil disalin ke clipboard');
+    public function sendToastNotification()
+    {
+        $this->dispatch('show-toast', ['message' => 'Berhasil disalin ke clipboard']);
     }
 
     public function render()
