@@ -41,7 +41,15 @@
                                 <td style="white-space: nowrap">{{ $item->date }}</td>
                                 <td>{{ substr($item->request, 0, 100) }}...</td>
                                 <td>{{ $item->response }}</td>
-                                <td>{{ $item->status }}</td>
+                                <td>
+                                    <span class="badge text-bg-{{ $item->status == '1' ? 'success' : 'danger' }}">
+                                        @if ($item->status == '1')
+                                            SUKSES
+                                        @else
+                                            GAGAL
+                                        @endif
+                                    </span>
+                                </td>
                             </tr>
                         @empty
                             <tr>
