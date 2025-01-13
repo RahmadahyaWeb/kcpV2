@@ -153,8 +153,6 @@ class ReturInvoiceController extends Controller
      */
     private function sendDataToBosnet($data)
     {
-        dd(json_encode($data));
-
         $credential = TokenBosnetController::signInForSecretKey();
 
         if (isset($credential['status'])) {
