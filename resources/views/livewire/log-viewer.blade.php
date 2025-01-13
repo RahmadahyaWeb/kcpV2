@@ -39,7 +39,7 @@
                         @forelse ($items as $item)
                             <tr>
                                 <td style="white-space: nowrap">{{ $item->date }}</td>
-                                <td @click="copyText($event)">{{ substr($item->request, 0, 100) }}...</td>
+                                <td @click="copyText($event, '{{ addslashes($item->request) }}')">{{ substr($item->request, 0, 100) }}...</td>
                                 <td>{{ $item->response }}</td>
                                 <td>
                                     <span class="badge text-bg-{{ $item->status == '1' ? 'success' : 'danger' }}">
@@ -66,13 +66,9 @@
         <script>
             function copyToClipboard() {
                 return {
-                    async copyText(event) {
-                        // Ambil teks dari elemen yang diklik
-                        const text = event.target.innerText;
-
+                    async copyText(event, fullText) {
                         try {
-                            // Menyalin teks langsung ke clipboard
-                            await navigator.clipboard.writeText(text);
+                            await navigator.clipboard.writeText(fullText);
                         } catch (err) {
                             console.error('Gagal menyalin teks: ', err);
                         }
