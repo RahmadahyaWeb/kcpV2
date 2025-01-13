@@ -248,8 +248,6 @@ class SalesOrderController extends Controller
 
             if ($response->successful()) {
 
-                dd($data_json['statusCode']);
-
                 if ($data_json['statusCode'] == 500) {
                     $log_controller::log_api($data, $data_json, false);
 
