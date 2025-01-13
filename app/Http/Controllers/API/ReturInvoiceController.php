@@ -37,8 +37,6 @@ class ReturInvoiceController extends Controller
             // Persiapkan data untuk dikirim ke BOSNET
             $dataToSend = $this->prepareBosnetData($item, $no_retur);
 
-            dd($dataToSend);
-
             // Kirim data ke BOSNET
             $response = $this->sendDataToBosnet($dataToSend);
 
@@ -212,7 +210,7 @@ class ReturInvoiceController extends Controller
         return [
             "szAppId"               => "BDI.KCP",
             "fdoData"   => [
-                "szDoId"            => $item->noinv,
+                "szDoId"            => $no_retur,
                 "szFSoId"           => "",
                 "szLogisticType"    => "POS",
                 "szOrderTypeId"     => "RETUR",
