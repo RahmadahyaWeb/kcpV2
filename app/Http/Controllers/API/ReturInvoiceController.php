@@ -153,7 +153,6 @@ class ReturInvoiceController extends Controller
      */
     private function sendDataToBosnet($data)
     {
-        dd($data);
         $credential = TokenBosnetController::signInForSecretKey();
 
         if (isset($credential['status'])) {
@@ -215,7 +214,7 @@ class ReturInvoiceController extends Controller
                 "szFSoId"           => "",
                 "szLogisticType"    => "POS",
                 "szOrderTypeId"     => "RETUR",
-                "dtmDelivery"       => \Carbon\Carbon::now()->toDateTimeString(),
+                "dtmDelivery"       => Carbon::now()->format('Y-m-d'),
                 "szCustId"          => $item->kd_outlet,
                 "decAmount"         => -$decDPPTotal,
                 "decTax"            => -$decTaxTotal,

@@ -158,7 +158,7 @@ class InvoiceController extends Controller
                 "szFSoId"           => $item->noso,
                 "szLogisticType"    => "POS",
                 "szOrderTypeId"     => "JUAL",
-                "dtmDelivery"       => Carbon::now()->format('Y-m-d'),
+                "dtmDelivery"       => Carbon::parse($item->crea_date)->toDateTimeString(),
                 "szCustId"          => $item->kd_outlet,
                 "decAmount"         => $decDPPTotal,
                 "decTax"            => $decTaxTotal,
