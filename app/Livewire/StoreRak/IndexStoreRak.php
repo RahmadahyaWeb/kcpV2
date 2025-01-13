@@ -94,6 +94,8 @@ class IndexStoreRak extends Component
         DB::table('trans_store_rak')
             ->where('id', $id)
             ->delete();
+
+        $this->dispatch('saved');
     }
 
     public function render()
