@@ -19,8 +19,8 @@
                     <label class="form-label">Status</label>
                     <select wire:model.change="status" class="form-select">
                         <option value="" selected>Pilih Status</option>
-                        <option value="1">SUKSES</option>
-                        <option value="0">GAGAL</option>
+                        <option value="SUKSES">SUKSES</option>
+                        <option value="GAGAL">GAGAL</option>
                     </select>
                 </div>
             </div>
