@@ -27,6 +27,8 @@ class SalesOrderController extends Controller
     {
         $invoice = $request->invoice;
 
+        $log_controller = LogController::class;
+
         try {
             // Fetch the invoice header
             $header = DB::table('invoice_bosnet')->where('noinv', $invoice)->first();
@@ -57,10 +59,13 @@ class SalesOrderController extends Controller
                     'status_bosnet'     => 'BOSNET',
                     'send_to_bosnet'    => now()
                 ]);
+
+                $log_controller::log_api($dataToSend, '', true);
             } else {
                 throw new \Exception('Failed to send data to BOSNET');
             }
         } catch (\Exception $e) {
+            $log_controller::log_api($dataToSend, $e->getMessage(), false);
             throw new \Exception($e->getMessage());
         }
     }
@@ -225,11 +230,7 @@ class SalesOrderController extends Controller
     {
         $credential = TokenBosnetController::signInForSecretKey();
 
-        $log_controller = LogController::class;
-
         if (isset($credential['status'])) {
-            $log_controller::log_api($data, $credential, false);
-
             throw new \Exception('Connection refused by BOSNET');
         }
 
@@ -249,22 +250,14 @@ class SalesOrderController extends Controller
             if ($response->successful()) {
 
                 if ($data_json['statusCode'] == 500) {
-                    $log_controller::log_api($data, $data_json, false);
-
                     throw new \Exception($data_json['statusMessage']);
                 } else {
-                    $log_controller::log_api($data, $data_json, true);
-
                     return true;
                 }
             } else {
-                $log_controller::log_api($data, $data_json, false);
-
                 throw new \Exception($data_json['message']);
             }
         } else {
-            $log_controller::log_api($data, $credential, false);
-
             throw new \Exception('BOSNET not responding');
         }
     }
