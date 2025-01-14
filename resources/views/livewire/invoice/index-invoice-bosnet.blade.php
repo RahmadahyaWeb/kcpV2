@@ -70,7 +70,7 @@
                                 <td>{{ number_format($invoice->amount_total, 0, ',', '.') }}</td>
                                 <td>
                                     <span
-                                        class="badge text-bg-{{ $invoice->status_bosnet == 'KCP' ? 'success' : ($invoice->status_bosnet == 'failed' ? 'danger' : 'warning') }}">
+                                        class="badge text-bg-{{ $invoice->status_bosnet == 'KCP' ? 'success' : ($invoice->status_bosnet == 'FAILED' ? 'danger' : 'warning') }}">
                                         {{ $invoice->status_bosnet }}
                                     </span>
                                 </td>
@@ -81,7 +81,7 @@
                                     <span
                                         class="badge text-bg-{{ $invoice->status_invoice == 'KCP'
                                             ? 'success'
-                                            : ($invoice->status_invoice == 'failed'
+                                            : ($invoice->status_invoice == 'FAILED'
                                                 ? 'danger'
                                                 : 'warning') }}">
                                         {{ $invoice->status_invoice }}
