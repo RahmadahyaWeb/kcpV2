@@ -37,7 +37,7 @@
                     </thead>
                     <tbody>
                         @forelse ($items as $item)
-                            <tr>
+                            <tr wire:key="{{ $item->id }}">
                                 <td style="white-space: nowrap">{{ $item->date }}</td>
                                 <td @click="copyText($event, '{{ addslashes($item->request) }}')">
                                     {{ substr($item->request, 0, 100) }}...</td>
