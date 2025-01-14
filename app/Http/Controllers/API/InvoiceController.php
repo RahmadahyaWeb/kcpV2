@@ -24,6 +24,8 @@ class InvoiceController extends Controller
         if ($invoices->isEmpty()) {
             Log::info('Tidak ada invoice.');
         } else {
+            $log_controller = LogController::class;
+
             foreach ($invoices as $invoice) {
                 try {
                     // Mulai transaksi untuk invoice
@@ -37,40 +39,37 @@ class InvoiceController extends Controller
                     // Persiapkan data untuk dikirim ke BOSNET
                     $dataToSend = $this->prepareBosnetData($item);
 
-                    // Kirim data ke BOSNET
-                    $response = $this->sendDataToBosnet($dataToSend);
+                    // Kirim data ke BOSNET dan tangani response
+                    $this->sendDataToBosnet($dataToSend);
 
-                    if ($response) {
-                        DB::table('invoice_bosnet')
-                            ->where('noinv', $invoice->noinv)
-                            ->update([
-                                'status_invoice' => 'BOSNET',
-                                'invoice_send_to_bosnet' => now()
-                            ]);
-                        Log::info("Berhasil kirim invoice: $invoice->noinv");
-                    } else {
-                        // Jika gagal mengirim ke BOSNET, update status menjadi FAILED
-                        DB::table('invoice_bosnet')
-                            ->where('noinv', $invoice->noinv)
-                            ->update([
-                                'status_invoice' => 'FAILED',
-                                'invoice_send_to_bosnet' => now()
-                            ]);
-                        Log::error("Gagal kirim invoice: $invoice->noinv");
-                    }
+                    // Update status invoice jika berhasil
+                    DB::table('invoice_bosnet')
+                        ->where('noinv', $invoice->noinv)
+                        ->update([
+                            'status_invoice' => 'BOSNET',
+                            'invoice_send_to_bosnet' => now()
+                        ]);
+
+                    Log::info("Berhasil kirim invoice: $invoice->noinv");
 
                     DB::commit(); // Commit transaksi setelah berhasil mengupdate status
 
+                    $log_controller::log_api($dataToSend, '', true);
                 } catch (\Exception $e) {
                     // Tangani error per invoice, update status ke FAILED dan lanjutkan ke invoice berikutnya
                     DB::rollBack(); // Rollback transaksi jika ada error
+
                     DB::table('invoice_bosnet')
                         ->where('noinv', $invoice->noinv)
                         ->update([
                             'status_invoice' => 'FAILED',
                             'invoice_send_to_bosnet' => now()
                         ]);
+
                     Log::error('Error occurred for invoice ' . $invoice->noinv . ': ' . $e->getMessage());
+
+                    $log_controller::log_api($dataToSend, $e->getMessage(), false);
+
                     continue; // Lanjutkan ke invoice berikutnya
                 }
             }
@@ -87,11 +86,7 @@ class InvoiceController extends Controller
     {
         $credential = TokenBosnetController::signInForSecretKey();
 
-        $log_controller = LogController::class;
-
         if (isset($credential['status'])) {
-            $log_controller::log_api($data, $credential, false);
-
             throw new \Exception('Connection refused by BOSNET');
         }
 
@@ -111,22 +106,14 @@ class InvoiceController extends Controller
             if ($response->successful()) {
 
                 if ($data_json['statusCode'] == 500) {
-                    $log_controller::log_api($data, $data_json, false);
-
                     throw new \Exception($data_json['statusMessage']);
                 } else {
-                    $log_controller::log_api($data, $data_json, true);
-
                     return true;
                 }
             } else {
-                $log_controller::log_api($data, $data_json, false);
-
                 throw new \Exception($data_json['message']);
             }
         } else {
-            $log_controller::log_api($data, $credential, false);
-
             throw new \Exception('BOSNET not responding');
         }
     }
