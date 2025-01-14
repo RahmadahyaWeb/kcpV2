@@ -10,7 +10,7 @@ class LogController extends Controller
 {
     public static function log_api($dataToSend, $response, $status = false)
     {
-        if ($status) {
+        if ($status == true) {
             $status = 'SUKSES';
         } else {
             $status = 'GAGAL';
