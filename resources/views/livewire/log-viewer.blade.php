@@ -20,7 +20,7 @@
                     <select wire:model.change="status" class="form-select">
                         <option value="" selected>Pilih Status</option>
                         <option value="1">SUKSES</option>
-                        <option value="0">GAGAL</option>
+                        <option value="">GAGAL</option>
                     </select>
                 </div>
             </div>
