@@ -43,8 +43,8 @@
                                     {{ substr($item->request, 0, 100) }}...</td>
                                 <td>{{ substr($item->response, 0, 300) }}...</td>
                                 <td>
-                                    <span class="badge text-bg-{{ $item->status == '1' ? 'success' : 'danger' }}">
-                                        @if ($item->status == '1')
+                                    <span class="badge text-bg-{{ $item->status == 'SUKSES' ? 'success' : 'danger' }}">
+                                        @if ($item->status == 'SUKSES')
                                             SUKSES
                                         @else
                                             GAGAL
