@@ -316,7 +316,7 @@ class PurchaseAop extends Component
             ->when($this->flag_po, function ($query) {
                 return $query->where('flag_po', $this->flag_po);
             })
-            ->orderBy('billingDocumentDate', 'desc')
+            ->orderBy('invoiceAop', 'desc')
             ->paginate(20);
 
         return view('livewire.purchase.purchase-aop', compact(
