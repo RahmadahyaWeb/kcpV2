@@ -19,6 +19,8 @@ class GoodsReceiptAOPController extends Controller
      */
     public function sendToBosnet(Request $request)
     {
+        $log_controller = LogController::class;
+
         try {
             $kcpapplication = DB::connection('mysql');
 
@@ -64,10 +66,15 @@ class GoodsReceiptAOPController extends Controller
                 // Update items status in the database
                 $this->updateItemsStatus($invoiceAop, $itemsToUpdate);
 
+                $log_controller::log_api($dataToSent, '', true);
+
                 $kcpapplication->commit();
             }
         } catch (Exception $e) {
             $kcpapplication->rollBack();
+
+            $log_controller::log_api($dataToSent, $e->getMessage(), false);
+
             throw new \Exception($e->getMessage());
         }
     }
