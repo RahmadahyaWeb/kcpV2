@@ -43,7 +43,7 @@ class IndexInvoiceBosnet extends Component
             ->where('noso', 'like', '%' . $this->noso . '%')
             ->where('noinv', 'like', '%' . $this->noinv . '%')
             ->where('status_bosnet', 'like', '%' . $this->status . '%')
-            ->where('status_invoice', 'like', '%' . $this->status . '%')
+            ->where('status_invoice', 'like', '%' . $this->status_invoice . '%')
             ->orderBy('noinv', 'desc')
             ->paginate(20);
 
