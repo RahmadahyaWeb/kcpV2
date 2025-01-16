@@ -113,7 +113,7 @@
                                     <div>
                                         <div class="d-inline text-primary" style="cursor: pointer"
                                             wire:click="openModalFakturPajak">
-                                            {{ $header->fakturPajak ?? 'Belum ada' }}
+                                            {{ empty($header->fakturPajak) ? 'Belum ada' : $header->fakturPajak }}
                                         </div>
                                     </div>
                                 </div>
