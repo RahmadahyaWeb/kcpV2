@@ -111,15 +111,10 @@
                                 </div>
                                 <div class="col col-auto">
                                     <div>
-                                        @if ($header->fakturPajak != null && $header->flag_final == 'N')
+                                        @if ($header->fakturPajak != null)
                                             <div class="d-inline text-primary" style="cursor: pointer"
                                                 wire:click="openModalFakturPajak">
                                                 {{ $header->fakturPajak }}
-                                            </div>
-                                        @elseif ($header->flag_final == 'N')
-                                            <div class="d-inline text-primary" style="cursor: pointer"
-                                                wire:click="openModalFakturPajak">
-                                                Belum ada
                                             </div>
                                         @else
                                             <div class="d-inline text-secondary" style="cursor: not-allowed">
@@ -210,7 +205,7 @@
                             </div>
                         </div>
                     </div>
-                    @if ($header->fakturPajak && $header->flag_final == 'N' && $isAvailable)
+                    @if ($header->flag_final == 'N' && $isAvailable)
                         <div class="row">
                             <form wire:submit="updateFlag({{ $header->invoiceAop }})"
                                 wire:confirm="Yakin ingin update flag?">
@@ -222,7 +217,7 @@
                                 </div>
                             </form>
                         </div>
-                    @elseif($header->fakturPajak && $header->flag_final == 'Y' && $header->flag_po == 'N')
+                    @elseif($header->flag_final == 'Y' && $header->flag_po == 'N')
                         <div class="row gap-2">
                             <div class="col">
                                 <hr>
