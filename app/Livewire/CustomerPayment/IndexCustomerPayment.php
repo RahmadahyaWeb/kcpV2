@@ -22,6 +22,7 @@ class IndexCustomerPayment extends Component
             ->table('customer_payment_header')
             ->where('no_piutang', 'like', '%' . $this->no_piutang . '%')
             ->where('status', $this->status_customer_payment)
+            ->orderBy('crea_date', 'desc')
             ->paginate(20);
 
         return view('livewire.customer-payment.index-customer-payment', compact(
