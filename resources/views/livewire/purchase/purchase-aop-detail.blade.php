@@ -254,33 +254,35 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Discount (Rp)</th>
-                                <th>Keterangan</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($programAop as $item)
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
                                 <tr>
-                                    <td>{{ number_format($item->potonganProgram, 0, ',', '.') }}</td>
-                                    <td>{{ $item->keteranganProgram }}</td>
-                                    <td>
-                                        <button class="btn btn-danger btn-sm"
-                                            wire:click="destroyProgram({{ $item->id }})">
-                                            Hapus
-                                        </button>
-                                    </td>
+                                    <th>Discount (Rp)</th>
+                                    <th>Keterangan</th>
+                                    <th></th>
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="3" class="text-center">No Data</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @forelse ($programAop as $item)
+                                    <tr>
+                                        <td>{{ number_format($item->potonganProgram, 0, ',', '.') }}</td>
+                                        <td>{{ $item->keteranganProgram }}</td>
+                                        <td>
+                                            <button class="btn btn-danger btn-sm"
+                                                wire:click="destroyProgram({{ $item->id }})">
+                                                Hapus
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="3" class="text-center">No Data</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
