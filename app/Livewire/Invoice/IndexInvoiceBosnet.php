@@ -19,6 +19,7 @@ class IndexInvoiceBosnet extends Component
     public $noso = '';
     public $noinv = '';
     public $status = '';
+    public $status_invoice = '';
 
     public function send_inv_to_bosnet()
     {
@@ -42,6 +43,7 @@ class IndexInvoiceBosnet extends Component
             ->where('noso', 'like', '%' . $this->noso . '%')
             ->where('noinv', 'like', '%' . $this->noinv . '%')
             ->where('status_bosnet', 'like', '%' . $this->status . '%')
+            ->where('status_invoice', 'like', '%' . $this->status . '%')
             ->orderBy('noinv', 'desc')
             ->paginate(20);
 

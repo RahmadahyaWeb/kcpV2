@@ -23,22 +23,31 @@
 
             <!-- Filter Section -->
             <div class="row mb-3 g-2">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label">Sales Order</label>
                     <input type="text" class="form-control" placeholder="Cari berdasarkan no sales order"
                         wire:model.live.debounce.1000ms="noso">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label">Invoice</label>
                     <input type="text" class="form-control" placeholder="Cari berdasarkan no invoice"
                         wire:model.live.debounce.1000ms="noinv">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label">Status SO</label>
                     <select wire:model.change="status" class="form-select">
                         <option value="">Pilih Status</option>
                         <option value="KCP">KCP</option>
                         <option value="BOSNET">BOSNET</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Status SO</label>
+                    <select wire:model.change="status_invoice" class="form-select">
+                        <option value="">Pilih Status</option>
+                        <option value="KCP">KCP</option>
+                        <option value="BOSNET">BOSNET</option>
+                        <option value="FAILED">FAILED</option>
                     </select>
                 </div>
             </div>
