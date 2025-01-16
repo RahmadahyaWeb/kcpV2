@@ -42,6 +42,8 @@ class PurchaseOrderAOPController extends Controller
      */
     private function processAndSendToBosnet($invoiceAop)
     {
+        $log_controller = LogController::class;
+
         try {
             // Retrieve the invoice header data
             $invoiceHeader = DB::table('invoice_aop_header')
@@ -83,10 +85,14 @@ class PurchaseOrderAOPController extends Controller
                         'flag_po'   => 'Y',
                         'po_date'   => now()
                     ]);
+
+                $log_controller::log_api($dataToSend, '', true);
             } else {
                 throw new \Exception('Failed to send data to BOSNET');
             }
         } catch (\Exception $e) {
+            $log_controller::log_api($dataToSend, $e->getMessage(), false);
+
             throw new \Exception("Failed to process and send data to BOSNET: " . $e->getMessage());
         }
     }
