@@ -14,7 +14,7 @@ class IndexInvoiceBosnet extends Component
 {
     use WithPagination;
 
-    public $target = 'noso, noinv, status, send_inv_to_bosnet';
+    public $target = 'noso, noinv, status, send_inv_to_bosnet, status_invoice';
 
     public $noso = '';
     public $noinv = '';
