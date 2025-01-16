@@ -182,7 +182,7 @@ class PurchaseOrderAOPController extends Controller
                 'decDPP'               => $detail->price,
                 'decPPN'               => $detail->price * config('tax.ppn_percentage'),
                 'decAmount'            => $decAmount,
-                'purchaseTypeId'       => "BELI",
+                'purchaseItemTypeId'   => "BELI",
                 'deliveryList'         => [['qty' => $detail->qty]],
             ];
         }
