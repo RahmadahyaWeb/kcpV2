@@ -42,7 +42,7 @@
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label">Status SO</label>
+                    <label class="form-label">Status Invoice</label>
                     <select wire:model.change="status_invoice" class="form-select">
                         <option value="">Pilih Status</option>
                         <option value="KCP">KCP</option>
