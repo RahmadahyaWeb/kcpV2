@@ -111,16 +111,10 @@
                                 </div>
                                 <div class="col col-auto">
                                     <div>
-                                        @if ($header->fakturPajak != null)
-                                            <div class="d-inline text-primary" style="cursor: pointer"
-                                                wire:click="openModalFakturPajak">
-                                                {{ $header->fakturPajak }}
-                                            </div>
-                                        @else
-                                            <div class="d-inline text-secondary" style="cursor: not-allowed">
-                                                {{ $header->fakturPajak ?? 'Belum ada' }}
-                                            </div>
-                                        @endif
+                                        <div class="d-inline text-primary" style="cursor: pointer"
+                                            wire:click="openModalFakturPajak">
+                                            {{ $header->fakturPajak ?? 'Belum ada' }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
