@@ -247,11 +247,9 @@
                             Extra Plafon Discount (Disc Program)
                         </div>
                         <div class="col d-flex justify-content-end">
-                            @if ($header->flag_final == 'N')
-                                <button class="btn btn-primary" wire:click="openModalProgram">
-                                    Tambah Program
-                                </button>
-                            @endif
+                            <button class="btn btn-primary" wire:click="openModalProgram">
+                                Tambah Program
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -270,12 +268,10 @@
                                     <td>{{ number_format($item->potonganProgram, 0, ',', '.') }}</td>
                                     <td>{{ $item->keteranganProgram }}</td>
                                     <td>
-                                        @if ($header->flag_final == 'N')
-                                            <button class="btn btn-danger btn-sm"
-                                                wire:click="destroyProgram({{ $item->id }})">
-                                                Hapus
-                                            </button>
-                                        @endif
+                                        <button class="btn btn-danger btn-sm"
+                                            wire:click="destroyProgram({{ $item->id }})">
+                                            Hapus
+                                        </button>
                                     </td>
                                 </tr>
                             @empty
