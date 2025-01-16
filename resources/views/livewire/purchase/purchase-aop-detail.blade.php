@@ -292,23 +292,25 @@
                     Detail Material Astra Otoparts (AOP): <b>{{ $header->invoiceAop }}</b>
                 </div>
                 <div class="card-body">
-                    <table class="table mb-3">
-                        <thead>
-                            <tr>
-                                <th>Total Qty</th>
-                                <th>Total Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><b>{{ $totalQty }}</b></td>
+                    <div class="table-responsive">
+                        <table class="table mb-3">
+                            <thead>
+                                <tr>
+                                    <th>Total Qty</th>
+                                    <th>Total Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><b>{{ $totalQty }}</b></td>
 
-                                <td>
-                                    <b>Rp {{ number_format($totalAmount, 0, ',', '.') }}</b>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                    <td>
+                                        <b>Rp {{ number_format($totalAmount, 0, ',', '.') }}</b>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
                     <div class="table-responsive">
                         <table class="table">
