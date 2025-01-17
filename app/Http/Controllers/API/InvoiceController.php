@@ -138,6 +138,8 @@ class InvoiceController extends Controller
             $user_sales = $item->user_sales;
         }
 
+        $kd_outlet = $this->removeLeadingZero($item->kd_outlet);
+
         return [
             "szAppId"               => "BDI.KCP",
             "fdoData"   => [
@@ -146,7 +148,7 @@ class InvoiceController extends Controller
                 "szLogisticType"    => "POS",
                 "szOrderTypeId"     => "JUAL",
                 "dtmDelivery"       => Carbon::parse($item->crea_date)->toDateTimeString(),
-                "szCustId"          => $item->kd_outlet,
+                "szCustId"          => $kd_outlet,
                 "decAmount"         => $decDPPTotal,
                 "decTax"            => $decTaxTotal,
                 "szCcyId"           => "IDR",
@@ -281,5 +283,9 @@ class InvoiceController extends Controller
         $days = Carbon::parse($billingDate)->diffInDays($dueDate);
 
         return $days;
+    }
+
+    private function removeLeadingZero($str) {
+        return (string)(int)$str;  // Mengubah menjadi integer, lalu kembali ke string
     }
 }

@@ -152,6 +152,8 @@ class SalesOrderController extends Controller
         $decDPPTotal += $decDPP;
         $decTaxTotal += $decTax;
 
+        $kd_outlet = $this->removeLeadingZero($value->kd_outlet);
+
         return [
             'szOrderItemTypeId' => "JUAL",
             'szProductId' => $value->part_no,
@@ -168,7 +170,7 @@ class SalesOrderController extends Controller
             'deliveryList' => [
                 [
                     'dtmDelivery' => date('Y-m-d H:i:s', strtotime($value->crea_date)),
-                    'szCustId' => $value->kd_outlet,
+                    'szCustId' => $kd_outlet,
                     'decQty' => $value->qty,
                     'szFromWpId' => config('api.workplace_id'),
                 ],
@@ -194,16 +196,18 @@ class SalesOrderController extends Controller
             $user_sales = $header->user_sales;
         }
 
+        $kd_outlet = $this->removeLeadingZero($header->kd_outlet);
+
         return [
             'szAppId' => "BDI.KCP",
             'fSoData' => [
                 'szFSoId'           => $header->noso,
                 'szOrderTypeId'     => 'JUAL',
                 'dtmOrder'          => date('Y-m-d H:i:s', strtotime($header->crea_date)),
-                'szCustId'          => $header->kd_outlet,
+                'szCustId'          => $kd_outlet,
                 'decAmount'         => $decDPPTotal,
                 'decTax'            => $decTaxTotal,
-                'szShipToId'        => $header->kd_outlet,
+                'szShipToId'        => $kd_outlet,
                 'szStatus'          => "OPE",
                 'szCcyId'           => "IDR",
                 'szCcyRateId'       => "BI",
@@ -275,5 +279,9 @@ class SalesOrderController extends Controller
             ->table('trns_inv_details')
             ->where('noinv', $invoice)
             ->get();
+    }
+
+    private function removeLeadingZero($str) {
+        return (string)(int)$str;  // Mengubah menjadi integer, lalu kembali ke string
     }
 }
