@@ -13,7 +13,7 @@ class IndexCustomerPayment extends Component
     public $no_piutang;
     public $search_toko;
     public $status_customer_payment = 'O';
-    public $target = 'no_piutang, status_customer_payment';
+    public $target = 'no_piutang, status_customer_payment, search_toko';
 
     public function render()
     {
