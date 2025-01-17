@@ -15,7 +15,7 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Kode / Nama Toko</label>
-                    <input type="text" class="form-control" wire:model.live.debounce.150ms="search_toko">
+                    <input type="text" class="form-control" wire:model.live.debounce.150ms="search_toko" placeholder="Cari berdasarkan kode / nama toko">
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Status Customer Payment</label>
