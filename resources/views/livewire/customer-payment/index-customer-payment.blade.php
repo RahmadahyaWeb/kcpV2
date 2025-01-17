@@ -14,6 +14,10 @@
                         placeholder="Cari berdasarkan no piutang">
                 </div>
                 <div class="col-md-4">
+                    <label class="form-label">Kode / Nama Toko</label>
+                    <input type="text" class="form-control" wire:model.live.debounce.150ms="search_toko">
+                </div>
+                <div class="col-md-4">
                     <label class="form-label">Status Customer Payment</label>
                     <select class="form-select" wire:model.change="status_customer_payment">
                         <option value="O">OPEN</option>

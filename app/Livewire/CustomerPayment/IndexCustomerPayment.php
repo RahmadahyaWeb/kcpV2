@@ -11,6 +11,7 @@ class IndexCustomerPayment extends Component
     use WithPagination;
 
     public $no_piutang;
+    public $search_toko;
     public $status_customer_payment = 'O';
     public $target = 'no_piutang, status_customer_payment';
 
@@ -20,6 +21,10 @@ class IndexCustomerPayment extends Component
 
         $customer_payment_header = $kcpapplication
             ->table('customer_payment_header')
+            ->where(function ($query) {
+                $query->where('kd_outlet', 'like', '%' . $this->search_toko . '%')
+                    ->orWhere('nm_outlet', 'like', '%' . $this->search_toko . '%');
+            })
             ->where('no_piutang', 'like', '%' . $this->no_piutang . '%')
             ->where('status', $this->status_customer_payment)
             ->orderBy('crea_date', 'desc')
