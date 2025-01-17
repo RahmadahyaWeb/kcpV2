@@ -5,7 +5,7 @@
         </div>
         <div class="card-body">
             <span class="d-block fs-2 fw-bold">
-                {{ number_format($amount, 0, ',', '.') }}
+                {{ \App\Http\Controllers\HelperController::format_number($amount) }}
             </span>
         </div>
     </div>
