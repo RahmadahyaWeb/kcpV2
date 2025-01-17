@@ -27,13 +27,14 @@ class HelperController extends Controller
             return HelperController::convert($x / 1000000) . " juta " . HelperController::convert($x % 1000000);
     }
 
-    public static function format_number($number) {
+    public static function format_number($number)
+    {
         if ($number >= 1000000000) {
-            return number_format($number / 1000000000, 3, '.', '.') . ' B';  // Format dengan titik sebagai pemisah ribuan
+            return number_format($number / 1000000000, 3, '.', '.') . ' M';  // Miliar
         } elseif ($number >= 1000000) {
-            return number_format($number / 1000000, 3, '.', '.') . ' M';  // Format dengan titik sebagai pemisah ribuan
+            return number_format($number / 1000000, 3, '.', '.') . ' J';  // Juta
         } elseif ($number >= 1000) {
-            return number_format($number / 1000, 3, '.', '.') . ' K';  // Format dengan titik sebagai pemisah ribuan
+            return number_format($number / 1000, 3, '.', '.') . ' R';  // Ribu
         } else {
             return number_format($number, 0, ',', '.');  // Format biasa untuk angka kecil
         }
