@@ -282,6 +282,12 @@ class SalesOrderController extends Controller
     }
 
     private function removeLeadingZero($str) {
-        return (string)(int)$str;  // Mengubah menjadi integer, lalu kembali ke string
+        // Cek apakah string dimulai dengan angka 0
+        if (preg_match('/^0\d/', $str)) {
+            // Mengubah menjadi integer, lalu kembali ke string
+            return (string)(int)$str;
+        }
+        // Jika tidak ada leading zero, kembalikan string aslinya
+        return $str;
     }
 }
