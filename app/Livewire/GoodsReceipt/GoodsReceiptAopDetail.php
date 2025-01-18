@@ -48,13 +48,11 @@ class GoodsReceiptAopDetail extends Component
             $this->selectedItems = collect($this->items_with_qty)
                 ->filter(function ($item) {
                     // Periksa apakah qty >= qty_terima - asal_qty dan status bukan BOSNET
-                    return $item->qty >= ($item->qty_terima - ($item->asal_qty ? $item->asal_qty->sum('qty') : 0))
+                    return $item->qty <= ($item->qty_terima - ($item->asal_qty ? $item->asal_qty->sum('qty') : 0))
                         && $item->status != 'BOSNET';
                 })
                 ->pluck('materialNumber')
                 ->toArray();
-
-            dd($this->selectedItems);
         } else {
             // Kosongkan daftar yang dipilih
             $this->selectedItems = [];
@@ -143,8 +141,6 @@ class GoodsReceiptAopDetail extends Component
         });
 
         $this->items_with_qty = $items_with_qty;
-
-        dd($this->items_with_qty);
 
         return view('livewire.goods-receipt.goods-receipt-aop-detail', compact(
             'items_with_qty',
