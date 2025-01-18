@@ -48,7 +48,7 @@ class GoodsReceiptNonAopDetail extends Component
             $this->selectedItems = collect($this->items_with_qty)
                 ->filter(function ($item) {
                     // Periksa apakah qty >= qty_terima - asal_qty dan status bukan BOSNET
-                    return $item->qty >= ($item->qty_terima - ($item->asal_qty ? $item->asal_qty->sum('qty') : 0))
+                    return $item->qty <= ($item->qty_terima - ($item->asal_qty ? $item->asal_qty->sum('qty') : 0))
                         && $item->status != 'BOSNET';
                 })
                 ->pluck('materialNumber')
