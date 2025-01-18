@@ -43,6 +43,7 @@ class GoodsReceiptAopDetail extends Component
 
     public function updatedSelectAll($value)
     {
+        dd($value);
         if ($value) {
             // Pilih semua item yang memenuhi syarat dan status bukan 'BOSNET'
             $this->selectedItems = collect($this->items_with_qty)
