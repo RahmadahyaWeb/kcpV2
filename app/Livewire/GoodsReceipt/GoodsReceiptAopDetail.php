@@ -144,6 +144,8 @@ class GoodsReceiptAopDetail extends Component
 
         $this->items_with_qty = $items_with_qty;
 
+        dd($this->items_with_qty);
+
         return view('livewire.goods-receipt.goods-receipt-aop-detail', compact(
             'items_with_qty',
             'spb',
