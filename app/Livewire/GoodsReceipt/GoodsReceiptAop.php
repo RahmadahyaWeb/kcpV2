@@ -33,7 +33,8 @@ class GoodsReceiptAop extends Component
             ])
             ->where('flag_po', 'Y')
             ->where('invoiceAop', 'like', '%' . $this->invoiceAop . '%')
-            ->where('SPB', 'like', '%' . $this->spb . '%');
+            ->where('SPB', 'like', '%' . $this->spb . '%')
+            ->orderBy('invoiceAop', 'desc');
 
         if (!empty($this->keterangan)) {
             $items->having('keterangan', $this->keterangan);
