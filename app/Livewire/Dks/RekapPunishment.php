@@ -176,6 +176,7 @@ class RekapPunishment extends Component
     public function render()
     {
         $users = User::role('salesman')
+            ->where('status', 'active')
             ->orderBy('name', 'asc')
             ->get();
 
