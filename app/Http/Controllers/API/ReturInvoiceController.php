@@ -25,6 +25,8 @@ class ReturInvoiceController extends Controller
 
     public function sendPartialDataToBosnet($no_retur, $no_invoice)
     {
+        $log_controller = LogController::class;
+
         try {
             // Mulai transaksi untuk invoice
             DB::beginTransaction();
@@ -38,40 +40,35 @@ class ReturInvoiceController extends Controller
             $dataToSend = $this->prepareBosnetData($item, $no_retur);
 
             // Kirim data ke BOSNET
-            $response = $this->sendDataToBosnet($dataToSend);
+            $this->sendDataToBosnet($dataToSend);
 
-            if ($response) {
-                DB::connection('kcpinformation')
-                    ->table('trns_retur_header')
-                    ->update([
-                        'flag_bosnet' => 'Y',
-                        'retur_send_to_bosnet' => now()
-                    ]);
-                Log::info("Berhasil kirim retur invoice: $no_invoice");
-            } else {
-                // Jika gagal mengirim ke BOSNET, update status menjadi FAILED
-                DB::connection('kcpinformation')
-                    ->table('trns_retur_header')
-                    ->update([
-                        'flag_bosnet' => 'F',
-                        'retur_send_to_bosnet' => now()
-                    ]);
-                Log::error("Gagal kirim retur invoice: $no_invoice");
-                throw new \Exception('Failed to send data to BOSNET');
-            }
+            DB::connection('kcpinformation')
+                ->table('trns_retur_header')
+                ->update([
+                    'flag_bosnet' => 'Y',
+                    'retur_send_to_bosnet' => now()
+                ]);
+
+            Log::info("Berhasil kirim retur invoice: $no_invoice");
 
             DB::commit(); // Commit transaksi setelah berhasil mengupdate status
 
+            $log_controller::log_api($dataToSend, '', true);
         } catch (\Exception $e) {
             // Tangani error per invoice, update status ke FAILED dan lanjutkan ke invoice berikutnya
             DB::rollBack(); // Rollback transaksi jika ada error
+
             DB::connection('kcpinformation')
                 ->table('trns_retur_header')
                 ->update([
                     'flag_bosnet' => 'F',
                     'retur_send_to_bosnet' => now()
                 ]);
+
             Log::error('Error occurred for return invoice ' . $no_invoice . ': ' . $e->getMessage());
+
+            $log_controller::log_api($dataToSend, $e->getMessage(), false);
+
             throw new \Exception('Error occurred for return invoice ' . $no_invoice . ': ' . $e->getMessage());
         }
     }
@@ -176,8 +173,6 @@ class ReturInvoiceController extends Controller
 
                 if ($data['statusCode'] == 500) {
                     throw new \Exception($data['statusMessage']);
-                } else {
-                    return true;
                 }
             } else {
                 throw new \Exception($data['message']);
