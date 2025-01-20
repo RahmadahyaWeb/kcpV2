@@ -101,21 +101,26 @@ class IndexStoreRak extends Component
     public function render()
     {
         $user = Auth::user();
+        $status = $user->hasRole('inventory') ? 'finished' : 'unfinished';
 
         if ($user->hasRole('inventory')) {
-            $status = 'finished';
+            $items = DB::table('trans_store_rak')
+                ->orderBy('created_at', 'desc')
+                ->where('status', $status);
         } else {
-            $status = 'unfinished';
-        }
-
-        $items = DB::table('trans_store_rak')
+            $items = DB::table('trans_store_rak')
             ->orderBy('created_at', 'desc')
-            ->where('status', $status);
+            ->where('status', $status)
+            ->where('user_id', Auth::id());
+        }
 
         $from_date = $this->from_date;
         $to_date = $this->to_date;
 
         if (!empty($from_date) && !empty($to_date)) {
+            // Format date to include start and end of the day
+            $from_date = Carbon::parse($from_date)->startOfDay();
+            $to_date = Carbon::parse($to_date)->endOfDay();
             $items = $items->whereBetween('created_at', [$from_date, $to_date]);
         }
 
