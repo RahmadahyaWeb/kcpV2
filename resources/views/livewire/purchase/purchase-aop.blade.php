@@ -64,16 +64,21 @@
                 </div>
                 <div class="card-body">
                     <div class="row mb-3">
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label class="form-label">Invoice AOP</label>
                             <input type="text" class="form-control" wire:model.live.debounce.1000ms="invoiceAop"
                                 placeholder="Invoice AOP">
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">SPB</label>
+                            <input type="text" class="form-control" wire:model.live.debounce.1000ms="dn"
+                                placeholder="SPB">
+                        </div>
+                        <div class="col-md-3 mb-3">
                             <label class="form-label">Tanggal Jatuh Tempo</label>
                             <input type="date" class="form-control" wire:model.change="tanggalJatuhTempo">
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label class="form-label">Status</label>
                             <select class="form-select" wire:model.change="flag_po">
                                 <option value="Y">BOSNET</option>
