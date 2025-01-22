@@ -18,8 +18,6 @@ class ReturInvoiceController extends Controller
 
         if ($no_retur && $no_invoice) {
             $this->sendPartialDataToBosnet($no_retur, $no_invoice);
-        } else {
-            $this->sendBulkDataToBosnet();
         }
     }
 
@@ -75,74 +73,74 @@ class ReturInvoiceController extends Controller
         }
     }
 
-    public function sendBulkDataToBosnet()
-    {
-        $retur_items = DB::connection('kcpinformation')
-            ->table('trns_retur_header')
-            ->where([
-                ['flag_reject', '=', 'N'],
-                ['flag_batal', '=', 'N'],
-                ['flag_approve1', '=', 'Y'],
-                ['flag_nota', '=', 'Y'],
-            ])
-            ->whereDate('crea_date', '>=', '2025-01')
-            ->where(function ($query) {
-                $query->where('flag_bosnet', '=', 'N')
-                    ->orWhere('flag_bosnet', '=', 'F');
-            })
-            ->get();
+    // public function sendBulkDataToBosnet()
+    // {
+    //     $retur_items = DB::connection('kcpinformation')
+    //         ->table('trns_retur_header')
+    //         ->where([
+    //             ['flag_reject', '=', 'N'],
+    //             ['flag_batal', '=', 'N'],
+    //             ['flag_approve1', '=', 'Y'],
+    //             ['flag_nota', '=', 'Y'],
+    //         ])
+    //         ->whereDate('crea_date', '>=', '2025-01')
+    //         ->where(function ($query) {
+    //             $query->where('flag_bosnet', '=', 'N')
+    //                 ->orWhere('flag_bosnet', '=', 'F');
+    //         })
+    //         ->get();
 
-        foreach ($retur_items as $retur) {
-            try {
-                // Mulai transaksi untuk invoice
-                DB::beginTransaction();
+    //     foreach ($retur_items as $retur) {
+    //         try {
+    //             // Mulai transaksi untuk invoice
+    //             DB::beginTransaction();
 
-                $item = DB::connection('kcpinformation')
-                    ->table('trns_inv_header')
-                    ->where('noinv', $retur->noinv)
-                    ->first();
+    //             $item = DB::connection('kcpinformation')
+    //                 ->table('trns_inv_header')
+    //                 ->where('noinv', $retur->noinv)
+    //                 ->first();
 
-                // Persiapkan data untuk dikirim ke BOSNET
-                $dataToSend = $this->prepareBosnetData($item, $retur->noretur);
+    //             // Persiapkan data untuk dikirim ke BOSNET
+    //             $dataToSend = $this->prepareBosnetData($item, $retur->noretur);
 
-                // Kirim data ke BOSNET
-                $response = $this->sendDataToBosnet($dataToSend);
+    //             // Kirim data ke BOSNET
+    //             $response = $this->sendDataToBosnet($dataToSend);
 
-                if ($response) {
-                    DB::connection('kcpinformation')
-                        ->table('trns_retur_header')
-                        ->update([
-                            'flag_bosnet' => 'Y',
-                            'retur_send_to_bosnet' => now()
-                        ]);
-                    Log::info("Berhasil kirim retur invoice: $retur->noinv");
-                } else {
-                    // Jika gagal mengirim ke BOSNET, update status menjadi FAILED
-                    DB::connection('kcpinformation')
-                        ->table('trns_retur_header')
-                        ->update([
-                            'flag_bosnet' => 'F',
-                            'retur_send_to_bosnet' => now()
-                        ]);
-                    Log::error("Gagal kirim retur invoice: $retur->noinv");
-                }
+    //             if ($response) {
+    //                 DB::connection('kcpinformation')
+    //                     ->table('trns_retur_header')
+    //                     ->update([
+    //                         'flag_bosnet' => 'Y',
+    //                         'retur_send_to_bosnet' => now()
+    //                     ]);
+    //                 Log::info("Berhasil kirim retur invoice: $retur->noinv");
+    //             } else {
+    //                 // Jika gagal mengirim ke BOSNET, update status menjadi FAILED
+    //                 DB::connection('kcpinformation')
+    //                     ->table('trns_retur_header')
+    //                     ->update([
+    //                         'flag_bosnet' => 'F',
+    //                         'retur_send_to_bosnet' => now()
+    //                     ]);
+    //                 Log::error("Gagal kirim retur invoice: $retur->noinv");
+    //             }
 
-                DB::commit(); // Commit transaksi setelah berhasil mengupdate status
+    //             DB::commit(); // Commit transaksi setelah berhasil mengupdate status
 
-            } catch (\Exception $e) {
-                // Tangani error per invoice, update status ke FAILED dan lanjutkan ke invoice berikutnya
-                DB::rollBack(); // Rollback transaksi jika ada error
-                DB::connection('kcpinformation')
-                    ->table('trns_retur_header')
-                    ->update([
-                        'flag_bosnet' => 'F',
-                        'retur_send_to_bosnet' => now()
-                    ]);
-                Log::error('Error occurred for return invoice ' . $retur->noinv . ': ' . $e->getMessage());
-                continue;
-            }
-        }
-    }
+    //         } catch (\Exception $e) {
+    //             // Tangani error per invoice, update status ke FAILED dan lanjutkan ke invoice berikutnya
+    //             DB::rollBack(); // Rollback transaksi jika ada error
+    //             DB::connection('kcpinformation')
+    //                 ->table('trns_retur_header')
+    //                 ->update([
+    //                     'flag_bosnet' => 'F',
+    //                     'retur_send_to_bosnet' => now()
+    //                 ]);
+    //             Log::error('Error occurred for return invoice ' . $retur->noinv . ': ' . $e->getMessage());
+    //             continue;
+    //         }
+    //     }
+    // }
 
     /**
      * Placeholder function for sending data to BOSNET.
