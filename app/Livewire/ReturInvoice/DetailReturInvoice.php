@@ -27,10 +27,10 @@ class DetailReturInvoice extends Component
                 ['noretur', $this->no_retur]
             ])
             ->whereDate('crea_date', '>=', '2025-01')
-            ->where(function ($query) {
-                $query->where('flag_bosnet', '=', 'N')
-                    ->orWhere('flag_bosnet', '=', 'F');
-            })
+            // ->where(function ($query) {
+            //     $query->where('flag_bosnet', '=', 'N')
+            //         ->orWhere('flag_bosnet', '=', 'F');
+            // })
             ->first();
 
         if (!$this->header) {
