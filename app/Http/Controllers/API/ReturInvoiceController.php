@@ -44,6 +44,7 @@ class ReturInvoiceController extends Controller
 
             DB::connection('kcpinformation')
                 ->table('trns_retur_header')
+                ->where('noretur', $item->noinv)
                 ->update([
                     'flag_bosnet' => 'Y',
                     'retur_send_to_bosnet' => now()
@@ -60,6 +61,7 @@ class ReturInvoiceController extends Controller
 
             DB::connection('kcpinformation')
                 ->table('trns_retur_header')
+                ->where('noretur', $item->noinv)
                 ->update([
                     'flag_bosnet' => 'F',
                     'retur_send_to_bosnet' => now()
