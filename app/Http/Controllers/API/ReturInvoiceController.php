@@ -34,6 +34,8 @@ class ReturInvoiceController extends Controller
                 ->where('noinv', $no_invoice)
                 ->first();
 
+            dd($item);
+
             // Persiapkan data untuk dikirim ke BOSNET
             $dataToSend = $this->prepareBosnetData($item, $no_retur);
 
