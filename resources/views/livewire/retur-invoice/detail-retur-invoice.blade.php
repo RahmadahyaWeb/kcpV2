@@ -25,7 +25,7 @@
             </div>
 
             <!-- Send to Bosnet Button (Only for KCP Status) -->
-            @if (isset($header->flag_bosnet) && $header->flag_bosnet == 'N' || $header->flag_bosnet == 'F')
+            @if ($header->flag_bosnet == 'N' || $header->flag_bosnet == 'F')
                 <div class="row">
                     <form wire:submit="sendToBosnet" wire:confirm="Yakin ingin kirim data ke Bosnet?">
                         <div class="col d-grid">
