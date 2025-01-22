@@ -34,8 +34,6 @@ class ReturInvoiceController extends Controller
                 ->where('noinv', $no_invoice)
                 ->first();
 
-            dd($item);
-
             // Persiapkan data untuk dikirim ke BOSNET
             $dataToSend = $this->prepareBosnetData($item, $no_retur);
 
@@ -44,7 +42,7 @@ class ReturInvoiceController extends Controller
 
             DB::connection('kcpinformation')
                 ->table('trns_retur_header')
-                ->where('noretur', $item->noinv)
+                ->where('noinv', $item->noinv)
                 ->update([
                     'flag_bosnet' => 'Y',
                     'retur_send_to_bosnet' => now()
@@ -61,7 +59,7 @@ class ReturInvoiceController extends Controller
 
             DB::connection('kcpinformation')
                 ->table('trns_retur_header')
-                ->where('noretur', $item->noinv)
+                ->where('noinv', $item->noinv)
                 ->update([
                     'flag_bosnet' => 'F',
                     'retur_send_to_bosnet' => now()
