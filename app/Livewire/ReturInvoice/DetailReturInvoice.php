@@ -16,26 +16,6 @@ class DetailReturInvoice extends Component
     public function mount($no_retur)
     {
         $this->no_retur = $no_retur;
-
-        $this->header = DB::connection('kcpinformation')
-            ->table('trns_retur_header')
-            ->where([
-                ['flag_reject', '=', 'N'],
-                ['flag_batal', '=', 'N'],
-                ['flag_approve1', '=', 'Y'],
-                ['flag_nota', '=', 'Y'],
-                ['noretur', $this->no_retur]
-            ])
-            ->whereDate('crea_date', '>=', '2025-01')
-            // ->where(function ($query) {
-            //     $query->where('flag_bosnet', '=', 'N')
-            //         ->orWhere('flag_bosnet', '=', 'F');
-            // })
-            ->first();
-
-        if (!$this->header) {
-            abort(404);
-        }
     }
 
     public function sendToBosnet()
@@ -52,6 +32,22 @@ class DetailReturInvoice extends Component
 
     public function render()
     {
+        $this->header = DB::connection('kcpinformation')
+            ->table('trns_retur_header')
+            ->where([
+                ['flag_reject', '=', 'N'],
+                ['flag_batal', '=', 'N'],
+                ['flag_approve1', '=', 'Y'],
+                ['flag_nota', '=', 'Y'],
+                ['noretur', $this->no_retur]
+            ])
+            ->whereDate('crea_date', '>=', '2025-01')
+            // ->where(function ($query) {
+            //     $query->where('flag_bosnet', '=', 'N')
+            //         ->orWhere('flag_bosnet', '=', 'F');
+            // })
+            ->first();
+
         $items = DB::connection('kcpinformation')
             ->table('trns_retur_details')
             ->where('noretur', $this->no_retur)
