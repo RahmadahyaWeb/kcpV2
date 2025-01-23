@@ -8,16 +8,24 @@
         </div>
         <div class="card-body">
             <div class="row mb-3 g-2">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label">No Piutang</label>
                     <input type="text" class="form-control" wire:model.live.debounce.1000ms="no_piutang"
                         placeholder="Cari berdasarkan no piutang">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label">Kode / Nama Toko</label>
                     <input type="text" class="form-control" wire:model.live.debounce.150ms="search_toko" placeholder="Cari berdasarkan kode / nama toko">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
+                    <label class="form-label">Pembayaran Via</label>
+                    <select class="form-select" wire:model.change="pembayaran_via">
+                        <option value="TRANSFER">TRANSFER</option>
+                        <option value="CASH">CASH</option>
+                        <option value="BG">BG</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
                     <label class="form-label">Status Customer Payment</label>
                     <select class="form-select" wire:model.change="status_customer_payment">
                         <option value="O">OPEN</option>
