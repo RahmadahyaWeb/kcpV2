@@ -14,7 +14,7 @@ class PurchaseAop extends Component
     use WithFileUploads;
     use WithPagination, WithoutUrlPagination;
 
-    public $target = 'save, invoiceAop, tanggalJatuhTempo, flag_po';
+    public $target = 'save, invoiceAop, tanggalJatuhTempo, flag_po, billing_doc_date';
     public $surat_tagihan, $rekap_tagihan, $invoiceAop, $tanggalJatuhTempo, $dn, $billing_doc_date;
 
     public $flag_po = 'N';
