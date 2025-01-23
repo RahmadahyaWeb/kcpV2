@@ -15,7 +15,7 @@ class PurchaseAop extends Component
     use WithPagination, WithoutUrlPagination;
 
     public $target = 'save, invoiceAop, tanggalJatuhTempo, flag_po';
-    public $surat_tagihan, $rekap_tagihan, $invoiceAop, $tanggalJatuhTempo, $dn;
+    public $surat_tagihan, $rekap_tagihan, $invoiceAop, $tanggalJatuhTempo, $dn, $billing_doc_date;
 
     public $flag_po = 'N';
 
@@ -313,6 +313,9 @@ class PurchaseAop extends Component
             ->where('SPB', 'like', '%' . $this->dn . '%')
             ->when($this->tanggalJatuhTempo, function ($query) {
                 return $query->where('tanggalJatuhTempo', $this->tanggalJatuhTempo);
+            })
+            ->when($this->billing_doc_date, function ($query) {
+                return $query->where('billingDocumentDate', $this->billing_doc_date);
             })
             ->when($this->flag_po, function ($query) {
                 return $query->where('flag_po', $this->flag_po);

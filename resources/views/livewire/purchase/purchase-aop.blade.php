@@ -85,6 +85,10 @@
                                 <option value="N">KCP</option>
                             </select>
                         </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Tanggal Invoice</label>
+                            <input type="date" class="form-control" wire:model.change="billing_doc_date">
+                        </div>
                     </div>
 
                     <div class="table-responsive">
