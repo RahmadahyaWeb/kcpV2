@@ -20,6 +20,7 @@
                 <div class="col-md-3">
                     <label class="form-label">Pembayaran Via</label>
                     <select class="form-select" wire:model.change="pembayaran_via">
+                        <option value="" selected>Pilih Jenis Pembayaran</option>
                         <option value="TRANSFER">TRANSFER</option>
                         <option value="CASH">CASH</option>
                         <option value="BG">BG</option>

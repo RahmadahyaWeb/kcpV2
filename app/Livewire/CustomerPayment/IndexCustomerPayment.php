@@ -14,7 +14,7 @@ class IndexCustomerPayment extends Component
     public $search_toko;
     public $status_customer_payment = 'O';
     public $pembayaran_via;
-    public $target = 'no_piutang, status_customer_payment, search_toko';
+    public $target = 'no_piutang, status_customer_payment, search_toko, pembayaran_via';
 
     public function render()
     {
