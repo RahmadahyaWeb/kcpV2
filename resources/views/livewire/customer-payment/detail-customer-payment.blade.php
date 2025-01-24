@@ -53,7 +53,6 @@
                     <thead">
                         <tr>
                             <th>No Invoice</th>
-                            <th>No Piutang</th>
                             <th>Nominal Potong</th>
                             <th>Nominal Pembayaran Sebelumnya</th>
                             <th>Nominal Invoice</th>
@@ -67,9 +66,6 @@
                                 <tr>
                                     <td style="white-space: nowrap">
                                         {{ $item->noinv }}
-                                    </td>
-                                    <td style="white-space: nowrap">
-                                        {{ $item->no_piutang }}
                                     </td>
                                     <td>{{ number_format($item->nominal, 0, ',', '.') }}</td>
                                     @if ($item->status == 'O')
