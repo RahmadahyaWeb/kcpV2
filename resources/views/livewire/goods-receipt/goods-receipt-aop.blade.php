@@ -42,7 +42,7 @@
                         @forelse ($items as $item)
                             <tr>
                                 <td>
-                                    <a href="{{route('goods.aop.detail', $item->invoiceAop)}}">
+                                    <a href="{{route('goods.aop.detail', $item->invoiceAop)}}" wire:navigate>
                                         {{ $item->invoiceAop }}
                                     </a>
                                 </td>
