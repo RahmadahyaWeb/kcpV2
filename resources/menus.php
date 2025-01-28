@@ -98,7 +98,7 @@ return [
         "label" => "Pembelian",
         "icon" => "bx bx-store",
         "route" => null,
-        "roles" => ['super-user', 'finance'],
+        "roles" => ['super-user', 'finance', 'admin'],
         "active" => Request::is('purchase*'),
         "children" => [
             [
