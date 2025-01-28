@@ -91,7 +91,7 @@ return [
     // // FINANCE
     [
         "label" => "Finance",
-        "roles" => ['super-user', 'finance', 'ar'],
+        "roles" => ['super-user', 'finance', 'ar', 'admin'],
         "header" => true
     ],
     [

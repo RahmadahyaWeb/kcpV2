@@ -131,8 +131,9 @@ Route::middleware('auth')->group(function () {
     /**
      * super-user
      * finance
+     * admin
      */
-    Route::middleware('role:finance|super-user')->group(function () {
+    Route::middleware('role:finance|super-user|admin')->group(function () {
         // PURCHASE AOP
         Route::get('/purchase/aop', PurchaseAop::class)->name('purchase.aop.index');
         Route::get('/purchase/aop/{invoiceAop}', PurchaseAopDetail::class)->name('purchase.aop.detail');
