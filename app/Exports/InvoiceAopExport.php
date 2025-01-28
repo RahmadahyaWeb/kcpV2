@@ -33,7 +33,8 @@ class InvoiceAopExport implements FromCollection, WithHeadings, WithMapping
                 'extraPlafonDiscount',
                 'amount',
                 'tax',
-                'grandTotal'
+                'grandTotal',
+                'netSales'
             ])
             ->whereBetween('billingDocumentDate', [$this->from_date, $this->to_date])
             ->get();
@@ -48,7 +49,7 @@ class InvoiceAopExport implements FromCollection, WithHeadings, WithMapping
             $row->price,
             $row->addDiscount,
             $row->extraPlafonDiscount,
-            $row->amount,
+            $row->netSales,
             $row->tax,
             $row->grandTotal,
         ];
