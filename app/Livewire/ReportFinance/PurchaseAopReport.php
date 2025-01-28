@@ -22,7 +22,7 @@ class PurchaseAopReport extends Component
         $fromDateFormatted = \Carbon\Carbon::parse($this->from_date)->format('Ymd');
         $toDateFormatted = \Carbon\Carbon::parse($this->to_date)->format('Ymd');
 
-        $filename = "invoice_aop{$fromDateFormatted}_-_{$toDateFormatted}.xlsx";
+        $filename = "invoice_aop_{$fromDateFormatted}_-_{$toDateFormatted}.xlsx";
 
         return Excel::download(new InvoiceAopExport($this->from_date, $this->to_date), $filename);
     }
