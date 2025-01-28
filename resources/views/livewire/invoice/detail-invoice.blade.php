@@ -29,6 +29,13 @@
                                     class="btn btn-success">
                                     <i class='bx bxs-printer me-1'></i> Print
                                 </button>
+                            @elseif($header->cetak >= 1)
+                                @hasanyrole(['super-user'])
+                                    <button wire:click="batal_print('{{ $header->noinv }}')" type="button"
+                                        class="btn btn-danger">
+                                        Batal Print
+                                    </button>
+                                @endhasanyrole
                             @endif
                         </div>
                     </div>

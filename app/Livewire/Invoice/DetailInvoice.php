@@ -229,20 +229,28 @@ class DetailInvoice extends Component
         $dppDisc = round($sumTotalDPP) / config('tax.ppn_factor');
         $nominalPPnDisc = round($dppDisc * config('tax.ppn_percentage'));
 
-        DB::table('invoice_bosnet')
-            ->insert([
-                'noso'          => $header->noso,
-                'noinv'         => $header->noinv,
-                'kd_outlet'     => $header->kd_outlet,
-                'nm_outlet'     => $header->nm_outlet,
-                'amount_total'  => $sumTotalDPP,
-                'amount'        => $sumTotalNominal,
-                'amount_disc'   => $sumTotalDisc,
-                'crea_date'     => $header->crea_date,
-                'tgl_jth_tempo' => $header->tgl_jth_tempo,
-                'user_sales'    => $header->user_sales,
-                'flag_print'    => 'Y'
-            ]);
+        // CEK INVOICE BOSNET APAKAH SUDAH ADA ATAU BELUM
+        $cek_invoice_bosnet = DB::table('invoice_bosnet')
+            ->where('noso', $header->noso)
+            ->where('noinv', $header->noinv)
+            ->first();
+
+        if (!$cek_invoice_bosnet) {
+            DB::table('invoice_bosnet')
+                ->insert([
+                    'noso'          => $header->noso,
+                    'noinv'         => $header->noinv,
+                    'kd_outlet'     => $header->kd_outlet,
+                    'nm_outlet'     => $header->nm_outlet,
+                    'amount_total'  => $sumTotalDPP,
+                    'amount'        => $sumTotalNominal,
+                    'amount_disc'   => $sumTotalDisc,
+                    'crea_date'     => $header->crea_date,
+                    'tgl_jth_tempo' => $header->tgl_jth_tempo,
+                    'user_sales'    => $header->user_sales,
+                    'flag_print'    => 'Y'
+                ]);
+        }
 
         $suppProgram = DB::table('history_bonus_invoice')
             ->where('noinv', $noinv)
@@ -271,6 +279,27 @@ class DetailInvoice extends Component
             'Content-Disposition' => 'inline; filename="' . $noinv . '.pdf"',
             'Content-Transfer-Encoding' =>  'binary'
         ]);
+    }
+
+    public function batal_print($noinv)
+    {
+        $kcpInformation = DB::connection('kcpinformation');
+
+        try {
+            $kcpInformation->beginTransaction();
+
+            $kcpInformation->table('trns_inv_header')
+                ->where('noinv', $noinv)
+                ->update([
+                    "cetak" => 0,
+                ]);
+
+            $kcpInformation->commit();
+        } catch (\Exception $e) {
+            $kcpInformation->rollBack();
+
+            session()->flash('error', $e->getMessage());
+        }
     }
 
     public function render()
