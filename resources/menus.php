@@ -43,7 +43,7 @@ return [
         "children" => []
     ],
 
-    // // MARKETING
+    // MARKETING
     [
         "label" => "Marketing",
         "roles" => ['super-user', 'admin', 'head-marketing', 'supervisor-area', 'salesman', 'fakturis'],
@@ -78,17 +78,17 @@ return [
         "icon" => "bx bx-layout",
         "route" => null,
         "roles" => ['super-user', 'admin', 'head-marketing', 'supervisor-area'],
-        "active" => Request::is('report*'),
+        "active" => Request::is('report-marketing*'),
         "children" => [
             [
                 "label" => "DKS",
-                "route" => "report.dks",
-                "active" => Request::is('report/dks*')
+                "route" => "report-marketing.dks",
+                "active" => Request::is('report-marketing/dks*')
             ]
         ]
     ],
 
-    // // FINANCE
+    // FINANCE
     [
         "label" => "Finance",
         "roles" => ['super-user', 'finance', 'ar', 'admin'],
@@ -128,6 +128,20 @@ return [
         "roles" => ['super-user', 'ar'],
         "active" => Request::is('piutang*'),
         "children" => []
+    ],
+    [
+        "label" => "Report Finance",
+        "icon" => "bx bx-layout",
+        "route" => null,
+        "roles" => ['super-user', 'admin', 'finance'],
+        "active" => Request::is('report-finance*'),
+        "children" => [
+            [
+                "label" => "Invoice AOP",
+                "route" => "report-finance.purchase.aop.index",
+                "active" => Request::is('report-finance/purchase/aop*')
+            ]
+        ]
     ],
 
     // WAREHOUSE

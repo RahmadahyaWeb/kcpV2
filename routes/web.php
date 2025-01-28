@@ -30,6 +30,7 @@ use App\Livewire\Purchase\PurchaseAop;
 use App\Livewire\Purchase\PurchaseAopDetail;
 use App\Livewire\Purchase\PurchaseNonAop;
 use App\Livewire\Purchase\PurchaseNonAopDetail;
+use App\Livewire\ReportFinance\PurchaseAopReport;
 use App\Livewire\ReportMarketing\MonitoringDks;
 use App\Livewire\ReturInvoice\DetailReturInvoice;
 use App\Livewire\ReturInvoice\IndexReturInvoice;
@@ -86,8 +87,8 @@ Route::middleware('auth')->group(function () {
      */
     Route::middleware('role:supervisor-area|super-user')->group(function () {
         // REPORT MARKETING
-        Route::get('/report/dks', MonitoringDks::class)->name('report.dks');
-        Route::get('/report/dks/rekap-punishment', RekapPunishment::class)->name('report.dks.rekap-punishment');
+        Route::get('/report-marketing/dks', MonitoringDks::class)->name('report-marketing.dks');
+        Route::get('/report-marketing/dks/rekap-punishment', RekapPunishment::class)->name('report-marketing.dks.rekap-punishment');
     });
 
     /**
@@ -142,6 +143,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/purchase/non', PurchaseNonAop::class)->name('purchase.non.index');
         Route::get('/purchase/non/create', CreatePurchaseNonAop::class)->name('purchase.non.create');
         Route::get('/purchase/non/{invoiceNon}', PurchaseNonAopDetail::class)->name('purchase.non.detail');
+
+        // REPORT FINANCE
+        Route::get('/report-finance/purchase/aop', PurchaseAopReport::class)->name('report-finance.purchase.aop.index');
     });
 
     /**

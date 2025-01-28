@@ -7,7 +7,7 @@
         </div>
         <div class="card-body">
             <div class="d-flex gap-2 mb-3 py-4" style="overflow-x: auto; white-space: nowrap;">
-                <a href="{{ route('report.dks.rekap-punishment') }}" class="btn btn-primary" wire:navigate>Rekap Punishment</a>
+                <a href="{{ route('report-marketing.dks.rekap-punishment') }}" class="btn btn-primary" wire:navigate>Rekap Punishment</a>
             </div>
 
             <div class="row g-2 mb-3">
