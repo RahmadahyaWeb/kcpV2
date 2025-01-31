@@ -73,11 +73,9 @@
                                         {{ $item->noinv }}
                                     </td>
                                     <td>{{ number_format($item->nominal, 0, ',', '.') }}</td>
-                                    @if ($item->status == 'O')
-                                        <td>
-                                            {{ number_format($nominal_pembayaran_sebelumnya, 0, ',', '.') }}
-                                        </td>
-                                    @endif
+                                    <td>
+                                        {{ number_format($nominal_pembayaran_sebelumnya, 0, ',', '.') }}
+                                    </td>
                                     <td>{{ number_format($nominal_invoice, 0, ',', '.') }}</td>
                                     <td>
                                         {{ number_format($nominal_invoice - $nominal_pembayaran_sebelumnya, 0, ',', '.') }}
