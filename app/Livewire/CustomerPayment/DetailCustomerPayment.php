@@ -71,6 +71,7 @@ class DetailCustomerPayment extends Component
 
         return $kcpinformation->table('trns_pembayaran_piutang')
             ->where('noinv', $no_invoice_formatted)
+            ->where('status', 'C')
             ->sum('nominal');
     }
 
