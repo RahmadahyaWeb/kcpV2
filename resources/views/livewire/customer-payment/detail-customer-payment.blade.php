@@ -56,6 +56,7 @@
                             <th>Nominal Potong</th>
                             <th>Nominal Pembayaran Sebelumnya</th>
                             <th>Nominal Invoice</th>
+                            <th>Sisa Piutang (Invoice)</th>
                             <th>No BG</th>
                             <th>Bank</th>
                             <th>Keterangan</th>
@@ -63,6 +64,10 @@
                         </thead>
                         <tbody>
                             @foreach ($customer_payment_details as $item)
+                                @php
+                                    $nominal_pembayaran_sebelumnya = $model::get_nominal_pembayaran($item->noinv);
+                                    $nominal_invoice = $model::get_nominal_invoice($item->noinv);
+                                @endphp
                                 <tr>
                                     <td style="white-space: nowrap">
                                         {{ $item->noinv }}
@@ -70,12 +75,15 @@
                                     <td>{{ number_format($item->nominal, 0, ',', '.') }}</td>
                                     @if ($item->status == 'O')
                                         <td>
-                                            {{ number_format($model::get_nominal_pembayaran($item->noinv), 0, ',', '.') }}
+                                            {{ number_format($nominal_pembayaran_sebelumnya, 0, ',', '.') }}
                                         </td>
                                     @else
                                         <td>LUNAS</td>
                                     @endif
-                                    <td>{{ number_format($model::get_nominal_invoice($item->noinv), 0, ',', '.') }}</td>
+                                    <td>{{ number_format($nominal_invoice, 0, ',', '.') }}</td>
+                                    <td>
+                                        {{ number_format($nominal_invoice - $nominal_pembayaran_sebelumnya, 0, ',', '.') }}
+                                    </td>
                                     <td style="white-space: nowrap">
                                         {{ $item->no_bg }}
                                     </td>
