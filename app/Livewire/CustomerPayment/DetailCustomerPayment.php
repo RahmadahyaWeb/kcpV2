@@ -87,6 +87,12 @@ class DetailCustomerPayment extends Component
                 return;
             }
 
+            if ($cek_invoice->flag_pembayaran_lunas == 'Y') {
+                $noinv = $cek_invoice->noinv;
+                session()->flash('error', "$noinv sudah dipotong.");
+                return;
+            }
+
             $nominal_invoice = DetailCustomerPayment::get_nominal_invoice($value->noinv);
             $nominal_potong = $value->nominal;
 
