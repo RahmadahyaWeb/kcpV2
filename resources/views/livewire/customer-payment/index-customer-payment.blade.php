@@ -31,6 +31,7 @@
                     <select class="form-select" wire:model.change="status_customer_payment">
                         <option value="O">OPEN</option>
                         <option value="C">CLOSE</option>
+                        <option value="F">CANCEL</option>
                     </select>
                 </div>
             </div>
