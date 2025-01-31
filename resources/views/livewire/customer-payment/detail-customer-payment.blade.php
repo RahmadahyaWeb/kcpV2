@@ -77,8 +77,6 @@
                                         <td>
                                             {{ number_format($nominal_pembayaran_sebelumnya, 0, ',', '.') }}
                                         </td>
-                                    @else
-                                        <td>LUNAS</td>
                                     @endif
                                     <td>{{ number_format($nominal_invoice, 0, ',', '.') }}</td>
                                     <td>
