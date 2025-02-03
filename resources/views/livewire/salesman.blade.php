@@ -36,8 +36,7 @@
                                         <td class="text-nowrap">{{ $sales->fullname }}</td>
                                         <td>{{ number_format($sales->total_amount, 0, ',', '.') }}</td>
                                         <td>{{ number_format($sales->total_retur, 0, ',', '.') }}</td>
-                                        <td>{{ number_format($sales->total_amount - $sales->total_retur, 0, ',', '.') }}
-                                        </td>
+                                        <td>{{ number_format($sales->total_amount - $sales->total_retur, 0, ',', '.') }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -114,7 +113,7 @@
                 // Create the new chart and store the chart instance in a global variable
                 if (canvasId === 'salesman') {
                     window['salesmanChart'] = new Chart(ctx, {
-                        type: 'line',
+                        type: 'bar',
                         data: chartData,
                         options: chartOptions
                     });
@@ -128,8 +127,7 @@
                     data: data,
                     backgroundColor: backgroundColor,
                     borderColor: borderColor,
-                    borderWidth: 1,
-                    pointRadius: 8
+                    borderWidth: 1
                 };
             }
         </script>
