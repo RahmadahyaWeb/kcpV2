@@ -1,11 +1,31 @@
-<div x-data="{ data: @entangle('data_aop') }" x-init="$nextTick(() => initializeChart(data))">
+<div x-data="{
+    dataAop: @entangle('data_aop'),
+    dataNonAop: @entangle('data_non_aop')
+}" x-init="$nextTick(() => {
+    initializeChart('product_aop', dataAop, 'Penjualan Produk AOP', 'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 1)');
+    initializeChart('product_non_aop', dataNonAop, 'Penjualan Produk Non-AOP', 'rgba(255, 99, 132, 0.6)', 'rgba(255, 99, 132, 1)');
+})">
 
     <x-dashboard-navigation />
 
-    <div class="chartCard">
-        <div class="chartBox">
-            <div class="canvas">
-                <canvas id="myChart"></canvas>
+    <div class="row gap-3">
+        <div class="col-12">
+            <div class="chartCard">
+                <div class="chartBox">
+                    <div class="canvas">
+                        <canvas id="product_aop"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="chartCard">
+                <div class="chartBox">
+                    <div class="canvas">
+                        <canvas id="product_non_aop"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -14,17 +34,16 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
         <script>
             // Fungsi untuk menginisialisasi chart
-            function initializeChart(data) {
-                console.log(data.amount)
+            function initializeChart(canvasId, data, label, bgColor, borderColor) {
+                console.log(`${label}:`, data.amount);
 
-                const ctx = document.getElementById('myChart');
+                const ctx = document.getElementById(canvasId);
                 const labels = data.labels;
 
                 const chartData = {
                     labels: labels,
                     datasets: [
-                        createDataset('Penjualan Produk AOP', 'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 1)', data
-                            .amount),
+                        createDataset(label, bgColor, borderColor, data.amount),
                     ]
                 };
 
@@ -33,7 +52,7 @@
                     plugins: {
                         legend: {
                             display: true,
-                            position: 'top' // Legend di atas chart
+                            position: 'top'
                         }
                     },
                     scales: {

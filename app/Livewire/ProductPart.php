@@ -7,16 +7,7 @@ use Livewire\Component;
 
 class ProductPart extends Component
 {
-    public $data_aop;
-
-    public function fetch_product_aop()
-    {
-        $kcpinformation = DB::connection('kcpinformation');
-
-        $product_aop = $this->fetch_product_by_supplier(['ASTRA OTOPART']);
-
-        return $product_aop;
-    }
+    public $data_aop, $data_non_aop;
 
     private function fetch_product_by_supplier(array $suppliers)
     {
@@ -26,6 +17,15 @@ class ProductPart extends Component
             ->groupBy('produk_part')
             ->pluck('produk_part')
             ->toArray();
+    }
+
+    public function fetch_product_aop()
+    {
+        $kcpinformation = DB::connection('kcpinformation');
+
+        $product_aop = $this->fetch_product_by_supplier(['ASTRA OTOPART']);
+
+        return $product_aop;
     }
 
     public function fetch_product_non_aop()
@@ -75,11 +75,22 @@ class ProductPart extends Component
         return $amount_aop;
     }
 
+    public function fetch_amount_non_aop()
+    {
+        $amounts = $this->fetch_amount_by_supplier(['KMC', 'ABM', 'SSI']);
+        return $amounts;
+    }
+
     public function render()
     {
         $this->data_aop = [
             'labels' => $this->fetch_product_aop(),
             'amount' => $this->fetch_amount_aop()
+        ];
+
+        $this->data_non_aop = [
+            'labels' => $this->fetch_product_non_aop(),
+            'amount' => $this->fetch_amount_non_aop()
         ];
 
         return view('livewire.product-part');

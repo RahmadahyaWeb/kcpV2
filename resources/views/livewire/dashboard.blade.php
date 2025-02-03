@@ -24,7 +24,7 @@
     <div class="chartCard">
         <div class="chartBox">
             <div class="canvas">
-                <canvas id="product_aop"></canvas>
+                <canvas id="penjualan"></canvas>
             </div>
         </div>
     </div>
@@ -34,7 +34,7 @@
         <script>
             // Fungsi untuk menginisialisasi chart
             function initializeChart(data) {
-                const ctx = document.getElementById('product_aop');
+                const ctx = document.getElementById('penjualan');
                 const labels = [
                     'January', 'February', 'March', 'April', 'May', 'June',
                     'July', 'August', 'September', 'October', 'November', 'December'
