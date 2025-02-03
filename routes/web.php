@@ -25,6 +25,7 @@ use App\Livewire\Master\EditUser;
 use App\Livewire\Master\IndexMasterToko;
 use App\Livewire\Master\IndexUser;
 use App\Livewire\Piutang\IndexPiutang;
+use App\Livewire\ProductPart;
 use App\Livewire\Purchase\CreatePurchaseNonAop;
 use App\Livewire\Purchase\PurchaseAop;
 use App\Livewire\Purchase\PurchaseAopDetail;
@@ -46,6 +47,9 @@ Route::redirect('/', '/dashboard');
 Route::middleware('auth')->group(function () {
     // DASHBOARD
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
+
+    // PRODUCT PART
+    Route::get('/dashboard/product-part', ProductPart::class)->name('dashboard.product-part');
 
     /**
      * super-user

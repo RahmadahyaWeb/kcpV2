@@ -1,23 +1,4 @@
-<div x-data="{ data: @entangle('data') }" x-init="$nextTick(() => initializeChart(data))">
-
-    <div class="row mb-3">
-        <div class="col-md-4 mb-3">
-            <div class="card" style="height: 10rem">
-                <div class="card-header">
-                    Pencapaian Bulan {{ \Carbon\Carbon::now()->locale('id')->isoFormat('MMMM') }}
-                </div>
-                <div class="card-body">
-                    <span class="d-block fs-2 fw-bold">
-                        {{ $performance }} %
-                    </span>
-                </div>
-            </div>
-        </div>
-
-        <x-total-invoice-card :amount="$total_invoice" />
-
-        <x-total-invoice-terbentuk-card :total="$total_invoice_terbentuk" />
-    </div>
+<div x-data="{ data: @entangle('data_aop') }" x-init="$nextTick(() => initializeChart(data))">
 
     <div class="d-flex gap-2 mb-3 py-4" style="overflow-x: auto; white-space: nowrap;">
         <a href="{{ route('dashboard') }}" class="btn btn-primary" wire:navigate>Penjualan</a>
@@ -37,18 +18,15 @@
         <script>
             // Fungsi untuk menginisialisasi chart
             function initializeChart(data) {
+                console.log(data.amount)
+
                 const ctx = document.getElementById('myChart');
-                const labels = [
-                    'January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December'
-                ];
+                const labels = data.labels;
 
                 const chartData = {
                     labels: labels,
                     datasets: [
-                        createDataset('Penjualan', 'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 1)', data
-                            .arrPenjualan),
-                        createDataset('Target', 'rgba(255, 99, 132, 0.6)', 'rgba(255, 99, 132, 1)', data.arrTarget)
+                        createDataset('Penjualan', 'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 1)', data.amount),
                     ]
                 };
 
