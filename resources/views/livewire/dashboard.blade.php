@@ -40,6 +40,8 @@
             // Fungsi untuk menginisialisasi chart
             function initializeChart(canvasId, data, label, bgColor, borderColor) {
 
+                console.log(data.arrPenjualan);
+
                 const ctx = document.getElementById(canvasId);
 
                 // Clear the canvas content
