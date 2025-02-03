@@ -1,5 +1,5 @@
 <div>
-
+    <x-loading :target="$target" />
     <x-dashboard-navigation />
 
     <div class="row mb-3">

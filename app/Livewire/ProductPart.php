@@ -7,6 +7,7 @@ use Livewire\Component;
 
 class ProductPart extends Component
 {
+    public $target = 'periode';
     public $data_aop, $data_non_aop;
     public $periode;
 
