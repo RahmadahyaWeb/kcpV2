@@ -1,6 +1,11 @@
-<div x-data="{ data: @entangle('data') }" x-init="$nextTick(() => initializeChart(data))">
+<div x-data="{ dataPenjualan: @entangle('data') }" x-init="$nextTick(() => {
+    initializeChart('penjualan', dataPenjualan, 'Total', 'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 1)');
+})"
+    x-effect="$watch('dataPenjualan', () => {
+    initializeChart('penjualan', dataPenjualan, 'Total', 'rgba(255, 99, 132, 0.6)', 'rgba(255, 99, 132, 1)');
+})">
 
-    <x-dashboard-navigation/>
+    <x-dashboard-navigation />
 
     <div class="row mb-3">
         <div class="col-md-4 mb-3">
@@ -33,19 +38,24 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
         <script>
             // Fungsi untuk menginisialisasi chart
-            function initializeChart(data) {
-                const ctx = document.getElementById('penjualan');
-                const labels = [
-                    'January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December'
-                ];
+            function initializeChart(canvasId, data, label, bgColor, borderColor) {
+
+                const ctx = document.getElementById(canvasId);
+
+                // Clear the canvas content
+                ctx.getContext('2d').clearRect(0, 0, ctx.width, ctx.height);
+
+                // Destroy the previous chart instance if it exists
+                if (window[canvasId + 'Chart']) {
+                    window[canvasId + 'Chart'].destroy();
+                }
+
+                const labels = data.labels;
 
                 const chartData = {
                     labels: labels,
                     datasets: [
-                        createDataset('Penjualan', 'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 1)', data
-                            .arrPenjualan),
-                        createDataset('Target', 'rgba(255, 99, 132, 0.6)', 'rgba(255, 99, 132, 1)', data.arrTarget)
+                        createDataset(label, bgColor, borderColor, data.amount),
                     ]
                 };
 
@@ -54,7 +64,7 @@
                     plugins: {
                         legend: {
                             display: true,
-                            position: 'top' // Legend di atas chart
+                            position: 'top'
                         }
                     },
                     scales: {
@@ -64,11 +74,14 @@
                     }
                 };
 
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: chartData,
-                    options: chartOptions
-                });
+                // Create the new chart and store the chart instance in a global variable
+                if (canvasId === 'penjualan') {
+                    window['penjualanChart'] = new Chart(ctx, {
+                        type: 'bar',
+                        data: chartData,
+                        options: chartOptions
+                    });
+                }
             }
 
             // Fungsi untuk membuat dataset

@@ -50,10 +50,10 @@
     <div x-data="{
         dataSalesman: @entangle('data_salesman'),
     }" x-init="$nextTick(() => {
-        initializeChart('salesman', dataSalesman, 'Total Invoice Terbentuk', 'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 1)');
+        initializeChart('salesman', dataSalesman, 'Total', 'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 1)');
     })"
         x-effect="$watch('dataSalesman', () => {
-        initializeChart('salesman', dataSalesman, 'Total Invoice Terbentuk', 'rgba(255, 99, 132, 0.6)', 'rgba(255, 99, 132, 1)');
+        initializeChart('salesman', dataSalesman, 'Total', 'rgba(255, 99, 132, 0.6)', 'rgba(255, 99, 132, 1)');
     })">
 
         <div class="row gap-3 mb-3">
