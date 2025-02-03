@@ -13,7 +13,7 @@ class Salesman extends Component
 
     public function mount()
     {
-        $this->periode = date('Y-m', strtotime('2024-01'));
+        $this->periode = date('Y-m', strtotime('2024-11'));
     }
 
     public function fetch_invoice_salesman()
@@ -39,6 +39,28 @@ class Salesman extends Component
             ->orderBy('total_amount', 'desc')
             ->get();
 
+        $retur = $kcpinformation->table('trns_inv_header')
+            ->join('trns_retur_header as retur_header', 'retur_header.noinv', '=', 'trns_inv_header.noinv')
+            ->join('trns_retur_details as retur_detail', 'retur_header.noretur', '=', 'retur_detail.noretur')
+            ->select('trns_inv_header.user_sales', DB::raw('SUM(retur_detail.nominal_total) as total_retur'))
+            ->where(DB::raw('SUBSTR(retur_header.flag_nota_date, 1, 7)'), '=', [$periode])
+            ->where('retur_header.flag_nota', '=', 'Y')
+            ->where('trns_inv_header.flag_batal', '<>', 'Y')
+            ->groupBy('trns_inv_header.user_sales')
+            ->get();
+
+        // dd($retur);
+
+        foreach ($invoice as $salesman) {
+            // Cari data retur untuk user_sales yang sama (dengan strtolower untuk case-insensitive matching)
+            $returnData = $retur->firstWhere(function ($item) use ($salesman) {
+                return strtolower($item->user_sales) === strtolower($salesman->user_sales);
+            });
+
+            // Jika ada data retur, tambahkan total_retur, jika tidak set ke 0
+            $salesman->total_retur = $returnData ? $returnData->total_retur : 0;
+        }
+
         return [
             'invoice' => $invoice,
         ];
@@ -50,7 +72,8 @@ class Salesman extends Component
 
         $this->data_salesman = [
             'labels' => $data['invoice']->pluck('fullname')->toArray(),
-            'amount' => $data['invoice']->pluck('total_amount')->toArray()
+            'amount' => $data['invoice']->pluck('total_amount')->toArray(),
+            'retur'  => $data['invoice']->pluck('total_retur')->toArray()
         ];
 
         $salesmanData = $data['invoice'];

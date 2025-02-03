@@ -21,6 +21,7 @@
                                     <th>NO</th>
                                     <th>NAMA SALES</th>
                                     <th>AMOUNT TOTAL (INVOICE)</th>
+                                    <th>AMOUNT TOTAL (RETUR)</th>
                                     <th>TOTAL</th>
                                 </tr>
                             </thead>
@@ -34,7 +35,8 @@
                                         <td>{{ $no++ }}</td>
                                         <td>{{ $sales->fullname }}</td>
                                         <td>{{ number_format($sales->total_amount, 0, ',', '.') }}</td>
-                                        <td>{{ number_format($sales->total_amount, 0, ',', '.') }}</td>
+                                        <td>{{ number_format($sales->total_retur, 0, ',', '.') }}</td>
+                                        <td>{{ number_format($sales->total_amount - $sales->total_retur, 0, ',', '.') }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -48,7 +50,7 @@
     <div x-data="{
         dataSalesman: @entangle('data_salesman'),
     }" x-init="$nextTick(() => {
-        initializeChart('salesman', dataSalesman, 'Total Invoice Terbentuk', 'rgba(255, 99, 132, 0.6)', 'rgba(255, 99, 132, 1)');
+        initializeChart('salesman', dataSalesman, 'Total Invoice Terbentuk', 'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 1)');
     })"
         x-effect="$watch('dataSalesman', () => {
         initializeChart('salesman', dataSalesman, 'Total Invoice Terbentuk', 'rgba(255, 99, 132, 0.6)', 'rgba(255, 99, 132, 1)');
@@ -89,6 +91,7 @@
                     labels: labels,
                     datasets: [
                         createDataset(label, bgColor, borderColor, data.amount),
+                        createDataset('Retur Invoice', 'rgba(255, 99, 132, 0.6)', 'rgba(255, 99, 132, 1)', data.retur)
                     ]
                 };
 
