@@ -33,10 +33,11 @@
                                 @foreach ($salesmanData as $sales)
                                     <tr>
                                         <td>{{ $no++ }}</td>
-                                        <td>{{ $sales->fullname }}</td>
+                                        <td class="text-wrap">{{ $sales->fullname }}</td>
                                         <td>{{ number_format($sales->total_amount, 0, ',', '.') }}</td>
                                         <td>{{ number_format($sales->total_retur, 0, ',', '.') }}</td>
-                                        <td>{{ number_format($sales->total_amount - $sales->total_retur, 0, ',', '.') }}</td>
+                                        <td>{{ number_format($sales->total_amount - $sales->total_retur, 0, ',', '.') }}
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -127,7 +128,8 @@
                     data: data,
                     backgroundColor: backgroundColor,
                     borderColor: borderColor,
-                    borderWidth: 1
+                    borderWidth: 1,
+                    pointRadius: 8
                 };
             }
         </script>
