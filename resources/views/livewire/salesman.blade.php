@@ -21,7 +21,6 @@
                                     <th>NO</th>
                                     <th>NAMA SALES</th>
                                     <th>AMOUNT TOTAL (INVOICE)</th>
-                                    <th>AMOUNT TOTAL (RETUR)</th>
                                     <th>TOTAL</th>
                                 </tr>
                             </thead>
@@ -35,8 +34,7 @@
                                         <td>{{ $no++ }}</td>
                                         <td>{{ $sales->fullname }}</td>
                                         <td>{{ number_format($sales->total_amount, 0, ',', '.') }}</td>
-                                        <td>{{ number_format($sales->total_retur, 0, ',', '.') }}</td>
-                                        <td>{{ number_format($sales->total_amount - $sales->total_retur, 0, ',', '.') }}</td>
+                                        <td>{{ number_format($sales->total_amount, 0, ',', '.') }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

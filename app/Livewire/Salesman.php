@@ -13,7 +13,7 @@ class Salesman extends Component
 
     public function mount()
     {
-        $this->periode = date('Y-m');
+        $this->periode = date('Y-m', strtotime('2024-01'));
     }
 
     public function fetch_invoice_salesman()
@@ -28,35 +28,32 @@ class Salesman extends Component
                     ->whereRaw("SUBSTR(invoice.crea_date, 1, 7) = ?", [$periode])
                     ->where('invoice.flag_batal', '<>', 'Y');
             })
-            ->leftJoin('trns_retur_header as retur_header', function ($join) use ($periode) {
-                $join->where('retur_header.flag_nota', '=', 'Y')
-                    ->whereRaw("SUBSTR(retur_header.flag_nota_date, 1, 7) = ?", [$periode]);
-            })
-            ->leftJoin('trns_retur_details as retur_details', 'retur_header.noretur', '=', 'retur_details.noretur')
             ->where('salesman.role', 'SALESMAN')
             ->where('salesman.status', 'Y')
             ->select(
                 'salesman.username as user_sales',
                 'salesman.fullname',
-                DB::raw('COALESCE(SUM(invoice.amount_total), 0) as total_amount'),
-                DB::raw('COALESCE(SUM(CASE WHEN retur_header.noretur IS NOT NULL THEN retur_details.nominal_total ELSE 0 END), 0) as total_retur')
+                DB::raw('COALESCE(SUM(invoice.amount_total), 0) as total_amount')
             )
             ->groupBy('salesman.username', 'salesman.fullname')
             ->orderBy('total_amount', 'desc')
             ->get();
 
-        return $invoice;
+        return [
+            'invoice' => $invoice,
+        ];
     }
-
 
     public function render()
     {
-        $salesmanData = $this->fetch_invoice_salesman();
+        $data = $this->fetch_invoice_salesman();
 
         $this->data_salesman = [
-            'labels' => $salesmanData->pluck('fullname'),
-            'amount' => $salesmanData->pluck('total_amount'),
+            'labels' => $data['invoice']->pluck('fullname')->toArray(),
+            'amount' => $data['invoice']->pluck('total_amount')->toArray()
         ];
+
+        $salesmanData = $data['invoice'];
 
         return view('livewire.salesman', compact('salesmanData'));
     }
