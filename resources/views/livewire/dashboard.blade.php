@@ -55,8 +55,8 @@
                 const chartData = {
                     labels: labels,
                     datasets: [
-                        createDataset(label, bgColor, borderColor, data.arrPenjualan),
-                        createDataset(label, 'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 0.6)', data.arrTarget),
+                        createDataset('Penjualan', bgColor, borderColor, data.arrPenjualan),
+                        createDataset('Target', 'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 0.6)', data.arrTarget),
                     ]
                 };
 
