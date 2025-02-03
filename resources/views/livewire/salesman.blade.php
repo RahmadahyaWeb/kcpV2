@@ -113,7 +113,7 @@
                 // Create the new chart and store the chart instance in a global variable
                 if (canvasId === 'salesman') {
                     window['salesmanChart'] = new Chart(ctx, {
-                        type: 'bar',
+                        type: 'line',
                         data: chartData,
                         options: chartOptions
                     });
