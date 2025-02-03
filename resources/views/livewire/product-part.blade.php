@@ -56,20 +56,17 @@
     @push('script')
         <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
         <script>
-            let productAopChart = null;
-            let productNonAopChart = null;
-
             // Fungsi untuk menginisialisasi chart
             function initializeChart(canvasId, data, label, bgColor, borderColor) {
-                console.log("Data for chart:", data); // Debugging data
 
                 const ctx = document.getElementById(canvasId);
 
-                // Hancurkan chart lama jika sudah ada
-                if (canvasId === 'product_aop' && productAopChart) {
-                    productAopChart.destroy();
-                } else if (canvasId === 'product_non_aop' && productNonAopChart) {
-                    productNonAopChart.destroy();
+                // Clear the canvas content
+                ctx.getContext('2d').clearRect(0, 0, ctx.width, ctx.height);
+
+                // Destroy the previous chart instance if it exists
+                if (window[canvasId + 'Chart']) {
+                    window[canvasId + 'Chart'].destroy();
                 }
 
                 const labels = data.labels;
@@ -96,15 +93,15 @@
                     }
                 };
 
-                // Buat chart baru dan simpan objek chart ke dalam variabel
+                // Create the new chart and store the chart instance in a global variable
                 if (canvasId === 'product_aop') {
-                    productAopChart = new Chart(ctx, {
+                    window['product_aopChart'] = new Chart(ctx, {
                         type: 'bar',
                         data: chartData,
                         options: chartOptions
                     });
                 } else if (canvasId === 'product_non_aop') {
-                    productNonAopChart = new Chart(ctx, {
+                    window['product_non_aopChart'] = new Chart(ctx, {
                         type: 'bar',
                         data: chartData,
                         options: chartOptions
