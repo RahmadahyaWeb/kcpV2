@@ -1,11 +1,4 @@
-<div x-data="{ dataPenjualan: @entangle('data') }" x-init="$nextTick(() => {
-    initializeChart('penjualan', dataPenjualan, 'Total', 'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 1)');
-})"
-    x-effect="$watch('dataPenjualan', () => {
-    initializeChart('penjualan', dataPenjualan, 'Total', 'rgba(255, 99, 132, 0.6)', 'rgba(255, 99, 132, 1)');
-})">
-
-    <x-dashboard-navigation />
+<div x-data="{ data: @entangle('data') }" x-init="$nextTick(() => initializeChart(data))">
 
     <div class="row mb-3">
         <div class="col-md-4 mb-3">
@@ -26,10 +19,12 @@
         <x-total-invoice-terbentuk-card :total="$total_invoice_terbentuk" />
     </div>
 
+    <x-dashboard-navigation />
+
     <div class="chartCard">
         <div class="chartBox">
             <div class="canvas">
-                <canvas id="penjualan"></canvas>
+                <canvas id="product_aop"></canvas>
             </div>
         </div>
     </div>
@@ -38,27 +33,19 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
         <script>
             // Fungsi untuk menginisialisasi chart
-            function initializeChart(canvasId, data, label, bgColor, borderColor) {
-
-                console.log(data.arrPenjualan);
-
-                const ctx = document.getElementById(canvasId);
-
-                // Clear the canvas content
-                ctx.getContext('2d').clearRect(0, 0, ctx.width, ctx.height);
-
-                // Destroy the previous chart instance if it exists
-                if (window[canvasId + 'Chart']) {
-                    window[canvasId + 'Chart'].destroy();
-                }
-
-                const labels = data.labels;
+            function initializeChart(data) {
+                const ctx = document.getElementById('product_aop');
+                const labels = [
+                    'January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'
+                ];
 
                 const chartData = {
                     labels: labels,
                     datasets: [
-                        createDataset('Penjualan', bgColor, borderColor, data.arrPenjualan),
-                        createDataset('Target', 'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 0.6)', data.arrTarget),
+                        createDataset('Penjualan', 'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 1)', data
+                            .arrPenjualan),
+                        createDataset('Target', 'rgba(255, 99, 132, 0.6)', 'rgba(255, 99, 132, 1)', data.arrTarget)
                     ]
                 };
 
@@ -67,7 +54,7 @@
                     plugins: {
                         legend: {
                             display: true,
-                            position: 'top'
+                            position: 'top' // Legend di atas chart
                         }
                     },
                     scales: {
@@ -77,14 +64,11 @@
                     }
                 };
 
-                // Create the new chart and store the chart instance in a global variable
-                if (canvasId === 'penjualan') {
-                    window['penjualanChart'] = new Chart(ctx, {
-                        type: 'bar',
-                        data: chartData,
-                        options: chartOptions
-                    });
-                }
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: chartData,
+                    options: chartOptions
+                });
             }
 
             // Fungsi untuk membuat dataset
