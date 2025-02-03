@@ -21,21 +21,20 @@ class Salesman extends Component
 
     public function fetch_invoice_salesman()
     {
-        $salesman = $this->fetch_salesman();
-
         $kcpinformation = DB::connection('kcpinformation');
 
         $currentMonth = date('Y-m', strtotime('2025-01'));
 
-        $invoice = $kcpinformation->table('user as u')
-            ->leftJoin('trns_inv_header as inv', function ($join) use ($currentMonth) {
-                $join->on('u.username', '=', 'inv.user_sales')
-                    ->whereRaw("SUBSTR(inv.crea_date, 1, 7) = ?", [$currentMonth]);
+        $invoice = $kcpinformation->table('user as salesman')
+            ->leftJoin('trns_inv_header as invoice', function ($join) use ($currentMonth) {
+                $join->on('salesman.username', '=', 'invoice.user_sales')
+                    ->whereRaw("SUBSTR(invoice.crea_date, 1, 7) = ?", [$currentMonth]);
             })
-            ->where('u.role', 'SALESMAN')
-            ->where('u.status', 'Y')
-            ->select('u.username as user_sales', DB::raw('COALESCE(SUM(inv.amount_total), 0) as total_amount'))
-            ->groupBy('u.username')
+            ->where('invoice.flag_batal', '<>', 'Y')
+            ->where('salesman.role', 'SALESMAN')
+            ->where('salesman.status', 'Y')
+            ->select('salesman.fullname as user_sales', DB::raw('COALESCE(SUM(invoice.amount_total), 0) as total_amount'))
+            ->groupBy('salesman.username')
             ->get();
 
         dd($invoice);
