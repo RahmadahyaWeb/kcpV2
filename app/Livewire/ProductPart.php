@@ -54,7 +54,7 @@ class ProductPart extends Component
                         'part_info.produk_part',
                         DB::raw('SUM(inv_detail.nominal_total) as amount_total')
                     ])
-                    ->whereRaw("SUBSTR(inv.crea_date, 1, 7) = ?", [date('Y-m')])
+                    ->whereRaw("SUBSTR(inv.crea_date, 1, 7) = 2025-01")
                     ->where('inv.flag_batal', 'N')
                     ->groupBy('part_info.produk_part'),
                 'invoice_data',
