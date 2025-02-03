@@ -13,7 +13,7 @@ class Salesman extends Component
 
     public function mount()
     {
-        $this->periode = date('Y-m', strtotime('2024-12'));
+        $this->periode = date('Y-m');
     }
 
     public function fetch_invoice_salesman()
