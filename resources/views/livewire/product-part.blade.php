@@ -26,7 +26,7 @@
                 const chartData = {
                     labels: labels,
                     datasets: [
-                        createDataset('Penjualan', 'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 1)', data.amount),
+                        createDataset('Penjualan Produk AOP', 'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 1)', data.amount),
                     ]
                 };
 
