@@ -1,9 +1,6 @@
 <div x-data="{ data: @entangle('data_aop') }" x-init="$nextTick(() => initializeChart(data))">
 
-    <div class="d-flex gap-2 mb-3 py-4" style="overflow-x: auto; white-space: nowrap;">
-        <a href="{{ route('dashboard') }}" class="btn btn-primary" wire:navigate>Penjualan</a>
-        <a href="{{ route('dashboard.product-part') }}" class="btn btn-primary" wire:navigate>Produk</a>
-    </div>
+    <x-dashboard-navigation />
 
     <div class="chartCard">
         <div class="chartBox">
@@ -26,7 +23,8 @@
                 const chartData = {
                     labels: labels,
                     datasets: [
-                        createDataset('Penjualan Produk AOP', 'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 1)', data.amount),
+                        createDataset('Penjualan Produk AOP', 'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 1)', data
+                            .amount),
                     ]
                 };
 

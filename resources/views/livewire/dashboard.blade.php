@@ -19,10 +19,7 @@
         <x-total-invoice-terbentuk-card :total="$total_invoice_terbentuk" />
     </div>
 
-    <div class="d-flex gap-2 mb-3 py-4" style="overflow-x: auto; white-space: nowrap;">
-        <a href="{{ route('dashboard') }}" class="btn btn-primary" wire:navigate>Penjualan</a>
-        <a href="{{ route('dashboard.product-part') }}" class="btn btn-primary" wire:navigate>Produk</a>
-    </div>
+    <x-dashboard-navigation/>
 
     <div class="chartCard">
         <div class="chartBox">
