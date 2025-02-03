@@ -35,6 +35,7 @@ use App\Livewire\ReportFinance\PurchaseAopReport;
 use App\Livewire\ReportMarketing\MonitoringDks;
 use App\Livewire\ReturInvoice\DetailReturInvoice;
 use App\Livewire\ReturInvoice\IndexReturInvoice;
+use App\Livewire\Salesman;
 use App\Livewire\StockMovement\IndexStockMovement;
 use App\Livewire\StockPart\IndexStockPartRak;
 use App\Livewire\StoreRak\IndexStoreRak;
@@ -50,6 +51,9 @@ Route::middleware('auth')->group(function () {
 
     // PRODUCT PART
     Route::get('/dashboard/product-part', ProductPart::class)->name('dashboard.product-part');
+
+    // SALESMAN
+    Route::get('/dashboard/salesman', Salesman::class)->name('dashboard.salesman');
 
     /**
      * super-user
