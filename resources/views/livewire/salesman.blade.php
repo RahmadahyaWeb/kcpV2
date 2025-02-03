@@ -33,7 +33,7 @@
                                 @foreach ($salesmanData as $sales)
                                     <tr>
                                         <td>{{ $no++ }}</td>
-                                        <td class="text-wrap">{{ $sales->fullname }}</td>
+                                        <td class="text-nowrap">{{ $sales->fullname }}</td>
                                         <td>{{ number_format($sales->total_amount, 0, ',', '.') }}</td>
                                         <td>{{ number_format($sales->total_retur, 0, ',', '.') }}</td>
                                         <td>{{ number_format($sales->total_amount - $sales->total_retur, 0, ',', '.') }}
