@@ -7,7 +7,7 @@ return [
         "label" => "Dashboards",
         "icon" => "bx bx-home-smile",
         "route" => "dashboard",
-        "active" => Request::is('dashboard'),
+        "active" => Request::is('dashboard*'),
         "roles" => ['super-user', 'admin', 'head-marketing', 'salesman', 'storer', 'head-warehouse', 'inventory', 'finance', 'ar', 'supervisor-area', 'fakturis'],
         "children" => []
     ],
