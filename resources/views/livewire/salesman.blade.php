@@ -91,7 +91,6 @@
                     labels: labels,
                     datasets: [
                         createDataset(label, bgColor, borderColor, data.amount),
-                        createDataset('Retur Invoice', 'rgba(255, 99, 132, 0.6)', 'rgba(255, 99, 132, 1)', data.retur)
                     ]
                 };
 

@@ -49,8 +49,6 @@ class Salesman extends Component
             ->groupBy('trns_inv_header.user_sales')
             ->get();
 
-        // dd($retur);
-
         foreach ($invoice as $salesman) {
             // Cari data retur untuk user_sales yang sama (dengan strtolower untuk case-insensitive matching)
             $returnData = $retur->firstWhere(function ($item) use ($salesman) {
@@ -59,6 +57,8 @@ class Salesman extends Component
 
             // Jika ada data retur, tambahkan total_retur, jika tidak set ke 0
             $salesman->total_retur = $returnData ? $returnData->total_retur : 0;
+
+            $salesman->total = $salesman->total_amount - $salesman->total_retur;
         }
 
         return [
@@ -72,7 +72,7 @@ class Salesman extends Component
 
         $this->data_salesman = [
             'labels' => $data['invoice']->pluck('fullname')->toArray(),
-            'amount' => $data['invoice']->pluck('total_amount')->toArray(),
+            'amount' => $data['invoice']->pluck('total')->toArray(),
             'retur'  => $data['invoice']->pluck('total_retur')->toArray()
         ];
 
