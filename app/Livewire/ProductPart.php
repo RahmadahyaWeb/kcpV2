@@ -13,25 +13,38 @@ class ProductPart extends Component
     {
         $kcpinformation = DB::connection('kcpinformation');
 
-        $product_aop = $kcpinformation->table('mst_part')
-            ->where('supplier', 'ASTRA OTOPART')
-            ->groupBy('produk_part')
-            ->pluck('produk_part')
-            ->toArray();
+        $product_aop = $this->fetch_product_by_supplier(['ASTRA OTOPART']);
 
         return $product_aop;
     }
 
-    public function fetch_amount_aop()
+    private function fetch_product_by_supplier(array $suppliers)
+    {
+        return DB::connection('kcpinformation')
+            ->table('mst_part')
+            ->whereIn('supplier', $suppliers)
+            ->groupBy('produk_part')
+            ->pluck('produk_part')
+            ->toArray();
+    }
+
+    public function fetch_product_non_aop()
+    {
+        $product_non_aop = $this->fetch_product_by_supplier(['KMC', 'ABM', 'SSI']);
+
+        return $product_non_aop;
+    }
+
+    private function fetch_amount_by_supplier(array $suppliers)
     {
         $kcpinformation = DB::connection('kcpinformation');
 
-        $amount_aop = $kcpinformation->table('mst_part as part')
+        $amount = $kcpinformation->table('mst_part as part')
             ->select([
                 'part.produk_part',
                 DB::raw('IFNULL(invoice_data.amount_total, 0) as amount_total')
             ])
-            ->where('part.supplier', 'ASTRA OTOPART')
+            ->whereIn('part.supplier', $suppliers)
             ->groupBy('part.produk_part')
             ->leftJoinSub(
                 $kcpinformation->table('trns_inv_header as inv')
@@ -51,6 +64,13 @@ class ProductPart extends Component
             )
             ->pluck('amount_total', 'produk_part')
             ->toArray();
+
+        return $amount;
+    }
+
+    public function fetch_amount_aop()
+    {
+        $amount_aop = $this->fetch_amount_by_supplier(['ASTRA OTOPART']);
 
         return $amount_aop;
     }
