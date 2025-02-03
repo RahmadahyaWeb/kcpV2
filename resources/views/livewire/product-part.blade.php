@@ -34,10 +34,10 @@
     <div x-data="{
         dataNonAop: @entangle('data_non_aop'),
     }" x-init="$nextTick(() => {
-        initializeChart('product_non_aop', dataNonAop, 'Penjualan Produk AOP', 'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 1)');
+        initializeChart('product_non_aop', dataNonAop, 'Penjualan Produk NON AOP', 'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 1)');
     })"
         x-effect="$watch('dataNonAop', () => {
-        initializeChart('product_non_aop', dataNonAop, 'Penjualan Produk AOP', 'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 1)');
+        initializeChart('product_non_aop', dataNonAop, 'Penjualan Produk NON AOP', 'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 1)');
     })">
 
         <div class="row gap-3 mb-3">
