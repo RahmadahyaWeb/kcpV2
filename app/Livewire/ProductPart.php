@@ -8,6 +8,22 @@ use Livewire\Component;
 class ProductPart extends Component
 {
     public $data_aop, $data_non_aop;
+    public $periode;
+
+    public function mount()
+    {
+        $this->periode = date('Y-m');
+
+        $this->data_aop = [
+            'labels' => $this->fetch_product_aop(),
+            'amount' => $this->fetch_amount_aop()
+        ];
+
+        $this->data_non_aop = [
+            'labels' => $this->fetch_product_non_aop(),
+            'amount' => $this->fetch_amount_non_aop()
+        ];
+    }
 
     private function fetch_product_by_supplier(array $suppliers)
     {
@@ -35,7 +51,7 @@ class ProductPart extends Component
         return $product_non_aop;
     }
 
-    private function fetch_amount_by_supplier(array $suppliers)
+    private function fetch_amount_by_supplier(array $suppliers, $periode)
     {
         $kcpinformation = DB::connection('kcpinformation');
 
@@ -54,7 +70,7 @@ class ProductPart extends Component
                         'part_info.produk_part',
                         DB::raw('SUM(inv_detail.nominal_total) as amount_total')
                     ])
-                    ->whereRaw("SUBSTR(inv.crea_date, 1, 7) = 2025-01")
+                    ->whereRaw("SUBSTR(inv.crea_date, 1, 7) = ?", [date('Y-m', strtotime($periode))])
                     ->where('inv.flag_batal', 'N')
                     ->groupBy('part_info.produk_part'),
                 'invoice_data',
@@ -70,18 +86,18 @@ class ProductPart extends Component
 
     public function fetch_amount_aop()
     {
-        $amount_aop = $this->fetch_amount_by_supplier(['ASTRA OTOPART']);
+        $amount_aop = $this->fetch_amount_by_supplier(['ASTRA OTOPART'], $this->periode);
 
         return $amount_aop;
     }
 
     public function fetch_amount_non_aop()
     {
-        $amounts = $this->fetch_amount_by_supplier(['KMC', 'ABM', 'SSI']);
+        $amounts = $this->fetch_amount_by_supplier(['KMC', 'ABM', 'SSI'], $this->periode);
         return $amounts;
     }
 
-    public function render()
+    public function updatedPeriode()
     {
         $this->data_aop = [
             'labels' => $this->fetch_product_aop(),
@@ -92,7 +108,10 @@ class ProductPart extends Component
             'labels' => $this->fetch_product_non_aop(),
             'amount' => $this->fetch_amount_non_aop()
         ];
+    }
 
+    public function render()
+    {
         return view('livewire.product-part');
     }
 }
