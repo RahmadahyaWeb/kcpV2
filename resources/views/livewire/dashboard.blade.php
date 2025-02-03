@@ -1,5 +1,7 @@
 <div x-data="{ data: @entangle('data') }" x-init="$nextTick(() => initializeChart(data))">
 
+    <x-dashboard-navigation/>
+
     <div class="row mb-3">
         <div class="col-md-4 mb-3">
             <div class="card" style="height: 10rem">
@@ -18,8 +20,6 @@
 
         <x-total-invoice-terbentuk-card :total="$total_invoice_terbentuk" />
     </div>
-
-    <x-dashboard-navigation/>
 
     <div class="chartCard">
         <div class="chartBox">
