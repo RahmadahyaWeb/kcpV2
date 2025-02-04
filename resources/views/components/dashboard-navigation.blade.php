@@ -13,4 +13,9 @@
         wire:ignore.self>
         Salesman
     </a>
+    <a href="{{ route('dashboard.kelompok-part') }}"
+        class="btn btn-{{ Request::is('dashboard/kelompok-part') ? 'primary' : 'secondary' }}" wire:navigate
+        wire:ignore.self>
+        Kelompok Part
+    </a>
 </div>

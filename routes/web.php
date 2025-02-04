@@ -18,6 +18,7 @@ use App\Livewire\GoodsReceipt\GoodsReceiptNonAopDetail;
 use App\Livewire\Invoice\DetailInvoice;
 use App\Livewire\Invoice\IndexInvoice;
 use App\Livewire\Invoice\IndexInvoiceBosnet;
+use App\Livewire\KelompokPart;
 use App\Livewire\LogViewer;
 use App\Livewire\Master\CreateUser;
 use App\Livewire\Master\EditMasterToko;
@@ -54,6 +55,9 @@ Route::middleware('auth')->group(function () {
 
     // SALESMAN
     Route::get('/dashboard/salesman', Salesman::class)->name('dashboard.salesman');
+
+    // KELOMPOK PART
+    Route::get('/dashboard/kelompok-part', KelompokPart::class)->name('dashboard.kelompok-part');
 
     /**
      * super-user
