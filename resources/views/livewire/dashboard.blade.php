@@ -1,5 +1,4 @@
 <div>
-    <x-loading target="" />
     <x-dashboard-navigation />
 
     <div class="mb-3" x-data="{
