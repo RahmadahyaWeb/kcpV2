@@ -15,7 +15,8 @@
                 </div>
                 <div class="col-md-3">
                     <label class="form-label">Kode / Nama Toko</label>
-                    <input type="text" class="form-control" wire:model.live.debounce.150ms="search_toko" placeholder="Cari berdasarkan kode / nama toko">
+                    <input type="text" class="form-control" wire:model.live.debounce.150ms="search_toko"
+                        placeholder="Cari berdasarkan kode / nama toko">
                 </div>
                 <div class="col-md-3">
                     <label class="form-label">Pembayaran Via</label>
@@ -46,13 +47,15 @@
                             <th>Nominal Potong (RP)</th>
                             <th>Pembayaran Via</th>
                             <th>Tanggal</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($customer_payment_header as $item)
                             <tr>
                                 <td style="white-space: nowrap">
-                                    <a href="{{ route('customer-payment.detail', $item->no_piutang) }}" wire:navigate>{{ $item->no_piutang }}
+                                    <a href="{{ route('customer-payment.detail', $item->no_piutang) }}"
+                                        wire:navigate>{{ $item->no_piutang }}
                                     </a>
                                 </td>
                                 <td>{{ $item->kd_outlet }}</td>
@@ -60,10 +63,17 @@
                                 <td>{{ number_format($item->nominal_potong, 0, ',', '.') }}</td>
                                 <td>{{ $item->pembayaran_via }}</td>
                                 <td style="white-space: nowrap">{{ $item->crea_date }}</td>
+                                <td>
+                                    @if ($item->status == 'O')
+                                        <button class="btn btn-sm btn-danger" wire:click="batal('{{ $item->no_piutang }}')" wire:confirm="Yakin ingin batal?">
+                                            Batal
+                                        </button>
+                                    @endif
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center">No Data</td>
+                                <td colspan="7" class="text-center">No Data</td>
                             </tr>
                         @endforelse
                     </tbody>

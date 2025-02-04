@@ -14,7 +14,30 @@ class IndexCustomerPayment extends Component
     public $search_toko;
     public $status_customer_payment = 'O';
     public $pembayaran_via;
-    public $target = 'no_piutang, status_customer_payment, search_toko, pembayaran_via';
+    public $target = 'no_piutang, status_customer_payment, search_toko, pembayaran_via, batal';
+
+    public function batal($no_piutang)
+    {
+        $kcpapplication = DB::connection('mysql');
+
+        try {
+            $kcpapplication->beginTransaction();
+
+            $kcpapplication->table('customer_payment_header')
+                ->where('no_piutang', $no_piutang)
+                ->update([
+                    'status' => 'F'
+                ]);
+
+            $kcpapplication->commit();
+
+            session()->flash('success', "Berhasil batal customer payment: $no_piutang");
+        } catch (\Exception $e) {
+            $kcpapplication->rollBack();
+
+            session()->flash('error', $e->getMessage());
+        }
+    }
 
     public function render()
     {
