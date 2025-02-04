@@ -65,9 +65,13 @@
                                 <td style="white-space: nowrap">{{ $item->crea_date }}</td>
                                 <td>
                                     @if ($item->status == 'O')
-                                        <button class="btn btn-sm btn-danger" wire:click="batal('{{ $item->no_piutang }}')" wire:confirm="Yakin ingin batal?">
-                                            Batal
-                                        </button>
+                                        @hasanyrole(['super-user', 'admin'])
+                                            <button class="btn btn-sm btn-danger"
+                                                wire:click="batal('{{ $item->no_piutang }}')"
+                                                wire:confirm="Yakin ingin batal?">
+                                                Batal
+                                            </button>
+                                        @endhasanyrole
                                     @endif
                                 </td>
                             </tr>
