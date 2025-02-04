@@ -14,8 +14,9 @@
     background-color: rgba(0, 0, 0, 0.1); z-index: 9999;">
         <div class="card">
             <div class="card-body">
-                <p class="text-dark fw-bold m-0">Anda sedang offline. Pastikan perangkat terhubung
-                    ke internet.</p>
+                <span class="mb-1 fs-2 fw-bold text-uppercase">
+                    Anda sedang offline
+                </span>
             </div>
         </div>
     </div>
