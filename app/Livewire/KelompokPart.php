@@ -7,6 +7,7 @@ use Livewire\Component;
 
 class KelompokPart extends Component
 {
+    public $target = 'periode';
     public $kelompok_2w;
     public $kelompok_4w;
     public $non_aop;

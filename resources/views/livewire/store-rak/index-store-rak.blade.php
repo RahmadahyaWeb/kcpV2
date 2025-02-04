@@ -1,5 +1,6 @@
 <div>
     <x-alert />
+    <x-loading target="" />
 
     <div class="card mb-3">
         <div class="card-header">

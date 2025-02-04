@@ -105,7 +105,7 @@
             overflow: auto
         }
 
-        .canvas{
+        .canvas {
             height: 100%;
         }
 

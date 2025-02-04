@@ -1,4 +1,6 @@
 <div>
+    <x-loading target="" />
+
     <div class="row mb-3">
         <x-total-invoice-card :amount="$total_invoice" />
 
