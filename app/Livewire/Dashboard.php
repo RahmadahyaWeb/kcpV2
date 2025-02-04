@@ -9,10 +9,10 @@ use Livewire\Component;
 
 class Dashboard extends Component
 {
-    public $data;
+    public $data_aop, $data_non_aop;
     public $performance;
 
-    public function fetch_data_for_graph()
+    public function fetch_data_aop_for_graph()
     {
         $kcpinformation = DB::connection('kcpinformation');
 
@@ -155,6 +155,149 @@ class Dashboard extends Component
         ];
     }
 
+    public function fetch_data_non_aop_for_graph()
+    {
+        $kcpinformation = DB::connection('kcpinformation');
+
+        $jualQuery = $kcpinformation->table('trns_inv_header as a')
+            ->selectRaw("SUBSTR(a.crea_date, 1, 7) as periode, SUM(b.nominal_total) as jml")
+            ->join('trns_inv_details as b', 'a.noinv', '=', 'b.noinv')
+            ->join('mst_part as c', 'b.part_no', '=', 'c.part_no')
+            ->whereRaw("SUBSTR(a.crea_date, 1, 4) = '2025'")
+            ->where('a.flag_batal', 'N')
+            ->whereIn('c.supplier', ['KMC', 'ABM', 'SSI'])
+            ->groupByRaw("SUBSTR(a.crea_date, 1, 7)");
+
+        $returQuery = $kcpinformation->table('trns_retur_header as a')
+            ->selectRaw("SUBSTR(a.flag_nota_date, 1, 7) as periode, SUM(b.nominal_total) as retur")
+            ->join('trns_retur_details as b', 'a.noretur', '=', 'b.noretur')
+            ->join('mst_part as c', 'b.part_no', '=', 'c.part_no')
+            ->whereRaw("SUBSTR(a.flag_nota_date, 1, 4) = '2025'")
+            ->where('a.flag_batal', 'N')
+            ->whereIn('c.supplier', ['KMC', 'ABM', 'SSI'])
+            ->groupByRaw("SUBSTR(a.flag_nota_date, 1, 7)");
+
+        $result_1 = $kcpinformation->table(DB::raw("({$jualQuery->toSql()}) as jual"))
+            ->selectRaw("(jual.jml - IFNULL(retur.retur, 0)) as jml")
+            ->mergeBindings($jualQuery)
+            ->leftJoinSub($returQuery, 'retur', 'jual.periode', '=', 'retur.periode')
+            ->orderBy('jual.periode')
+            ->get();
+
+        $result_2 = $kcpinformation->table('mst_target_produk')
+            ->selectRaw("CONCAT(periode, '-', '01') as periode, SUM(jan) as jmlTarget")
+            ->where('periode', date('Y'))
+            ->whereNotIn('kd_area', [''])
+            ->whereIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+            ->groupBy('periode')
+            ->union(
+                $kcpinformation->table('mst_target_produk')
+                    ->selectRaw("CONCAT(periode, '-', '02') as periode, SUM(feb) as jmlTarget")
+                    ->where('periode', date('Y'))
+                    ->whereNotIn('kd_area', [''])
+                    ->whereIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->groupBy('periode')
+            )
+            ->union(
+                $kcpinformation->table('mst_target_produk')
+                    ->selectRaw("CONCAT(periode, '-', '03') as periode, SUM(mar) as jmlTarget")
+                    ->where('periode', date('Y'))
+                    ->whereNotIn('kd_area', [''])
+                    ->whereIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->groupBy('periode')
+            )
+            ->union(
+                $kcpinformation->table('mst_target_produk')
+                    ->selectRaw("CONCAT(periode, '-', '04') as periode, SUM(apr) as jmlTarget")
+                    ->where('periode', date('Y'))
+                    ->whereNotIn('kd_area', [''])
+                    ->whereIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->groupBy('periode')
+            )
+            ->union(
+                $kcpinformation->table('mst_target_produk')
+                    ->selectRaw("CONCAT(periode, '-', '05') as periode, SUM(mei) as jmlTarget")
+                    ->where('periode', date('Y'))
+                    ->whereNotIn('kd_area', [''])
+                    ->whereIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->groupBy('periode')
+            )
+            ->union(
+                $kcpinformation->table('mst_target_produk')
+                    ->selectRaw("CONCAT(periode, '-', '06') as periode, SUM(jun) as jmlTarget")
+                    ->where('periode', date('Y'))
+                    ->whereNotIn('kd_area', [''])
+                    ->whereIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->groupBy('periode')
+            )
+            ->union(
+                $kcpinformation->table('mst_target_produk')
+                    ->selectRaw("CONCAT(periode, '-', '07') as periode, SUM(jul) as jmlTarget")
+                    ->where('periode', date('Y'))
+                    ->whereNotIn('kd_area', [''])
+                    ->whereIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->groupBy('periode')
+            )
+            ->union(
+                $kcpinformation->table('mst_target_produk')
+                    ->selectRaw("CONCAT(periode, '-', '08') as periode, SUM(agt) as jmlTarget")
+                    ->where('periode', date('Y'))
+                    ->whereNotIn('kd_area', [''])
+                    ->whereIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->groupBy('periode')
+            )
+            ->union(
+                $kcpinformation->table('mst_target_produk')
+                    ->selectRaw("CONCAT(periode, '-', '09') as periode, SUM(spt) as jmlTarget")
+                    ->where('periode', date('Y'))
+                    ->whereNotIn('kd_area', [''])
+                    ->whereIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->groupBy('periode')
+            )
+            ->union(
+                $kcpinformation->table('mst_target_produk')
+                    ->selectRaw("CONCAT(periode, '-', '10') as periode, SUM(okt) as jmlTarget")
+                    ->where('periode', date('Y'))
+                    ->whereNotIn('kd_area', [''])
+                    ->whereIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->groupBy('periode')
+            )
+            ->union(
+                $kcpinformation->table('mst_target_produk')
+                    ->selectRaw("CONCAT(periode, '-', '11') as periode, SUM(nop) as jmlTarget")
+                    ->where('periode', date('Y'))
+                    ->whereNotIn('kd_area', [''])
+                    ->whereIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->groupBy('periode')
+            )
+            ->union(
+                $kcpinformation->table('mst_target_produk')
+                    ->selectRaw("CONCAT(periode, '-', '12') as periode, SUM(des) as jmlTarget")
+                    ->where('periode', date('Y'))
+                    ->whereNotIn('kd_area', [''])
+                    ->whereIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->groupBy('periode')
+            )
+            ->orderBy('periode')
+            ->get();
+
+        $arrPenjualan = [];
+        $arrTarget = [];
+
+        foreach ($result_1 as $vCmdPenjualan) {
+            $arrPenjualan[] = floatval($vCmdPenjualan->jml);
+        }
+
+        foreach ($result_2 as $vCmdTarget) {
+            $arrTarget[] = floatval($vCmdTarget->jmlTarget);
+        }
+
+        return [
+            'arrPenjualan'  => $arrPenjualan,
+            'arrTarget'     => $arrTarget,
+        ];
+    }
+
     public function fetch_monthly_target()
     {
         $date_month = date('Y-m');
@@ -261,11 +404,11 @@ class Dashboard extends Component
 
     public function render()
     {
-        $data = $this->fetch_data_for_graph();
+        $this->data_aop = $this->fetch_data_aop_for_graph();
+
+        $this->data_non_aop = $this->fetch_data_non_aop_for_graph();
 
         $this->performance = $this->fetch_monthly_target();
-
-        $this->data = $data;
 
         $total_invoice_data = DB::table('invoice_bosnet')
             ->whereDate('crea_date', '>=', Carbon::now()->startOfMonth())
