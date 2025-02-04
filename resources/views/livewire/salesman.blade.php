@@ -36,7 +36,8 @@
                                         <td class="text-nowrap">{{ $sales->fullname }}</td>
                                         <td>{{ number_format($sales->total_amount, 0, ',', '.') }}</td>
                                         <td>{{ number_format($sales->total_retur, 0, ',', '.') }}</td>
-                                        <td>{{ number_format($sales->total_amount - $sales->total_retur, 0, ',', '.') }}</td>
+                                        <td>{{ number_format($sales->total_amount - $sales->total_retur, 0, ',', '.') }}
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -95,6 +96,10 @@
                 };
 
                 const chartOptions = {
+                    interaction: {
+                        intersect: false,
+                        mode: 'index',
+                    },
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {

@@ -91,6 +91,10 @@
 
                 const chartOptions = {
                     maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index',
+                    },
                     plugins: {
                         legend: {
                             display: true,
