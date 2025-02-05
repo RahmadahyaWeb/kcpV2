@@ -64,8 +64,6 @@
 
                 const ctx = document.getElementById(canvasId);
 
-                console.log(canvasId)
-
                 // Clear the canvas content
                 ctx.getContext('2d').clearRect(0, 0, ctx.width, ctx.height);
 
@@ -86,8 +84,6 @@
                         createDataset('Target', 'rgba(255, 99, 132, 0.6)', 'rgba(255, 99, 132, 1)', data.arrTarget),
                     ]
                 };
-
-                console.log(chartData)
 
                 const chartOptions = {
                     maintainAspectRatio: false,
