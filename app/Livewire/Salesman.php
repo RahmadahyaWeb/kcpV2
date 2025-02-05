@@ -13,7 +13,7 @@ class Salesman extends Component
 
     public function mount()
     {
-        $this->periode = date('Y-m');
+        $this->periode = date('Y-m', strtotime('2025-01'));
     }
 
     public function fetch_invoice_salesman()
@@ -66,8 +66,59 @@ class Salesman extends Component
         ];
     }
 
+    public function get_product_parts($noinv_list)
+    {
+        $kcpinformation = DB::connection('kcpinformation');
+
+        return $kcpinformation->table('trns_inv_details as details')
+            ->join('mst_part as part', 'part.part_no', '=', 'details.part_no')
+            ->whereIn('details.noinv', $noinv_list)
+            ->groupBy('details.noinv', 'part.produk_part', 'part.supplier')
+            ->select([
+                'details.noinv',
+                'part.produk_part',
+                'part.supplier'
+            ])
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->noinv => [
+                    'product_part' => $item->produk_part,
+                    'supplier'     => $item->supplier
+                ]];
+            });
+    }
+
+    public function fetch_invoice()
+    {
+        $kcpinformation = DB::connection('kcpinformation');
+
+        $periode = $this->periode;
+
+        $invoices = $kcpinformation->table('trns_inv_header as header')
+            ->select(['header.noinv'])
+            ->join('trns_inv_details as details', 'details.noinv', '=', 'header.noinv')
+            ->join('mst_part as part', 'part.part_no', '=', 'details.part_no')
+            ->whereRaw("SUBSTR(header.crea_date, 1, 7) = ?", [$periode])
+            ->where('flag_batal', '<>', 'Y')
+            ->groupBy('header.noinv')
+            ->pluck('header.noinv');
+
+        $product_parts = $this->get_product_parts($invoices->toArray());
+
+        $arr_inv = [];
+
+        foreach ($invoices as $noinv) {
+            $arr_inv[$noinv] = [
+                'noinv'         => $noinv,
+                'product_part'  => $product_parts[$noinv]['product_part'] ?? null,
+                'supplier'      => $product_parts[$noinv]['supplier']
+            ];
+        }
+    }
+
     public function render()
     {
+        $this->fetch_invoice();
         $data = $this->fetch_invoice_salesman();
 
         $this->data_salesman = [

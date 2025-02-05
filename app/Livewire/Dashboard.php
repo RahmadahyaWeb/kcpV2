@@ -45,14 +45,14 @@ class Dashboard extends Component
             ->selectRaw("CONCAT(periode, '-', '01') as periode, SUM(jan) as jmlTarget")
             ->where('periode', date('Y'))
             ->whereNotIn('kd_area', [''])
-            ->whereNotIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+            ->whereNotIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
             ->groupBy('periode')
             ->union(
                 $kcpinformation->table('mst_target_produk')
                     ->selectRaw("CONCAT(periode, '-', '02') as periode, SUM(feb) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
-                    ->whereNotIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->whereNotIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
                     ->groupBy('periode')
             )
             ->union(
@@ -60,7 +60,7 @@ class Dashboard extends Component
                     ->selectRaw("CONCAT(periode, '-', '03') as periode, SUM(mar) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
-                    ->whereNotIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->whereNotIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
                     ->groupBy('periode')
             )
             ->union(
@@ -68,7 +68,7 @@ class Dashboard extends Component
                     ->selectRaw("CONCAT(periode, '-', '04') as periode, SUM(apr) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
-                    ->whereNotIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->whereNotIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
                     ->groupBy('periode')
             )
             ->union(
@@ -76,7 +76,7 @@ class Dashboard extends Component
                     ->selectRaw("CONCAT(periode, '-', '05') as periode, SUM(mei) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
-                    ->whereNotIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->whereNotIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
                     ->groupBy('periode')
             )
             ->union(
@@ -84,7 +84,7 @@ class Dashboard extends Component
                     ->selectRaw("CONCAT(periode, '-', '06') as periode, SUM(jun) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
-                    ->whereNotIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->whereNotIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
                     ->groupBy('periode')
             )
             ->union(
@@ -92,7 +92,7 @@ class Dashboard extends Component
                     ->selectRaw("CONCAT(periode, '-', '07') as periode, SUM(jul) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
-                    ->whereNotIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->whereNotIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
                     ->groupBy('periode')
             )
             ->union(
@@ -100,7 +100,7 @@ class Dashboard extends Component
                     ->selectRaw("CONCAT(periode, '-', '08') as periode, SUM(agt) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
-                    ->whereNotIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->whereNotIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
                     ->groupBy('periode')
             )
             ->union(
@@ -108,7 +108,7 @@ class Dashboard extends Component
                     ->selectRaw("CONCAT(periode, '-', '09') as periode, SUM(spt) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
-                    ->whereNotIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->whereNotIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
                     ->groupBy('periode')
             )
             ->union(
@@ -116,7 +116,7 @@ class Dashboard extends Component
                     ->selectRaw("CONCAT(periode, '-', '10') as periode, SUM(okt) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
-                    ->whereNotIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->whereNotIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
                     ->groupBy('periode')
             )
             ->union(
@@ -124,7 +124,7 @@ class Dashboard extends Component
                     ->selectRaw("CONCAT(periode, '-', '11') as periode, SUM(nop) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
-                    ->whereNotIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->whereNotIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
                     ->groupBy('periode')
             )
             ->union(
@@ -132,7 +132,7 @@ class Dashboard extends Component
                     ->selectRaw("CONCAT(periode, '-', '12') as periode, SUM(des) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
-                    ->whereNotIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->whereNotIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
                     ->groupBy('periode')
             )
             ->orderBy('periode')
@@ -188,14 +188,14 @@ class Dashboard extends Component
             ->selectRaw("CONCAT(periode, '-', '01') as periode, SUM(jan) as jmlTarget")
             ->where('periode', date('Y'))
             ->whereNotIn('kd_area', [''])
-            ->whereIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+            ->whereIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
             ->groupBy('periode')
             ->union(
                 $kcpinformation->table('mst_target_produk')
                     ->selectRaw("CONCAT(periode, '-', '02') as periode, SUM(feb) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
-                    ->whereIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->whereIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
                     ->groupBy('periode')
             )
             ->union(
@@ -203,7 +203,7 @@ class Dashboard extends Component
                     ->selectRaw("CONCAT(periode, '-', '03') as periode, SUM(mar) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
-                    ->whereIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->whereIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
                     ->groupBy('periode')
             )
             ->union(
@@ -211,7 +211,7 @@ class Dashboard extends Component
                     ->selectRaw("CONCAT(periode, '-', '04') as periode, SUM(apr) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
-                    ->whereIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->whereIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
                     ->groupBy('periode')
             )
             ->union(
@@ -219,7 +219,7 @@ class Dashboard extends Component
                     ->selectRaw("CONCAT(periode, '-', '05') as periode, SUM(mei) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
-                    ->whereIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->whereIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
                     ->groupBy('periode')
             )
             ->union(
@@ -227,7 +227,7 @@ class Dashboard extends Component
                     ->selectRaw("CONCAT(periode, '-', '06') as periode, SUM(jun) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
-                    ->whereIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->whereIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
                     ->groupBy('periode')
             )
             ->union(
@@ -235,7 +235,7 @@ class Dashboard extends Component
                     ->selectRaw("CONCAT(periode, '-', '07') as periode, SUM(jul) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
-                    ->whereIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->whereIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
                     ->groupBy('periode')
             )
             ->union(
@@ -243,7 +243,7 @@ class Dashboard extends Component
                     ->selectRaw("CONCAT(periode, '-', '08') as periode, SUM(agt) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
-                    ->whereIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->whereIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
                     ->groupBy('periode')
             )
             ->union(
@@ -251,7 +251,7 @@ class Dashboard extends Component
                     ->selectRaw("CONCAT(periode, '-', '09') as periode, SUM(spt) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
-                    ->whereIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->whereIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
                     ->groupBy('periode')
             )
             ->union(
@@ -259,7 +259,7 @@ class Dashboard extends Component
                     ->selectRaw("CONCAT(periode, '-', '10') as periode, SUM(okt) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
-                    ->whereIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->whereIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
                     ->groupBy('periode')
             )
             ->union(
@@ -267,7 +267,7 @@ class Dashboard extends Component
                     ->selectRaw("CONCAT(periode, '-', '11') as periode, SUM(nop) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
-                    ->whereIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->whereIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
                     ->groupBy('periode')
             )
             ->union(
@@ -275,7 +275,7 @@ class Dashboard extends Component
                     ->selectRaw("CONCAT(periode, '-', '12') as periode, SUM(des) as jmlTarget")
                     ->where('periode', date('Y'))
                     ->whereNotIn('kd_area', [''])
-                    ->whereIn('produk_part', ['NON AOP AIR AKI', 'NON AOP PENTIL', 'NON AOP AIR COLANT'])
+                    ->whereIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
                     ->groupBy('periode')
             )
             ->orderBy('periode')
