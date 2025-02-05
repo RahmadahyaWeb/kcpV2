@@ -1,4 +1,6 @@
 <div>
+    <x-alert-alpine />
+
     <x-loading :target="$target" />
 
     <div class="card mb-3">
