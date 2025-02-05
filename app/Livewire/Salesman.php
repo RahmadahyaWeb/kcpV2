@@ -95,7 +95,15 @@ class Salesman extends Component
         $periode = $this->periode;
 
         $invoices = $kcpinformation->table('trns_inv_header as header')
-            ->select(['header.noinv'])
+            // ->select([
+            //     'header.noinv',
+            //     'header.amount_total',
+            //     'outlet.flag_2w',
+            //     'outlet.flag_4w',
+            //     'outlet.area_group_2w',
+            //     'outlet.area_group_4w',
+            // ])
+            ->join('mst_outlet as outlet', 'outlet.kd_outlet', '=', 'header.kd_outlet')
             ->join('trns_inv_details as details', 'details.noinv', '=', 'header.noinv')
             ->join('mst_part as part', 'part.part_no', '=', 'details.part_no')
             ->whereRaw("SUBSTR(header.crea_date, 1, 7) = ?", [$periode])
@@ -114,11 +122,13 @@ class Salesman extends Component
                 'supplier'      => $product_parts[$noinv]['supplier']
             ];
         }
+
+        return $arr_inv;
     }
 
     public function render()
     {
-        $this->fetch_invoice();
+        dd($this->fetch_invoice());
         $data = $this->fetch_invoice_salesman();
 
         $this->data_salesman = [
