@@ -60,7 +60,7 @@ class IndexStoreRak extends Component
             $this->reset('part_number', 'kd_rak');
             $this->dispatch('saved');
 
-            $this->message = 'Berhasil scan part number dan kode rak.';
+            $this->dispatch('show-toast', ['message' => 'Berhasil scan part number dan kode rak.']);
         } catch (\Exception $e) {
             $kcpApplication->rollBack();
 
