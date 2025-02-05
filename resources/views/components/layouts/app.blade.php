@@ -286,10 +286,6 @@
                 $('#createProgramModal').modal('hide');
             });
 
-            document.addEventListener('livewire:navigated', () => {
-                document.getElementById('part_number').focus();
-            })
-
             Livewire.on('saved', () => {
                 document.getElementById('part_number').focus();
             });
