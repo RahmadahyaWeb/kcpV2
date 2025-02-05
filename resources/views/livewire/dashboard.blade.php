@@ -57,7 +57,19 @@
     </div>
 
     @push('script')
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+        <script data-navigate-once src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+        <script>
+            document.addEventListener('livewire:navigated', () => {
+                initializeChart('product_aop', @this.data_aop, 'Penjualan Produk AOP', 'rgba(54, 162, 235, 0.6)',
+                    'rgba(54, 162, 235, 1)');
+                initializeChart('product_non_aop', @this.data_non_aop, 'Penjualan Produk NON AOP',
+                    'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 1)');
+            }, {
+                once: true
+            });
+        </script>
+
         <script>
             // Fungsi untuk menginisialisasi chart
             function initializeChart(canvasId, data, label, bgColor, borderColor) {
