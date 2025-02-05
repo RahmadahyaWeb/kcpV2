@@ -155,27 +155,6 @@
                                 document.getElementById("placeholder").classList.remove('d-none');
 
                                 window.location.href = redirectUrl;
-
-                                // if (kd_toko == 'TQ') {
-                                //     $('#tqModal').modal('show');
-
-                                //     document.getElementById('confirmSelection').onclick = () => {
-                                //         const selectedOption = document.querySelector(
-                                //             'input[name="Tq"]:checked').id;
-
-                                //         $('#tqModal').modal('hide');
-
-                                //         if (katalog) {
-                                //             window.location.href =
-                                //                 `/dks-scan/${selectedOption}?katalog=${katalog}`;
-                                //         } else {
-                                //             window.location.href =
-                                //                 `/dks-scan/${selectedOption}`;
-                                //         }
-
-                                //     };
-                                // } else {
-                                // }
                             });
                         };
 
