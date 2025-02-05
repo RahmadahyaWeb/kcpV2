@@ -13,7 +13,7 @@ class IndexMasterToko extends Component
 {
     use WithPagination, WithoutUrlPagination;
 
-    public $target = 'sync_lokasi,kode_toko,nama_toko,status';
+    public $target = 'sync_lokasi,kode_toko,nama_toko,status, sync_frekuensi';
 
     public $kode_toko;
     public $nama_toko;
@@ -69,6 +69,33 @@ class IndexMasterToko extends Component
             // Rollback transaksi jika ada error
             DB::connection('kcpinformation')->rollBack();
 
+            session()->flash('error', $e->getMessage());
+        }
+    }
+
+    public function sync_frekuensi()
+    {
+        try {
+            $kcpinformation = DB::connection('kcpinformation');
+            $kcpinformation->beginTransaction();
+
+            $items = DB::table('frekuensi_toko_temp')
+                ->where('periode_tahun', date('Y'))
+                ->where('periode_bulan', (int) date('m'))
+                ->get();
+
+            foreach ($items as $item) {
+                $kcpinformation->table('mst_outlet')
+                    ->where('kd_outlet', $item->kd_outlet)
+                    ->update([
+                        'frekuensi' => $item->frekuensi
+                    ]);
+            }
+
+            $kcpinformation->commit();
+            session()->flash('success', 'Berhasil sync frekuensi toko.');
+        } catch (\Exception $e) {
+            $kcpinformation->rollBack();
             session()->flash('error', $e->getMessage());
         }
     }

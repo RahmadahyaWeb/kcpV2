@@ -22,7 +22,8 @@
                             </div>
                         @enderror
 
-                        <div class="d-flex justify-content-end">
+                        <div class="d-flex justify-content-end gap-3">
+                            <button type="button" wire:click="sync_frekuensi" class="mt-3 btn btn-primary">Sync</button>
                             <button type="submit" class="mt-3 btn btn-success">Upload</button>
                         </div>
                     </form>
@@ -74,7 +75,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($items as $item)
+                        @forelse ($items as $item)
                             <tr>
                                 <td style="white-space: nowrap">{{ $item->kd_outlet }}</td>
                                 <td style="white-space: nowrap">{{ $item->nm_outlet }}</td>
@@ -87,7 +88,11 @@
                                         class="btn btn-sm btn-warning" wire:navigate>Edit</a>
                                 </td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center">No Data</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
