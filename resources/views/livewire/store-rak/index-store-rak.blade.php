@@ -18,7 +18,7 @@
                         <label for="part_number" class="form-label">Part Number</label>
                         <input type="text" class="form-control @error('part_number') is-invalid @enderror"
                             name="part_number" id="part_number" wire:model="part_number" placeholder="Scan part number"
-                            autofocus @keyup.enter="$nextTick(() => $refs.kdRak.focus())">
+                            autofocus @keyup.enter="$nextTick(() => $refs.kdRak.focus())" wire:ignore.self>
 
                         @error('part_number')
                             <div class="invalid-feedback">
