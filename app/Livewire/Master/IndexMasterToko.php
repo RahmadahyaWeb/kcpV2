@@ -79,9 +79,12 @@ class IndexMasterToko extends Component
             $kcpinformation = DB::connection('kcpinformation');
             $kcpinformation->beginTransaction();
 
+            $bulan = date('m');
+            $tahun = date('Y');
+
             $items = DB::table('frekuensi_toko_temp')
-                ->where('periode_tahun', date('Y'))
-                ->where('periode_bulan', (int) date('m'))
+                ->where('periode_tahun', $tahun)
+                ->where('periode_bulan', (int) $bulan)
                 ->get();
 
             foreach ($items as $item) {
@@ -93,7 +96,7 @@ class IndexMasterToko extends Component
             }
 
             $kcpinformation->commit();
-            session()->flash('success', 'Berhasil sync frekuensi toko.');
+            session()->flash('success', "Berhasil sync frekuensi toko. Periode bulan $bulan tahun $tahun.");
         } catch (\Exception $e) {
             $kcpinformation->rollBack();
             session()->flash('error', $e->getMessage());
