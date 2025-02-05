@@ -14,10 +14,14 @@ class IndexStoreRak extends Component
 {
     use WithPagination;
 
+    public $target = "save, to_date";
     public $part_number;
     public $kd_rak;
     public $from_date;
     public $to_date;
+
+    public $message;
+    public $messageType = "success";
 
     public function save()
     {
@@ -27,55 +31,70 @@ class IndexStoreRak extends Component
         ]);
 
         try {
-            $kcpapplication = DB::connection('mysql');
-            $kcpapplication->beginTransaction();
+            $kcpApplication = DB::connection('mysql');
+            $kcpApplication->beginTransaction();
 
-            $part_number = preg_replace('/\s+/', '', $this->part_number);
-            $kd_rak = preg_replace('/\s+/', '', $this->kd_rak);
+            $partNumber = trim($this->part_number);
+            $kdRak = trim($this->kd_rak);
 
             // CARI NAMA PART
-            $nama_part = DB::connection('kcpinformation')
+            $namaPart = DB::connection('kcpinformation')
                 ->table('mst_part')
-                ->where('part_no', $part_number)
+                ->where('part_no', $partNumber)
                 ->value('nm_part');
 
-            if ($nama_part) {
-                DB::table('trans_store_rak')
-                    ->insert([
-                        'part_number' => $part_number,
-                        'nama_part'   => $nama_part,
-                        'kd_rak'      => $kd_rak,
-                        'user_id'     => Auth::user()->username,
-                        'created_at'  => now()
-                    ]);
-
-                $kcpapplication->commit();
-
-                $this->dispatch('saved');
-                $this->reset();
-            } else {
+            if (!$namaPart) {
                 throw new \Exception('Part number tidak ditemukan.');
             }
-        } catch (\Exception $e) {
-            $kcpapplication->rollBack();
 
+            $kcpApplication->table('trans_store_rak')->insert([
+                'part_number' => $partNumber,
+                'nama_part'   => $namaPart,
+                'kd_rak'      => $kdRak,
+                'user_id'     => Auth::id(),
+                'created_at'  => now()
+            ]);
+
+            $kcpApplication->commit();
+
+            $this->reset('part_number', 'kd_rak');
             $this->dispatch('saved');
-            $this->reset();
+
+            $this->message = 'Berhasil scan part number dan kode rak.';
+        } catch (\Exception $e) {
+            $kcpApplication->rollBack();
+
+            $this->reset('part_number', 'kd_rak');
+            $this->dispatch('saved');
+
+            $this->messageType = 'error';
+            $this->message = $e->getMessage();
         }
     }
 
     public function update_status()
     {
-        $update = DB::table('trans_store_rak')
-            ->where('status', 'unfinished')
-            ->update([
-                'status' => 'finished'
-            ]);
+        try {
+            DB::beginTransaction();
 
-        if ($update > 0) {
-            session()->flash('success', "Berhasil update status.");
-        } else {
-            session()->flash('error', "Tidak ada data yang diupdate.");
+            $update = DB::table('trans_store_rak')
+                ->where('status', 'unfinished')
+                ->update([
+                    'status' => 'finished'
+                ]);
+
+            if ($update > 0) {
+                DB::commit();
+
+                $this->message = "Berhasil update status.";
+            } else {
+                throw new \Exception("Tidak ada data yang diupdate.");
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            $this->messageType = "error";
+            $this->message = $e->getMessage();
         }
     }
 
@@ -91,11 +110,25 @@ class IndexStoreRak extends Component
 
     public function destroy($id)
     {
-        DB::table('trans_store_rak')
-            ->where('id', $id)
-            ->delete();
+        try {
+            DB::beginTransaction();
 
-        $this->dispatch('saved');
+            $deleted = DB::table('trans_store_rak')
+                ->where('id', $id)
+                ->delete();
+
+            DB::commit();
+
+            $this->message = "Data berhasil dihapus.";
+            $this->messageType = "success";
+
+            $this->dispatch('saved');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            $this->message = $e->getMessage();
+            $this->messageType = "error";
+        }
     }
 
     public function render()
@@ -103,28 +136,30 @@ class IndexStoreRak extends Component
         $user = Auth::user();
         $status = $user->hasRole('inventory') ? 'finished' : 'unfinished';
 
+        $items = DB::table('trans_store_rak')
+            ->join('users', 'users.id', '=', 'trans_store_rak.user_id')
+            ->select([
+                'trans_store_rak.id',
+                'part_number',
+                'nama_part',
+                'kd_rak',
+                'users.username',
+                'trans_store_rak.created_at'
+            ])
+            ->orderBy('created_at', 'desc');
+
         if ($user->hasRole('inventory')) {
-            $items = DB::table('trans_store_rak')
-                ->orderBy('created_at', 'desc')
-                ->where('status', $status);
+            $items->where('trans_store_rak.status', $status);
         } else {
-            $items = DB::table('trans_store_rak')
-            ->orderBy('created_at', 'desc')
-            ->where('status', $status)
-            ->where('user_id', Auth::id());
+            $items->where('trans_store_rak.status', $status)->where('user_id', Auth::id());
         }
 
-        $from_date = $this->from_date;
-        $to_date = $this->to_date;
+        $fromDateFormatted = \Carbon\Carbon::parse($this->from_date)->format('Y-m-d');
+        $toDateFormatted = \Carbon\Carbon::parse($this->to_date)->format('Y-m-d');
 
-        if (!empty($from_date) && !empty($to_date)) {
-            // Format date to include start and end of the day
-            $from_date = Carbon::parse($from_date)->startOfDay();
-            $to_date = Carbon::parse($to_date)->endOfDay();
-            $items = $items->whereBetween('created_at', [$from_date, $to_date]);
-        }
-
-        $items = $items->paginate(50);
+        $items = $items->when($this->from_date && $this->to_date, function ($query) use ($fromDateFormatted, $toDateFormatted) {
+            return $query->whereBetween(DB::raw('DATE(trans_store_rak.created_at)'), [$fromDateFormatted, $toDateFormatted]);
+        })->paginate();
 
         return view('livewire.store-rak.index-store-rak', compact('items'));
     }

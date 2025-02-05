@@ -1,6 +1,11 @@
 <div>
-    <x-alert />
-    <x-loading target="" />
+    @if ($message)
+        <div class="alert alert-{{ $messageType === 'success' ? 'primary' : 'danger' }}">
+            {{ $message }}
+        </div>
+    @endif
+
+    <x-loading :target="$target" />
 
     <div class="card mb-3">
         <div class="card-header">
@@ -45,12 +50,6 @@
 
         <div class="card-body">
             @hasanyrole(['inventory'])
-                <div class="d-flex gap-2 mb-3 py-4" style="overflow-x: auto; white-space: nowrap;">
-                    <button type="button" class="btn btn-primary" wire:click="update_status"
-                        wire:confirm="Yakin ingin update status?">
-                        Selesai
-                    </button>
-                </div>
                 <form wire:submit.prevent="export">
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -95,10 +94,11 @@
                                 <td style="white-space: nowrap">{{ $item->part_number }}</td>
                                 <td>{{ $item->nama_part }}</td>
                                 <td>{{ $item->kd_rak }}</td>
-                                <td>{{ $item->user_id }}</td>
+                                <td>{{ $item->username }}</td>
                                 <td>{{ $item->created_at }}</td>
                                 <td>
-                                    <button type="button" wire:click="destroy({{ $item->id }})" class="btn btn-sm btn-danger">Hapus</button>
+                                    <button type="button" wire:click="destroy({{ $item->id }})"
+                                        class="btn btn-sm btn-danger">Hapus</button>
                                 </td>
                             </tr>
                         @empty
@@ -115,17 +115,4 @@
             {{ $items->links() }}
         </div>
     </div>
-
-    @push('script')
-        @livewireScripts
-        <script>
-            document.addEventListener('livewire:navigated', () => {
-                document.getElementById('part_number').focus();
-            })
-
-            Livewire.on('saved', () => {
-                document.getElementById('part_number').focus();
-            });
-        </script>
-    @endpush
 </div>
