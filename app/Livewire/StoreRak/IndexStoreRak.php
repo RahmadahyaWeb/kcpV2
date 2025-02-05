@@ -20,9 +20,6 @@ class IndexStoreRak extends Component
     public $from_date;
     public $to_date;
 
-    public $message;
-    public $messageType = "success";
-
     public function save()
     {
         $this->validate([
@@ -59,16 +56,14 @@ class IndexStoreRak extends Component
 
             $this->reset('part_number', 'kd_rak');
             $this->dispatch('saved');
+            $this->dispatch('success', ['message' => 'Berhasil scan part number dan kode rak.']);
 
-            $this->dispatch('show-toast', ['message' => 'Berhasil scan part number dan kode rak.']);
         } catch (\Exception $e) {
             $kcpApplication->rollBack();
 
             $this->reset('part_number', 'kd_rak');
             $this->dispatch('saved');
-
-            $this->messageType = 'error';
-            $this->message = $e->getMessage();
+            $this->dispatch('error', ['message' => $e->getMessage()]);
         }
     }
 
@@ -86,15 +81,14 @@ class IndexStoreRak extends Component
             if ($update > 0) {
                 DB::commit();
 
-                $this->message = "Berhasil update status.";
+                $this->dispatch('success', ['message' => 'Berhasil update status.']);
             } else {
                 throw new \Exception("Tidak ada data yang diupdate.");
             }
         } catch (\Exception $e) {
             DB::rollBack();
 
-            $this->messageType = "error";
-            $this->message = $e->getMessage();
+            $this->dispatch('error', ['message' => $e->getMessage()]);
         }
     }
 
@@ -119,15 +113,15 @@ class IndexStoreRak extends Component
 
             DB::commit();
 
-            $this->message = "Data berhasil dihapus.";
-            $this->messageType = "success";
+            $this->dispatch('success', ['message' => 'Data berhasil dihapus.']);
 
             $this->dispatch('saved');
         } catch (\Exception $e) {
             DB::rollBack();
 
-            $this->message = $e->getMessage();
-            $this->messageType = "error";
+            $this->dispatch('saved');
+
+            $this->dispatch('error', ['message' => $e->getMessage()]);
         }
     }
 
