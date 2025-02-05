@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DksController;
+use App\Http\Controllers\UploadController;
 use App\Livewire\Auth\Login;
 use App\Livewire\Comparator\IndexComparator;
 use App\Livewire\CustomerPayment\DetailCustomerPayment;
@@ -80,6 +81,9 @@ Route::middleware('auth')->group(function () {
         // MASTER TOKO
         Route::get('/master/toko', IndexMasterToko::class)->name('master-toko.index');
         Route::get('/master/toko/edit/{kode_toko}', EditMasterToko::class)->name('master-toko.edit');
+
+        // UPLOAD FREKUENSI TOKO
+        Route::post('/master/toko/upload-frekuensi', [UploadController::class, 'import_frekuensi_toko'])->name('upload-frekuensi');
     });
 
     /**

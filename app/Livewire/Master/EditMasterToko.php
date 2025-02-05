@@ -12,6 +12,7 @@ class EditMasterToko extends Component
     public $kode_toko;
     public $latitude;
     public $longitude;
+    public $frekuensi;
 
     public function mount($kode_toko)
     {
@@ -24,6 +25,7 @@ class EditMasterToko extends Component
         $this->nama_toko = $item->nm_outlet;
         $this->latitude = $item->latitude;
         $this->longitude = $item->longitude;
+        $this->frekuensi = $item->frekuensi;
     }
 
     public function save()

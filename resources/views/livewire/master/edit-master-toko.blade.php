@@ -33,6 +33,17 @@
                                 @enderror
                             </div>
                             <div class="col-12">
+                                <label for="frekuensi" class="form-label">Frekuensi</label>
+                                <input type="number" class="form-control @error('frekuensi') is-invalid @enderror"
+                                    placeholder="frekuensi" wire:model="frekuensi">
+
+                                @error('frekuensi')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="col-12">
                                 <button type="submit" class="btn btn-primary">Simpan</button>
                             </div>
                         </div>

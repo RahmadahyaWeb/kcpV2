@@ -2,6 +2,35 @@
     <x-alert />
     <x-loading :target="$target" />
 
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Upload Frekuensi Toko
+                </div>
+
+                <div class="card-body">
+                    <form action="{{ route('upload-frekuensi') }}" enctype="multipart/form-data" method="POST">
+                        @csrf
+                        <label for="file_frekuensi" class="form-label">File Frekuensi</label>
+                        <input type="file" class="form-control @error('file_frekuensi') is-invalid @enderror"
+                            name="file_frekuensi" id="file_frekuensi">
+
+                        @error('file_frekuensi')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="mt-3 btn btn-success">Upload</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="card">
         <div class="card-header">
             Master Toko
@@ -14,11 +43,13 @@
             <div class="row mb-3">
                 <div class="col-md-4 mb-3">
                     <label for="kode_toko" class="form-label">Kode Toko</label>
-                    <input type="text" class="form-control" placeholder="Kode Toko" wire:model.live.debounce.150ms="kode_toko">
+                    <input type="text" class="form-control" placeholder="Kode Toko"
+                        wire:model.live.debounce.150ms="kode_toko">
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="nama_toko" class="form-label">Nama Toko</label>
-                    <input type="text" class="form-control" placeholder="Nama Toko" wire:model.live.debounce.150ms="nama_toko">
+                    <input type="text" class="form-control" placeholder="Nama Toko"
+                        wire:model.live.debounce.150ms="nama_toko">
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="status" class="form-label">Status</label>
