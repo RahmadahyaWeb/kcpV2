@@ -88,6 +88,31 @@ class Salesman extends Component
             });
     }
 
+    public function get_product_parts_non_aop($noretur_list)
+    {
+        $kcpinformation = DB::connection('kcpinformation');
+
+        return $kcpinformation->table('trns_retur_details as details')
+            ->join('trns_retur_header as retur_header', 'retur_header.noretur', '=', 'details.noretur')
+            ->join('mst_part as part', 'part.part_no', '=', 'details.part_no')
+            ->whereIn('details.noretur', $noretur_list)
+            ->groupBy('details.noretur', 'part.produk_part', 'part.supplier')
+            ->select([
+                'details.noretur',
+                'part.produk_part',
+                'part.supplier',
+                DB::raw('SUM(details.nominal_total) as total_retur')
+            ])
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->noretur => [
+                    'product_part' => $item->produk_part,
+                    'supplier'     => $item->supplier,
+                    'amount_total' => $item->total_retur
+                ]];
+            });
+    }
+
     public function fetch_invoice()
     {
         $kcpinformation = DB::connection('kcpinformation');
@@ -221,20 +246,25 @@ class Salesman extends Component
                     $report[$area] = [
                         'salesman_astra'   => [],
                         'salesman_non_astra' => [],
-                        'total_astra'      => 0,
-                        'total_non_astra'  => 0,
+                        'total_inv_astra'      => 0,
+                        'total_inv_non_astra'  => 0,
                         'target_aop' => 0, // Menambahkan target AOP dengan nilai awal 0
                         'target_non_aop' => 0, // Menambahkan target Non-AOP dengan nilai awal 0
                         'persen_aop' => 0, // Menambahkan kolom persen_aop dengan nilai awal 0
                         'persen_non_aop' => 0, // Menambahkan kolom persen_non_aop dengan nilai awal 0
-                        'total_retur' => 0,
+                        'total_retur_astra' => 0,
+                        'total_retur_non_astra' => 0,
+                        'total_astra' => 0,
+                        'total_non_astra' => 0,
                     ];
                 }
 
                 // Hitung total invoice berdasarkan supplier
                 if ($data['supplier'] === 'ASTRA OTOPART') {
+                    $report[$area]['total_inv_astra'] += $data['amount_total'];
                     $report[$area]['total_astra'] += $data['amount_total'];
                 } else {
+                    $report[$area]['total_inv_non_astra'] += $data['amount_total'];
                     $report[$area]['total_non_astra'] += $data['amount_total'];
                 }
 
@@ -265,37 +295,59 @@ class Salesman extends Component
 
                 // Hitung persentase AOP
                 if ($report[$area]['target_aop'] > 0) {
-                    $report[$area]['persen_aop'] = round(($report[$area]['total_astra'] / $report[$area]['target_aop']) * 100);
+                    $report[$area]['persen_aop'] = round(($report[$area]['total_inv_astra'] / $report[$area]['target_aop']) * 100);
                 }
 
                 // Hitung persentase Non-AOP
                 if ($report[$area]['target_non_aop'] > 0) {
-                    $report[$area]['persen_non_aop'] = round(($report[$area]['total_non_astra'] / $report[$area]['target_non_aop']) * 100);
+                    $report[$area]['persen_non_aop'] = round(($report[$area]['total_inv_non_astra'] / $report[$area]['target_non_aop']) * 100);
                 }
             }
         }
 
-
-        $data_retur = $kcpinformation->table('trns_inv_header')
-            ->join('trns_retur_header as retur_header', 'retur_header.noinv', '=', 'trns_inv_header.noinv')
-            ->join('trns_retur_details as retur_detail', 'retur_header.noretur', '=', 'retur_detail.noretur')
+        $data_retur = $kcpinformation->table('trns_retur_header as retur_header')
             ->join('mst_outlet as outlet', 'outlet.kd_outlet', '=', 'retur_header.kd_outlet')
             ->select([
+                'retur_header.noretur',
                 'outlet.area_group_2w',
                 'outlet.area_group_4w',
                 'outlet.flag_2w',
-                DB::raw('SUM(retur_detail.nominal_total) as total_retur')
             ])
             ->where(DB::raw('SUBSTR(retur_header.flag_nota_date, 1, 7)'), '=', [$periode])
             ->where('retur_header.flag_nota', '=', 'Y')
-            ->where('trns_inv_header.flag_batal', '<>', 'Y')
-            ->groupBy('retur_detail.noretur') // Group by area
+            ->groupBy('retur_header.noretur') // Group by area
             ->get();
+
+        $product_parts_non_aop = $this->get_product_parts_non_aop($data_retur->pluck('noretur')->toArray());
 
         foreach ($data_retur as $retur) {
             $area = ($retur->flag_2w == 'Y') ? $retur->area_group_2w : $retur->area_group_4w;
 
-            $report[$area]['total_retur'] += $retur->total_retur;
+            if (!empty($area) && $area != 'FLEET USER') {
+                $data = [
+                    'noretur'       => $retur->noretur,
+                    'supplier'      => $product_parts_non_aop[$retur->noretur]['supplier'] ?? null,
+                    'amount_total'  => $product_parts_non_aop[$retur->noretur]['amount_total'] ?? null
+                ];
+            }
+
+            // Hitung total retur berdasarkan supplier
+            if ($data['supplier'] === 'ASTRA OTOPART') {
+                $report[$area]['total_retur_astra'] += $data['amount_total'];
+                $report[$area]['total_astra'] -= $data['amount_total'];
+            } else {
+                $report[$area]['total_retur_non_astra'] += $data['amount_total'];
+                $report[$area]['total_non_astra'] -= $data['amount_total'];
+            }
+
+            if ($report[$area]['target_aop'] > 0) {
+                $report[$area]['persen_aop'] -= round(($report[$area]['total_retur_astra'] / $report[$area]['target_aop']) * 100);
+            }
+
+            // Hitung persentase Non-AOP
+            if ($report[$area]['target_non_aop'] > 0) {
+                $report[$area]['persen_non_aop'] -= round(($report[$area]['total_retur_non_astra'] / $report[$area]['target_non_aop']) * 100);
+            }
         }
 
         return $report;

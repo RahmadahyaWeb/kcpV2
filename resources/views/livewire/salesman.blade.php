@@ -23,10 +23,11 @@
                             <thead>
                                 <tr>
                                     <th>Nama Area</th>
-                                    <th>Target Area</th>
                                     <th>Sales AOP</th>
+                                    <th>Target Area</th>
                                     <th>Total Invoice AOP</th>
                                     <th>Total Retur AOP</th>
+                                    <th>Total AOP</th>
                                     <th>Pencapaian (Persen)</th>
                                 </tr>
                             </thead>
@@ -35,17 +36,20 @@
                                     <!-- Hanya tampilkan jika ada salesman AOP -->
                                     <tr>
                                         <td>{{ $area }}</td>
-                                        <td>{{ number_format($data['target_aop'], 0, ',', '.') }}</td>
                                         <td>
                                             @foreach ($data['salesman_astra'] as $sales)
                                                 <span class="text-nowrap">{{ $sales }}</span><br>
                                             @endforeach
                                         </td>
+                                        <td>{{ number_format($data['target_aop'], 0, ',', '.') }}</td>
                                         <td>
-                                            {{ number_format($data['total_astra'], 0, ',', '.') }}
+                                            {{ number_format($data['total_inv_astra'], 0, ',', '.') }}
                                         </td>
                                         <td>
-                                            {{ number_format($data['total_retur'], 0, ',', '.') }}
+                                            {{ number_format($data['total_retur_astra'], 0, ',', '.') }}
+                                        </td>
+                                        <td>
+                                            {{ number_format($data['total_astra'], 0, ',', '.') }}
                                         </td>
                                         <td>
                                             {{ $data['persen_aop'] }}%
@@ -66,37 +70,47 @@
 
                 <div class="card-body">
                     <!-- Tabel untuk Sales Non AOP -->
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Nama Area</th>
-                                <th>Target Area</th>
-                                <th>Sales NON AOP</th>
-                                <th>Total Invoice NON AOP</th>
-                                <th>Pencapaian (Persen)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($report as $area => $data)
-                                <!-- Hanya tampilkan jika ada salesman Non AOP -->
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
                                 <tr>
-                                    <td>{{ $area }}</td>
-                                    <td>{{ number_format($data['target_non_aop'], 0, ',', '.') }}</td>
-                                    <td>
-                                        @foreach ($data['salesman_non_astra'] as $sales)
-                                            <span class="text-nowrap">{{ $sales }}</span><br>
-                                        @endforeach
-                                    </td>
-                                    <td>
-                                        {{ number_format($data['total_non_astra'], 0, ',', '.') }}
-                                    </td>
-                                    <td>
-                                        {{ $data['persen_non_aop'] }}%
-                                    </td>
+                                    <th>Nama Area</th>
+                                    <th>Sales NON AOP</th>
+                                    <th>Target Area</th>
+                                    <th>Total Invoice NON AOP</th>
+                                    <th>Total Retur NON AOP</th>
+                                    <th>Total NON AOP</th>
+                                    <th>Pencapaian (Persen)</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach ($report as $area => $data)
+                                    <!-- Hanya tampilkan jika ada salesman Non AOP -->
+                                    <tr>
+                                        <td>{{ $area }}</td>
+                                        <td>
+                                            @foreach ($data['salesman_non_astra'] as $sales)
+                                                <span class="text-nowrap">{{ $sales }}</span><br>
+                                            @endforeach
+                                        </td>
+                                        <td>{{ number_format($data['target_non_aop'], 0, ',', '.') }}</td>
+                                        <td>
+                                            {{ number_format($data['total_inv_non_astra'], 0, ',', '.') }}
+                                        </td>
+                                        <td>
+                                            {{ number_format($data['total_retur_non_astra'], 0, ',', '.') }}
+                                        </td>
+                                        <td>
+                                            {{ number_format($data['total_non_astra'], 0, ',', '.') }}
+                                        </td>
+                                        <td>
+                                            {{ $data['persen_non_aop'] }}%
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
