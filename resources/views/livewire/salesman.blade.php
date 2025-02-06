@@ -10,33 +10,45 @@
         </div>
     </div>
 
-    <div class="row mb-3">
+    <div class="row mb-3 gap-3">
         <div class="col-12">
             <div class="card">
+                <div class="card-header">
+                    AOP
+                </div>
                 <div class="card-body">
                     <div class="table-responsive">
+                        <!-- Tabel untuk Sales AOP -->
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>NO</th>
-                                    <th>NAMA SALES</th>
-                                    <th>AMOUNT TOTAL (INVOICE)</th>
-                                    <th>AMOUNT TOTAL (RETUR)</th>
-                                    <th>TOTAL</th>
+                                    <th>Nama Area</th>
+                                    <th>Target Area</th>
+                                    <th>Sales AOP</th>
+                                    <th>Total Invoice AOP</th>
+                                    <th>Total Retur AOP</th>
+                                    <th>Pencapaian (Persen)</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @php
-                                    $no = 1;
-                                @endphp
-
-                                @foreach ($salesmanData as $sales)
+                                @foreach ($report as $area => $data)
+                                    <!-- Hanya tampilkan jika ada salesman AOP -->
                                     <tr>
-                                        <td>{{ $no++ }}</td>
-                                        <td class="text-nowrap">{{ $sales->fullname }}</td>
-                                        <td>{{ number_format($sales->total_amount, 0, ',', '.') }}</td>
-                                        <td>{{ number_format($sales->total_retur, 0, ',', '.') }}</td>
-                                        <td>{{ number_format($sales->total_amount - $sales->total_retur, 0, ',', '.') }}
+                                        <td>{{ $area }}</td>
+                                        <td>{{ number_format($data['target_aop'], 0, ',', '.') }}</td>
+                                        <td>
+                                            @foreach ($data['salesman_astra'] as $sales)
+                                                <span class="text-nowrap">{{ $sales }}</span><br>
+                                            @endforeach
+                                        </td>
+                                        <td>
+                                            {{ number_format($data['total_astra'], 0, ',', '.') }}
+                                        </td>
+                                        <td>
+                                            {{ number_format($data['total_retur'], 0, ',', '.') }}
+                                        </td>
+                                        <td>
+                                            {{ $data['persen_aop'] }}%
                                         </td>
                                     </tr>
                                 @endforeach
@@ -46,9 +58,51 @@
                 </div>
             </div>
         </div>
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    NON AOP
+                </div>
+
+                <div class="card-body">
+                    <!-- Tabel untuk Sales Non AOP -->
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nama Area</th>
+                                <th>Target Area</th>
+                                <th>Sales NON AOP</th>
+                                <th>Total Invoice NON AOP</th>
+                                <th>Pencapaian (Persen)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($report as $area => $data)
+                                <!-- Hanya tampilkan jika ada salesman Non AOP -->
+                                <tr>
+                                    <td>{{ $area }}</td>
+                                    <td>{{ number_format($data['target_non_aop'], 0, ',', '.') }}</td>
+                                    <td>
+                                        @foreach ($data['salesman_non_astra'] as $sales)
+                                            <span class="text-nowrap">{{ $sales }}</span><br>
+                                        @endforeach
+                                    </td>
+                                    <td>
+                                        {{ number_format($data['total_non_astra'], 0, ',', '.') }}
+                                    </td>
+                                    <td>
+                                        {{ $data['persen_non_aop'] }}%
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div x-data="{
+    {{-- <div x-data="{
         dataSalesman: @entangle('data_salesman'),
     }" x-init="$nextTick(() => {
         initializeChart('salesman', dataSalesman, 'Total', 'rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 1)');
@@ -68,9 +122,9 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
-    @push('script')
+    {{-- @push('script')
         <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
         <script>
             // Fungsi untuk menginisialisasi chart
@@ -135,5 +189,5 @@
                 };
             }
         </script>
-    @endpush
+    @endpush --}}
 </div>
