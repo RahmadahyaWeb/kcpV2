@@ -213,6 +213,8 @@ class Salesman extends Component
             ->get()
             ->keyBy('area');
 
+        dd($targets_non_aop);
+
         $bulan = date('m', strtotime($this->periode)); // Mendapatkan bulan dari periode
 
         $bulanMapping = [
