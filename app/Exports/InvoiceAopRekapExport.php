@@ -2,12 +2,14 @@
 
 namespace App\Exports;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class InvoiceAopRekapExport implements FromCollection, WithHeadings, WithMapping, WithColumnFormatting
 {
@@ -45,8 +47,8 @@ class InvoiceAopRekapExport implements FromCollection, WithHeadings, WithMapping
         return [
             $row->invoiceAop,
             $row->customerTo,
-            $row->billingDocumentDate,
-            $row->tanggalJatuhTempo,
+            Date::dateTimeToExcel(Carbon::parse($row->billingDocumentDate)),
+            Date::dateTimeToExcel(Carbon::parse($row->tanggalJatuhTempo)),
             $row->materialNumber,
             $row->qty,
             $row->amount,
@@ -70,6 +72,7 @@ class InvoiceAopRekapExport implements FromCollection, WithHeadings, WithMapping
     {
         return [
             'C' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'D' => NumberFormat::FORMAT_DATE_DDMMYYYY,
         ];
     }
 }
