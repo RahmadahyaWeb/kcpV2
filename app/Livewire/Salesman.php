@@ -201,19 +201,17 @@ class Salesman extends Component
             ->where('periode', date('Y', strtotime($this->periode)))
             ->whereNotIn('kd_area', ['']);
 
-        $targets_aop = $targets
+        $targets_aop = (clone $targets)
             ->whereNotIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
-            ->groupBy('area')  // Group by area untuk ambil target per area
+            ->groupBy('area')
             ->get()
             ->keyBy('area');
 
-        $targets_non_aop = $targets
+        $targets_non_aop = (clone $targets)
             ->whereIn('produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
-            ->groupBy('area')  // Group by area untuk ambil target per area
-            ->get()
+            ->groupBy('area')
+            ->get() // Pastikan diambil datanya
             ->keyBy('area');
-
-        dd($targets_non_aop);
 
         $bulan = date('m', strtotime($this->periode)); // Mendapatkan bulan dari periode
 
