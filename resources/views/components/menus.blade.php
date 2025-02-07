@@ -11,7 +11,7 @@
                     <a href="{{ $menu['route'] ? route($menu['route']) : 'javascript:void(0);' }}"
                         class="menu-link {{ $menu['children'] ? 'menu-toggle' : '' }}"
                         @if ($menu['children']) @click="isOpen = !isOpen" @endif
-                        @if ($menu['route']) wire:navigate @endif @click="isMenuExpanded = !isMenuExpanded">
+                        @if ($menu['route'] && $menu['route'] !== 'dashboard') wire:navigate @endif @click="isMenuExpanded = !isMenuExpanded">
                         <i class="menu-icon tf-icons {{ $menu['icon'] }}"></i>
                         <div class="text-truncate">{{ $menu['label'] }}</div>
                     </a>
@@ -19,7 +19,8 @@
                         <ul class="menu-sub" x-show="isOpen">
                             @foreach ($menu['children'] as $child)
                                 <li class="menu-item {{ $child['active'] ? 'active' : '' }}">
-                                    <a href="{{ route($child['route']) }}" class="menu-link" wire:navigate
+                                    <a href="{{ route($child['route']) }}" class="menu-link"
+                                        @if ($child['route'] !== 'dashboard') wire:navigate @endif
                                         @click="isMenuExpanded = !isMenuExpanded">
                                         <div class="text-truncate">{{ $child['label'] }}</div>
                                     </a>
