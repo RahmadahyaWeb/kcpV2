@@ -25,6 +25,8 @@
                                     <th>Nama Area</th>
                                     <th>Sales AOP</th>
                                     <th>Target Area</th>
+                                    <th>Total Invoice 2W</th>
+                                    <th>Total Invoice 4W</th>
                                     <th>Total Invoice AOP</th>
                                     <th>Total Retur AOP</th>
                                     <th>Total AOP</th>
@@ -42,6 +44,12 @@
                                             @endforeach
                                         </td>
                                         <td>{{ number_format($data['target_aop'], 0, ',', '.') }}</td>
+                                        <td>
+                                            {{ number_format($data['total_2w_astra'], 0, ',', '.') }}
+                                        </td>
+                                        <td>
+                                            {{ number_format($data['total_4w_astra'], 0, ',', '.') }}
+                                        </td>
                                         <td>
                                             {{ number_format($data['total_inv_astra'], 0, ',', '.') }}
                                         </td>

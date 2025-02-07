@@ -13,7 +13,7 @@ class Salesman extends Component
 
     public function mount()
     {
-        $this->periode = date('Y-m');
+        $this->periode = date('Y-m', strtotime('2024-11'));
     }
 
     public function fetch_invoice_salesman()
@@ -73,17 +73,19 @@ class Salesman extends Component
         return $kcpinformation->table('trns_inv_details as details')
             ->join('mst_part as part', 'part.part_no', '=', 'details.part_no')
             ->whereIn('details.noinv', $noinv_list)
-            ->groupBy('details.noinv', 'part.produk_part', 'part.supplier')
+            ->groupBy('details.noinv', 'part.produk_part', 'part.supplier', 'part.kategori_part')
             ->select([
                 'details.noinv',
                 'part.produk_part',
-                'part.supplier'
+                'part.supplier',
+                'part.kategori_part'
             ])
             ->get()
             ->mapWithKeys(function ($item) {
                 return [$item->noinv => [
                     'product_part' => $item->produk_part,
-                    'supplier'     => $item->supplier
+                    'supplier'     => $item->supplier,
+                    'kategori_part' => $item->kategori_part
                 ]];
             });
     }
@@ -238,7 +240,8 @@ class Salesman extends Component
                     'noinv'         => $invoice->noinv,
                     'product_part'  => $product_parts[$invoice->noinv]['product_part'] ?? null,
                     'supplier'      => $product_parts[$invoice->noinv]['supplier'] ?? null,
-                    'amount_total'  => $invoice->amount_total
+                    'amount_total'  => $invoice->amount_total,
+                    'kategori_part' => $product_parts[$invoice->noinv]['kategori_part'] ?? null
                 ];
 
                 // Jika area belum ada di report, inisialisasi
@@ -256,11 +259,19 @@ class Salesman extends Component
                         'total_retur_non_astra' => 0,
                         'total_astra' => 0,
                         'total_non_astra' => 0,
+                        'total_2w_astra' => 0,
+                        'total_4w_astra' => 0
                     ];
                 }
 
                 // Hitung total invoice berdasarkan supplier
                 if ($data['supplier'] === 'ASTRA OTOPART') {
+                    if ($data['kategori_part'] == '2W') {
+                        $report[$area]['total_2w_astra'] += $data['amount_total'];
+                    } else {
+                        $report[$area]['total_4w_astra'] += $data['amount_total'];
+                    }
+
                     $report[$area]['total_inv_astra'] += $data['amount_total'];
                     $report[$area]['total_astra'] += $data['amount_total'];
                 } else {
