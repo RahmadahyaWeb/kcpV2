@@ -35,7 +35,7 @@
                                 @foreach ($report as $area => $data)
                                     <!-- Hanya tampilkan jika ada salesman AOP -->
                                     <tr>
-                                        <td>{{ $area }}</td>
+                                        <td class="text-nowrap">{{ $area }}</td>
                                         <td>
                                             @foreach ($data['salesman_astra'] as $sales)
                                                 <span class="text-nowrap">{{ $sales }}</span><br>
@@ -87,7 +87,7 @@
                                 @foreach ($report as $area => $data)
                                     <!-- Hanya tampilkan jika ada salesman Non AOP -->
                                     <tr>
-                                        <td>{{ $area }}</td>
+                                        <td class="text-nowrap">{{ $area }}</td>
                                         <td>
                                             @foreach ($data['salesman_non_astra'] as $sales)
                                                 <span class="text-nowrap">{{ $sales }}</span><br>
