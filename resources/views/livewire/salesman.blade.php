@@ -24,12 +24,14 @@
                                 <tr>
                                     <th>Nama Area</th>
                                     <th>Sales AOP</th>
-                                    <th>Target Area</th>
+                                    <th>Target 2W</th>
+                                    <th>Target 4W</th>
+                                    <th>Total Target (2W + 4W)</th>
                                     <th>Total Invoice 2W</th>
                                     <th>Total Invoice 4W</th>
-                                    <th>Total Invoice AOP</th>
+                                    <th>Total Invoice AOP (2W + 4W)</th>
                                     <th>Total Retur AOP</th>
-                                    <th>Total AOP</th>
+                                    <th>Total AOP (TOTAL INVOICE - TOTAL RETUR)</th>
                                     <th>Pencapaian (Persen)</th>
                                 </tr>
                             </thead>
@@ -43,7 +45,9 @@
                                                 <span class="text-nowrap">{{ $sales }}</span><br>
                                             @endforeach
                                         </td>
-                                        <td>{{ number_format($data['target_aop'], 0, ',', '.') }}</td>
+                                        <td>{{ number_format($data['target_2w'], 0, ',', '.') }}</td>
+                                        <td>{{ number_format($data['target_4w'], 0, ',', '.') }}</td>
+                                        <td>{{ number_format($data['target_2w'] + $data['target_4w'], 0, ',', '.') }}</td>
                                         <td>
                                             {{ number_format($data['total_2w_astra'], 0, ',', '.') }}
                                         </td>
