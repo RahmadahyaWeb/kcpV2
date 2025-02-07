@@ -41,7 +41,6 @@
                                 @endphp
 
                                 @foreach ($report as $area => $data)
-
                                     @php
                                         $total_invoce_aop += $data['total_astra'];
                                     @endphp
@@ -83,7 +82,7 @@
                                         <strong>TOTAL</strong>
                                     </td>
                                     <td>
-                                        {{ number_format($total_invoce_aop, 0, ',', '.') }}
+                                        <strong>{{ number_format($total_invoce_aop, 0, ',', '.') }}</strong>
                                     </td>
                                     <td></td>
                                 </tr>
