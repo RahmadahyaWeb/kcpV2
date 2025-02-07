@@ -36,8 +36,16 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $total_invoce_aop = 0;
+                                @endphp
+
                                 @foreach ($report as $area => $data)
-                                    <!-- Hanya tampilkan jika ada salesman AOP -->
+
+                                    @php
+                                        $total_invoce_aop += $data['total_astra'];
+                                    @endphp
+
                                     <tr>
                                         <td class="text-nowrap">{{ $area }}</td>
                                         <td>
@@ -47,7 +55,8 @@
                                         </td>
                                         <td>{{ number_format($data['target_2w'], 0, ',', '.') }}</td>
                                         <td>{{ number_format($data['target_4w'], 0, ',', '.') }}</td>
-                                        <td>{{ number_format($data['target_2w'] + $data['target_4w'], 0, ',', '.') }}</td>
+                                        <td>{{ number_format($data['target_2w'] + $data['target_4w'], 0, ',', '.') }}
+                                        </td>
                                         <td>
                                             {{ number_format($data['total_2w_astra'], 0, ',', '.') }}
                                         </td>
@@ -68,6 +77,16 @@
                                         </td>
                                     </tr>
                                 @endforeach
+
+                                <tr>
+                                    <td colspan="9">
+                                        <strong>TOTAL</strong>
+                                    </td>
+                                    <td>
+                                        {{ number_format($total_invoce_aop, 0, ',', '.') }}
+                                    </td>
+                                    <td></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
