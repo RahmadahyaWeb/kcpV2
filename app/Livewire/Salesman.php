@@ -65,13 +65,9 @@ class Salesman extends Component
             });
     }
 
-    public function fetch_invoice()
+    public function fetch_invoices($kcpinformation, $periode)
     {
-        $kcpinformation = DB::connection('kcpinformation');
-
-        $periode = $this->periode;
-
-        $invoices = $kcpinformation->table('trns_inv_header as header')
+        return $kcpinformation->table('trns_inv_header as header')
             ->select([
                 'header.noinv',
                 'header.amount_total',
@@ -87,9 +83,10 @@ class Salesman extends Component
             ->where('flag_batal', '<>', 'Y')
             ->groupBy('header.noinv')
             ->get();
+    }
 
-        $product_parts = $this->get_product_parts($invoices->pluck('noinv')->toArray());
-
+    public function fetch_sales($kcpinformation)
+    {
         // Ambil semua user_sales yang memiliki produk Astra
         $sales_astra = $kcpinformation->table('mst_partsales as sales')
             ->join('mst_part as part', 'part.produk_part', '=', 'sales.produk_part')
@@ -131,31 +128,12 @@ class Salesman extends Component
             }
         }
 
-        // Buat struktur data sesuai format yang diinginkan
-        $report = [];
+        return $salesman_by_area;
+    }
 
-        $targets = $kcpinformation->table('mst_target_produk')
-            ->selectRaw("
-                area,
-                part.kategori_part,
-                SUM(jan) as jmlJan,
-                SUM(feb) as jmlFeb,
-                SUM(mar) as jmlMar,
-                SUM(apr) as jmlApr,
-                SUM(mei) as jmlMay,
-                SUM(jun) as jmlJun,
-                SUM(jul) as jmlJul,
-                SUM(agt) as jmlAug,
-                SUM(spt) as jmlSep,
-                SUM(okt) as jmlOct,
-                SUM(nop) as jmlNov,
-                SUM(des) as jmlDec
-            ")
-            ->join('mst_part as part', 'part.produk_part', '=', 'mst_target_produk.produk_part')
-            ->where('periode', date('Y', strtotime($this->periode)))
-            ->whereNotIn('kd_area', ['']);
-
-        $targets_aop = $kcpinformation->table('mst_target_produk')
+    public function fetch_target_aop($kcpinformation)
+    {
+        return $kcpinformation->table('mst_target_produk')
             ->joinSub(
                 $kcpinformation->table('mst_part')
                     ->select('produk_part', 'kategori_part')
@@ -170,21 +148,21 @@ class Salesman extends Component
             ->whereNotIn('mst_target_produk.produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
             ->whereIn('part.kategori_part', ['2W', '4W'])
             ->selectRaw("
-                part.kategori_part,
-                area,
-                SUM(jan) as jmlJan,
-                SUM(feb) as jmlFeb,
-                SUM(mar) as jmlMar,
-                SUM(apr) as jmlApr,
-                SUM(mei) as jmlMay,
-                SUM(jun) as jmlJun,
-                SUM(jul) as jmlJul,
-                SUM(agt) as jmlAug,
-                SUM(spt) as jmlSep,
-                SUM(okt) as jmlOct,
-                SUM(nop) as jmlNov,
-                SUM(des) as jmlDec
-            ")
+            part.kategori_part,
+            area,
+            SUM(jan) as jmlJan,
+            SUM(feb) as jmlFeb,
+            SUM(mar) as jmlMar,
+            SUM(apr) as jmlApr,
+            SUM(mei) as jmlMay,
+            SUM(jun) as jmlJun,
+            SUM(jul) as jmlJul,
+            SUM(agt) as jmlAug,
+            SUM(spt) as jmlSep,
+            SUM(okt) as jmlOct,
+            SUM(nop) as jmlNov,
+            SUM(des) as jmlDec
+        ")
             ->groupBy('part.kategori_part', 'area')
             ->orderBy('part.kategori_part')
             ->orderBy('area')
@@ -210,14 +188,56 @@ class Salesman extends Component
                     ];
                 });
             });
+    }
 
-        $targets_non_aop = (clone $targets)
+    public function fetch_target_non_aop($kcpinformation)
+    {
+        $targets = $kcpinformation->table('mst_target_produk')
+            ->selectRaw("
+            area,
+            part.kategori_part,
+            SUM(jan) as jmlJan,
+            SUM(feb) as jmlFeb,
+            SUM(mar) as jmlMar,
+            SUM(apr) as jmlApr,
+            SUM(mei) as jmlMay,
+            SUM(jun) as jmlJun,
+            SUM(jul) as jmlJul,
+            SUM(agt) as jmlAug,
+            SUM(spt) as jmlSep,
+            SUM(okt) as jmlOct,
+            SUM(nop) as jmlNov,
+            SUM(des) as jmlDec
+        ")
+            ->join('mst_part as part', 'part.produk_part', '=', 'mst_target_produk.produk_part')
+            ->where('periode', date('Y', strtotime($this->periode)))
+            ->whereNotIn('kd_area', ['']);
+
+
+        return (clone $targets)
             ->whereIn('mst_target_produk.produk_part', ['BRIO PART', 'ICHIDAI PART', 'LIQUID'])
             ->groupBy('area')
             ->get() // Pastikan diambil datanya
             ->keyBy('area');
+    }
 
-        $bulan = date('m', strtotime($this->periode)); // Mendapatkan bulan dari periode
+    public function fetch_invoice()
+    {
+        $kcpinformation = DB::connection('kcpinformation');
+
+        $periode = $this->periode;
+
+        $bulan = date('m', strtotime($this->periode));
+
+        $invoices = $this->fetch_invoices($kcpinformation, $periode);
+
+        $product_parts = $this->get_product_parts($invoices->pluck('noinv')->toArray());
+
+        $salesman_by_area = $this->fetch_sales($kcpinformation);
+
+        $targets_aop = $this->fetch_target_aop($kcpinformation);
+
+        $targets_non_aop = $this->fetch_target_non_aop($kcpinformation);
 
         $bulanMapping = [
             '01' => 'jmlJan',
@@ -234,6 +254,8 @@ class Salesman extends Component
             '12' => 'jmlDec',
         ];
 
+        $report = [];
+
         foreach ($invoices as $invoice) {
             $area = ($invoice->flag_2w == 'Y') ? $invoice->area_group_2w : $invoice->area_group_4w;
 
@@ -246,17 +268,16 @@ class Salesman extends Component
                     'kategori_part' => $product_parts[$invoice->noinv]['kategori_part'] ?? null
                 ];
 
-                // Jika area belum ada di report, inisialisasi
                 if (!isset($report[$area])) {
                     $report[$area] = [
                         'salesman_astra'   => [],
                         'salesman_non_astra' => [],
                         'total_inv_astra'      => 0,
                         'total_inv_non_astra'  => 0,
-                        'target_aop' => 0, // Menambahkan target AOP dengan nilai awal 0
-                        'target_non_aop' => 0, // Menambahkan target Non-AOP dengan nilai awal 0
-                        'persen_aop' => 0, // Menambahkan kolom persen_aop dengan nilai awal 0
-                        'persen_non_aop' => 0, // Menambahkan kolom persen_non_aop dengan nilai awal 0
+                        'target_aop' => 0,
+                        'target_non_aop' => 0,
+                        'persen_aop' => 0,
+                        'persen_non_aop' => 0,
                         'total_retur_astra' => 0,
                         'total_retur_non_astra' => 0,
                         'total_astra' => 0,
@@ -297,22 +318,22 @@ class Salesman extends Component
                     // Target Area Astra (AOP)
                     $target_aop_2w = $targets_aop['2W'][$area];
 
-                    $bulanKolomAop = $bulanMapping[$bulan]; // Mengambil kolom sesuai dengan bulan
-                    $report[$area]['target_2w'] = $target_aop_2w[$bulanKolomAop] ?? 0; // Menambahkan target AOP berdasarkan bulan yang sesuai
+                    $bulanKolomAop = $bulanMapping[$bulan];
+                    $report[$area]['target_2w'] = $target_aop_2w[$bulanKolomAop] ?? 0;
                 }
 
                 if (isset($targets_aop['4W'][$area])) {
                     $target_aop_4w = $targets_aop['4W'][$area];
 
-                    $bulanKolomAop = $bulanMapping[$bulan]; // Mengambil kolom sesuai dengan bulan
-                    $report[$area]['target_4w'] = $target_aop_4w[$bulanKolomAop] ?? 0; // Menambahkan target AOP berdasarkan bulan yang sesuai
+                    $bulanKolomAop = $bulanMapping[$bulan];
+                    $report[$area]['target_4w'] = $target_aop_4w[$bulanKolomAop] ?? 0;
                 }
 
                 // Target Area Non-Astra (Non-AOP)
                 if (isset($targets_non_aop[$area])) {
                     $target_non_aop = $targets_non_aop[$area];
-                    $bulanKolomNonAop = $bulanMapping[$bulan]; // Mengambil kolom sesuai dengan bulan
-                    $report[$area]['target_non_aop'] = $target_non_aop->$bulanKolomNonAop ?? 0; // Menambahkan target Non-AOP berdasarkan bulan yang sesuai
+                    $bulanKolomNonAop = $bulanMapping[$bulan];
+                    $report[$area]['target_non_aop'] = $target_non_aop->$bulanKolomNonAop ?? 0;
                 }
 
                 // Hitung persentase AOP
@@ -337,7 +358,7 @@ class Salesman extends Component
             ])
             ->where(DB::raw('SUBSTR(retur_header.flag_nota_date, 1, 7)'), '=', [$periode])
             ->where('retur_header.flag_nota', '=', 'Y')
-            ->groupBy('retur_header.noretur') // Group by area
+            ->groupBy('retur_header.noretur')
             ->get();
 
         $product_parts_non_aop = $this->get_product_parts_non_aop($data_retur->pluck('noretur')->toArray());
