@@ -7,6 +7,10 @@
             Data Customer Payment From Bosnet
         </div>
         <div class="card-body">
+            <div class="d-flex gap-2 mb-3 py-4" style="overflow-x: auto; white-space: nowrap;">
+                <a href="{{ route('customer-payment.bonus-toko') }}" class="btn btn-primary" wire:navigate>Bonus Toko</a>
+            </div>
+
             <div class="row mb-3 g-2">
                 <div class="col-md-3">
                     <label class="form-label">No Piutang</label>

@@ -5,6 +5,7 @@ use App\Http\Controllers\UploadController;
 use App\Livewire\Auth\Login;
 use App\Livewire\Comparator\IndexComparator;
 use App\Livewire\CustomerPayment\DetailCustomerPayment;
+use App\Livewire\CustomerPayment\IndexBonusToko;
 use App\Livewire\CustomerPayment\IndexCustomerPayment;
 use App\Livewire\Dashboard;
 use App\Livewire\DeliveryOrder\DetailDeliveryOrder;
@@ -188,7 +189,10 @@ Route::middleware('auth')->group(function () {
 
         // CUSTOMER PAYMENT
         Route::get('/customer-payment', IndexCustomerPayment::class)->name('customer-payment.index');
-        Route::get('/customer-payment/{no_piutang}', DetailCustomerPayment::class)->name('customer-payment.detail');
+        Route::get('/customer-payment/detail/{no_piutang}', DetailCustomerPayment::class)->name('customer-payment.detail');
+
+        // CP BONUS TOKO
+        Route::get('/customer-payment/bonus-toko', IndexBonusToko::class)->name('customer-payment.bonus-toko');
 
         // PIUTANG
         Route::get('/piutang', IndexPiutang::class)->name('piutang.index');
