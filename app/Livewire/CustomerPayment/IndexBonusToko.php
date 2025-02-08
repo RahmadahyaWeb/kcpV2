@@ -14,8 +14,8 @@ class IndexBonusToko extends Component
     {
         $kcpinformation = DB::connection('kcpinformation');
 
-        $from_date = Carbon::now()->startOfMonth();
-        $to_date = Carbon::now()->endOfMonth();
+        $from_date = Carbon::now()->startOfYear();
+        $to_date = Carbon::now()->endOfYear();
 
         return $kcpinformation->table('trns_inv_header')
             ->join('mst_outlet', 'mst_outlet.kd_outlet', 'trns_inv_header.kd_outlet')
