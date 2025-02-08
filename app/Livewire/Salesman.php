@@ -53,6 +53,7 @@ class Salesman extends Component
                 'details.noretur',
                 'part.produk_part',
                 'part.supplier',
+                'part.kategori_part',
                 DB::raw('SUM(details.nominal_total) as total_retur')
             ])
             ->get()
@@ -60,7 +61,8 @@ class Salesman extends Component
                 return [$item->noretur => [
                     'product_part' => $item->produk_part,
                     'supplier'     => $item->supplier,
-                    'amount_total' => $item->total_retur
+                    'amount_total' => $item->total_retur,
+                    'kategori_part' => $item->kategori_part
                 ]];
             });
     }
@@ -257,94 +259,97 @@ class Salesman extends Component
         $report = [];
 
         foreach ($invoices as $invoice) {
-            $area = ($invoice->flag_2w == 'Y') ? $invoice->area_group_2w : $invoice->area_group_4w;
+            $area = ($invoice->flag_2w === 'Y') ? $invoice->area_group_2w : $invoice->area_group_4w;
 
-            if (!empty($area) && $area != 'FLEET USER') {
-                $data = [
-                    'noinv'         => $invoice->noinv,
-                    'product_part'  => $product_parts[$invoice->noinv]['product_part'] ?? null,
-                    'supplier'      => $product_parts[$invoice->noinv]['supplier'] ?? null,
-                    'amount_total'  => $invoice->amount_total,
-                    'kategori_part' => $product_parts[$invoice->noinv]['kategori_part'] ?? null
-                ];
+            if (empty($area) || $area === 'FLEET USER') {
+                continue;
+            }
 
-                if (!isset($report[$area])) {
-                    $report[$area] = [
-                        'salesman_astra'   => [],
-                        'salesman_non_astra' => [],
-                        'total_inv_astra'      => 0,
-                        'total_inv_non_astra'  => 0,
-                        'target_aop' => 0,
-                        'target_non_aop' => 0,
-                        'persen_aop' => 0,
-                        'persen_non_aop' => 0,
-                        'total_retur_astra' => 0,
-                        'total_retur_non_astra' => 0,
-                        'total_astra' => 0,
-                        'total_non_astra' => 0,
-                        'total_2w_astra' => 0,
-                        'total_4w_astra' => 0,
-                        'target_2w' => 0,
-                        'target_4w' => 0,
-                    ];
-                }
+            $noinv = $invoice->noinv;
+            $supplier = $product_parts[$noinv]['supplier'] ?? null;
+            $kategori_part = $product_parts[$noinv]['kategori_part'] ?? null;
+            $amount_total = $invoice->amount_total;
 
-                // Hitung total invoice berdasarkan supplier
-                if ($data['supplier'] === 'ASTRA OTOPART') {
-                    if ($data['kategori_part'] == '2W') {
-                        $report[$area]['total_2w_astra'] += $data['amount_total'];
-                    } else {
-                        $report[$area]['total_4w_astra'] += $data['amount_total'];
-                    }
+            if (!isset($report[$area])) {
+                $report[$area] = array_fill_keys([
+                    'salesman_astra',
+                    'salesman_non_astra'
+                ], []) + array_fill_keys([
+                    'total_inv_astra',
+                    'total_inv_non_astra',
+                    'total_retur_astra',
+                    'total_retur_non_astra',
+                    'total_astra',
+                    'total_non_astra',
+                    'total_2w_astra',
+                    'total_4w_astra',
+                    'target_2w',
+                    'target_4w',
+                    'target_aop',
+                    'target_non_aop',
+                    'persen_aop',
+                    'persen_non_aop',
+                    'persen_2w_aop',
+                    'persen_4w_aop'
+                ], 0);
+            }
 
-                    $report[$area]['total_inv_astra'] += $data['amount_total'];
-                    $report[$area]['total_astra'] += $data['amount_total'];
-                } else {
-                    $report[$area]['total_inv_non_astra'] += $data['amount_total'];
-                    $report[$area]['total_non_astra'] += $data['amount_total'];
-                }
+            // Hitung total invoice berdasarkan supplier
+            if ($supplier === 'ASTRA OTOPART') {
+                $kategori_part === '2W'
+                    ? $report[$area]['total_2w_astra'] += $amount_total
+                    : $report[$area]['total_4w_astra'] += $amount_total;
 
-                // Salesman ASTRA
-                if (isset($salesman_by_area[$area]['ASTRA'])) {
-                    $report[$area]['salesman_astra'] = array_unique(array_merge($report[$area]['salesman_astra'], $salesman_by_area[$area]['ASTRA']));
-                }
+                $report[$area]['total_inv_astra'] += $amount_total;
+                $report[$area]['total_astra'] += $amount_total;
+            } else {
+                $report[$area]['total_inv_non_astra'] += $amount_total;
+                $report[$area]['total_non_astra'] += $amount_total;
+            }
 
-                // Salesman NON ASTRA
-                if (isset($salesman_by_area[$area]['NON ASTRA'])) {
-                    $report[$area]['salesman_non_astra'] = array_unique(array_merge($report[$area]['salesman_non_astra'], $salesman_by_area[$area]['NON ASTRA']));
-                }
+            // Salesman ASTRA
+            if (!empty($salesman_by_area[$area]['ASTRA'])) {
+                $report[$area]['salesman_astra'] = array_unique(array_merge(
+                    $report[$area]['salesman_astra'],
+                    $salesman_by_area[$area]['ASTRA']
+                ));
+            }
 
-                if (isset($targets_aop['2W'][$area])) {
-                    // Target Area Astra (AOP)
-                    $target_aop_2w = $targets_aop['2W'][$area];
+            // Salesman NON ASTRA
+            if (!empty($salesman_by_area[$area]['NON ASTRA'])) {
+                $report[$area]['salesman_non_astra'] = array_unique(array_merge(
+                    $report[$area]['salesman_non_astra'],
+                    $salesman_by_area[$area]['NON ASTRA']
+                ));
+            }
 
-                    $bulanKolomAop = $bulanMapping[$bulan];
-                    $report[$area]['target_2w'] = $target_aop_2w[$bulanKolomAop] ?? 0;
-                }
+            $bulanKolom = $bulanMapping[$bulan] ?? null;
 
-                if (isset($targets_aop['4W'][$area])) {
-                    $target_aop_4w = $targets_aop['4W'][$area];
+            if ($bulanKolom) {
+                $report[$area]['target_2w'] = $targets_aop['2W'][$area][$bulanKolom] ?? 0;
+                $report[$area]['target_4w'] = $targets_aop['4W'][$area][$bulanKolom] ?? 0;
+                $report[$area]['target_non_aop'] = $targets_non_aop[$area]->$bulanKolom ?? 0;
+            }
 
-                    $bulanKolomAop = $bulanMapping[$bulan];
-                    $report[$area]['target_4w'] = $target_aop_4w[$bulanKolomAop] ?? 0;
-                }
+            // Hitung persentase AOP
+            $target_total_aop = $report[$area]['target_2w'] + $report[$area]['target_4w'];
+            if ($target_total_aop > 0) {
+                $report[$area]['persen_aop'] = ($report[$area]['total_inv_astra'] / $target_total_aop) * 100;
+            }
 
-                // Target Area Non-Astra (Non-AOP)
-                if (isset($targets_non_aop[$area])) {
-                    $target_non_aop = $targets_non_aop[$area];
-                    $bulanKolomNonAop = $bulanMapping[$bulan];
-                    $report[$area]['target_non_aop'] = $target_non_aop->$bulanKolomNonAop ?? 0;
-                }
+            // Hitung persentase AOP 2W
+            if ($report[$area]['target_2w'] > 0) {
+                $report[$area]['persen_2w_aop'] = ($report[$area]['total_2w_astra'] / $report[$area]['target_2w']) * 100;
+            }
 
-                // Hitung persentase AOP
-                if ($report[$area]['target_2w'] > 0 || $report[$area]['target_4w'] > 0) {
-                    $report[$area]['persen_aop'] = round(($report[$area]['total_inv_astra'] / ($report[$area]['target_2w'] + $report[$area]['target_4w'])) * 100);
-                }
+            // Hitung persentase AOP 4W
+            if ($report[$area]['target_4w'] > 0) {
+                $report[$area]['persen_4w_aop'] = ($report[$area]['total_4w_astra'] / $report[$area]['target_4w']) * 100;
+            }
 
-                // Hitung persentase Non-AOP
-                if ($report[$area]['target_non_aop'] > 0) {
-                    $report[$area]['persen_non_aop'] = round(($report[$area]['total_inv_non_astra'] / $report[$area]['target_non_aop']) * 100);
-                }
+            // Hitung persentase Non-AOP
+            if ($report[$area]['target_non_aop'] > 0) {
+                $report[$area]['persen_non_aop'] = round(($report[$area]['total_inv_non_astra'] / $report[$area]['target_non_aop']) * 100);
             }
         }
 
@@ -385,12 +390,12 @@ class Salesman extends Component
 
             // Hitung persentase AOP
             if ($report[$area]['target_2w'] > 0 || $report[$area]['target_4w'] > 0) {
-                $report[$area]['persen_aop'] -= round(($report[$area]['total_retur_astra'] / ($report[$area]['target_2w'] + $report[$area]['target_4w'])) * 100);
+                $report[$area]['persen_aop'] -= ($report[$area]['total_retur_astra'] / ($report[$area]['target_2w'] + $report[$area]['target_4w'])) * 100;
             }
 
             // Hitung persentase Non-AOP
             if ($report[$area]['target_non_aop'] > 0) {
-                $report[$area]['persen_non_aop'] -= round(($report[$area]['total_retur_non_astra'] / $report[$area]['target_non_aop']) * 100);
+                $report[$area]['persen_non_aop'] -= ($report[$area]['total_retur_non_astra'] / $report[$area]['target_non_aop']) * 100;
             }
         }
 

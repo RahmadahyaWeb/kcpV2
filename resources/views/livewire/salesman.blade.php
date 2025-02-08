@@ -27,12 +27,14 @@
                                     <th>Target 2W</th>
                                     <th>Target 4W</th>
                                     <th>Total Target (2W + 4W)</th>
-                                    <th>Total Invoice 2W</th>
-                                    <th>Total Invoice 4W</th>
+                                    <th>Invoice 2W</th>
+                                    <th>Invoice 4W</th>
                                     <th>Total Invoice AOP (2W + 4W)</th>
                                     <th>Total Retur AOP</th>
                                     <th>Total AOP (TOTAL INVOICE - TOTAL RETUR)</th>
-                                    <th>Pencapaian (Persen)</th>
+                                    <th>Pencapaian 2W (Persen)</th>
+                                    <th>Pencapaian 4W (Persen)</th>
+                                    <th>Total Pencapaian (Persen)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -52,24 +54,35 @@
                                                 <span class="text-nowrap">{{ $sales }}</span><br>
                                             @endforeach
                                         </td>
-                                        <td>{{ number_format($data['target_2w'], 0, ',', '.') }}</td>
-                                        <td>{{ number_format($data['target_4w'], 0, ',', '.') }}</td>
-                                        <td>{{ number_format($data['target_2w'] + $data['target_4w'], 0, ',', '.') }}
+                                        <td class="table-warning">
+                                            {{ number_format($data['target_2w'], 0, ',', '.') }}
                                         </td>
-                                        <td>
+                                        <td class="table-warning">
+                                            {{ number_format($data['target_4w'], 0, ',', '.') }}
+                                        </td>
+                                        <td class="table-danger">
+                                            {{ number_format($data['target_2w'] + $data['target_4w'], 0, ',', '.') }}
+                                        </td>
+                                        <td class="table-warning">
                                             {{ number_format($data['total_2w_astra'], 0, ',', '.') }}
                                         </td>
-                                        <td>
+                                        <td class="table-warning">
                                             {{ number_format($data['total_4w_astra'], 0, ',', '.') }}
                                         </td>
-                                        <td>
+                                        <td class="table-danger">
                                             {{ number_format($data['total_inv_astra'], 0, ',', '.') }}
                                         </td>
                                         <td>
                                             {{ number_format($data['total_retur_astra'], 0, ',', '.') }}
                                         </td>
-                                        <td>
+                                        <td class="table-danger">
                                             {{ number_format($data['total_astra'], 0, ',', '.') }}
+                                        </td>
+                                        <td>
+                                            {{ $data['persen_2w_aop'] }}%
+                                        </td>
+                                        <td>
+                                            {{ $data['persen_4w_aop'] }}%
                                         </td>
                                         <td>
                                             {{ $data['persen_aop'] }}%
