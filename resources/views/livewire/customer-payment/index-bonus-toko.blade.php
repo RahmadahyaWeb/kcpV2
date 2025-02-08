@@ -31,10 +31,13 @@
                                 <td class="text-nowrap">{{ number_format($item->amount_disc, 0, ',', '.') }}</td>
                                 <td class="text-nowrap">{{ number_format($item->amount_total, 0, ',', '.') }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-danger" wire:click="potong_piutang('{{ $item->noinv }}')"
-                                        wire:confirm="Yakin ingin potong piutang?">
-                                        Potong Piutang
-                                    </button>
+                                    @hasanyrole(['super-user', 'ar'])
+                                        <button class="btn btn-sm btn-danger"
+                                            wire:click="potong_piutang('{{ $item->noinv }}')"
+                                            wire:confirm="Yakin ingin potong piutang?">
+                                            Potong Piutang
+                                        </button>
+                                    @endhasanyrole
                                 </td>
                             </tr>
                         @empty
