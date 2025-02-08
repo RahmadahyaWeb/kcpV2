@@ -20,7 +20,8 @@ class IndexBonusToko extends Component
         return $kcpinformation->table('trns_inv_header')
             ->join('mst_outlet', 'mst_outlet.kd_outlet', 'trns_inv_header.kd_outlet')
             ->whereRaw('(amount - amount_disc) = 0')
-            ->where('trns_inv_header.status', 'O')
+            ->where('trns_inv_header.status', 'C')
+            ->where('trns_inv_header.flag_pembayaran_lunas', 'N')
             ->whereBetween('trns_inv_header.crea_date', [$from_date, $to_date])
             ->select([
                 'trns_inv_header.*',
