@@ -41,7 +41,7 @@ class IndexBonusToko extends Component
             $kcpinformation->table('trns_inv_header')
                 ->where('noinv', $noinv)
                 ->update([
-                    'status' => 'C'
+                    'flag_pembayaran_lunas' => 'Y'
                 ]);
 
             $kcpinformation->commit();
