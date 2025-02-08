@@ -436,7 +436,7 @@ class Salesman extends Component
     public function render()
     {
 
-        $this->fetch_anomali_invoice();
+        // $this->fetch_anomali_invoice();
         $report = $this->fetch_invoice();
 
         // $data = $this->fetch_invoice_salesman();
