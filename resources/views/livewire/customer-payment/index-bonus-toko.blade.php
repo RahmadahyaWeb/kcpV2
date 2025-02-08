@@ -27,7 +27,7 @@
                                 <td class="text-nowrap">{{ $item->kd_outlet }}</td>
                                 <td class="text-nowrap">{{ $item->nm_outlet }}</td>
                                 <td class="text-nowrap">{{ number_format($item->amount_disc, 0, ',', '.') }}</td>
-                                <td class="text-nowrap">{{ number_format($item->amoount_total, 0, ',', '.') }}</td>
+                                <td class="text-nowrap">{{ number_format($item->amount_total, 0, ',', '.') }}</td>
                                 <td>
                                     <button class="btn btn-sm btn-danger" wire:click="potong_piutang('{{ $item->noinv }}')"
                                         wire:confirm="Yakin ingin potong piutang?">
