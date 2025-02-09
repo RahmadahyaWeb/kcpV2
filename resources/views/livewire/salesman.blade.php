@@ -30,6 +30,8 @@
                                     <th>Invoice 2W</th>
                                     <th>Invoice 4W</th>
                                     <th>Total Invoice AOP (2W + 4W)</th>
+                                    <th>Retur 2W</th>
+                                    <th>Retur 4W</th>
                                     <th>Total Retur AOP</th>
                                     <th>Total AOP (TOTAL INVOICE - TOTAL RETUR)</th>
                                     <th>Pencapaian 2W (Persen)</th>
@@ -73,19 +75,25 @@
                                             {{ number_format($data['total_inv_astra'], 0, ',', '.') }}
                                         </td>
                                         <td>
+                                            {{ number_format($data['retur_2w_aop'], 0, ',', '.') }}
+                                        </td>
+                                        <td>
+                                            {{ number_format($data['retur_4w_aop'], 0, ',', '.') }}
+                                        </td>
+                                        <td>
                                             {{ number_format($data['total_retur_astra'], 0, ',', '.') }}
                                         </td>
                                         <td class="table-danger">
                                             {{ number_format($data['total_astra'], 0, ',', '.') }}
                                         </td>
                                         <td>
-                                            {{ $data['persen_2w_aop'] }}%
+                                            {{ number_format($data['persen_2w_aop'], 2) }}%
                                         </td>
                                         <td>
-                                            {{ $data['persen_4w_aop'] }}%
+                                            {{ number_format($data['persen_4w_aop'], 2) }}%
                                         </td>
                                         <td>
-                                            {{ $data['persen_aop'] }}%
+                                            {{ number_format($data['persen_aop'], 2) }}%
                                         </td>
                                     </tr>
                                 @endforeach

@@ -290,7 +290,9 @@ class Salesman extends Component
                     'persen_aop',
                     'persen_non_aop',
                     'persen_2w_aop',
-                    'persen_4w_aop'
+                    'persen_4w_aop',
+                    'retur_2w_aop',
+                    'retur_4w_aop',
                 ], 0);
             }
 
@@ -375,12 +377,20 @@ class Salesman extends Component
                 $data = [
                     'noretur'       => $retur->noretur,
                     'supplier'      => $product_parts_non_aop[$retur->noretur]['supplier'] ?? null,
-                    'amount_total'  => $product_parts_non_aop[$retur->noretur]['amount_total'] ?? null
+                    'amount_total'  => $product_parts_non_aop[$retur->noretur]['amount_total'] ?? null,
+                    'kategori_part' => $product_parts_non_aop[$retur->noretur]['kategori_part'] ?? null
                 ];
             }
 
             // Hitung total retur berdasarkan supplier
             if ($data['supplier'] === 'ASTRA OTOPART') {
+
+                if ($data['kategori_part'] === '2W') {
+                    $report[$area]['retur_2w_aop'] += $data['amount_total'];
+                } else {
+                    $report[$area]['retur_4w_aop'] += $data['amount_total'];
+                }
+
                 $report[$area]['total_retur_astra'] += $data['amount_total'];
                 $report[$area]['total_astra'] -= $data['amount_total'];
             } else {
