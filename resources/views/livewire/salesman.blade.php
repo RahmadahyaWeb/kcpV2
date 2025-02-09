@@ -74,13 +74,13 @@
                                         <td class="table-danger">
                                             {{ number_format($data['total_inv_astra'], 0, ',', '.') }}
                                         </td>
-                                        <td>
+                                        <td class="table-warning">
                                             {{ number_format($data['retur_2w_aop'], 0, ',', '.') }}
                                         </td>
-                                        <td>
+                                        <td class="table-warning">
                                             {{ number_format($data['retur_4w_aop'], 0, ',', '.') }}
                                         </td>
-                                        <td>
+                                        <td class="table-danger">
                                             {{ number_format($data['total_retur_astra'], 0, ',', '.') }}
                                         </td>
                                         <td class="table-danger">
