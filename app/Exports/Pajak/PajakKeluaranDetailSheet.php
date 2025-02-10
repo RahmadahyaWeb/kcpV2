@@ -89,13 +89,13 @@ class PajakKeluaranDetailSheet implements FromCollection, WithTitle, WithEvents,
         $nama_satuan_ukur = "UM.0021";
 
         // HARGA SATUAN
-        $harga_satuan = $row->harga_satuan;
+        $harga_satuan = $row->harga_satuan / config('tax.ppn_factor');
 
         // JUMLAH BARANG JASA
         $jumlah_barang_jasa = (int) $row->jumlah_barang;
 
         // TOTAL DISKON
-        $total_diskon = $row->nominal_disc;
+        $total_diskon = $row->nominal_disc / config('tax.ppn_factor');
 
         // DPP
         $dpp = ($harga_satuan * $jumlah_barang_jasa) - $total_diskon;
@@ -138,6 +138,12 @@ class PajakKeluaranDetailSheet implements FromCollection, WithTitle, WithEvents,
     public function columnFormats(): array
     {
         return [
+            'F' => NumberFormat::FORMAT_NUMBER_00, // Tarif PPnBM
+            'H' => NumberFormat::FORMAT_NUMBER_00, // Tarif PPnBM
+            'I' => NumberFormat::FORMAT_NUMBER_00, // Tarif PPnBM
+            'J' => NumberFormat::FORMAT_NUMBER_00, // Tarif PPnBM
+            'L' => NumberFormat::FORMAT_NUMBER_00, // Tarif PPnBM
+
             'M' => NumberFormat::FORMAT_NUMBER, // Tarif PPnBM
             'N' => NumberFormat::FORMAT_NUMBER, // PPnBM
         ];
