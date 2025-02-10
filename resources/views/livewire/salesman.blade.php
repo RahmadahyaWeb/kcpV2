@@ -99,7 +99,7 @@
                                 @endforeach
 
                                 <tr>
-                                    <td colspan="9">
+                                    <td colspan="10">
                                         <strong>TOTAL</strong>
                                     </td>
                                     <td>
