@@ -25,11 +25,12 @@ class IndexPajakKeluaran extends Component
         $fromDateFormatted = \Carbon\Carbon::parse($this->from_date)->format('Ymd');
         $toDateFormatted = \Carbon\Carbon::parse($this->to_date)->format('Ymd');
 
-        $periode = date('m', strtotime('2025-01-01'));
+        $periode = date('Y-m', strtotime('2025-01'));
 
         $headers = $kcpinformation->table('trns_inv_header as header')
             ->join('mst_outlet as outlet', 'outlet.kd_outlet', 'header.kd_outlet')
             // ->whereBetween('header.crea_date', [$fromDateFormatted, $toDateFormatted])
+            ->whereRaw("SUBSTR(header.crea_date, 1, 7) = ?", [$periode])
             ->where('header.flag_batal', '<>', 'Y')
             ->where('outlet.kd_outlet', '<>', 'NW')
             ->whereNotIn('header.noinv', [
@@ -39,7 +40,6 @@ class IndexPajakKeluaran extends Component
                 'INV-202501-00005',
                 'INV-202501-00006',
             ])
-            ->whereRaw("SUBSTR(header.crea_date, 1, 7) = ?", [$periode])
             ->orderBy('header.noinv', 'asc')
             ->select([
                 'header.noinv as referensi',
