@@ -405,12 +405,12 @@ class Salesman extends Component
 
             // Hitung persentase AOP 2W
             if ($report[$area]['target_2w'] > 0) {
-                $report[$area]['persen_2w_aop'] = ($report[$area]['retur_2w_aop'] / $report[$area]['target_2w']) * 100;
+                $report[$area]['persen_2w_aop'] -= ($report[$area]['retur_2w_aop'] / $report[$area]['target_2w']) * 100;
             }
 
             // Hitung persentase AOP 4W
             if ($report[$area]['target_4w'] > 0) {
-                $report[$area]['persen_4w_aop'] = ($report[$area]['retur_4w_aop'] / $report[$area]['target_4w']) * 100;
+                $report[$area]['persen_4w_aop'] -= ($report[$area]['retur_4w_aop'] / $report[$area]['target_4w']) * 100;
             }
 
             // Hitung persentase Non-AOP
