@@ -56,7 +56,7 @@ class IndexPajakKeluaran extends Component
                 return $header;
             });
 
-        dd($headers);
+        dd($headers->pluck('referensi')->toArray());
 
         $details = $kcpinformation->table('trns_inv_details as detail')
             ->whereIn('detail.noinv', $headers->pluck('referensi')->toArray())
