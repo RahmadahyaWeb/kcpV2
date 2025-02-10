@@ -22,21 +22,21 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Nama Area</th>
-                                    <th>Sales AOP</th>
-                                    <th>Target 2W</th>
-                                    <th>Target 4W</th>
-                                    <th>Total Target (2W + 4W)</th>
-                                    <th>Invoice 2W</th>
-                                    <th>Invoice 4W</th>
-                                    <th>Total Invoice AOP (2W + 4W)</th>
-                                    <th>Retur 2W</th>
-                                    <th>Retur 4W</th>
-                                    <th>Total Retur AOP</th>
-                                    <th>Total AOP (TOTAL INVOICE - TOTAL RETUR)</th>
-                                    <th>Pencapaian 2W (Persen)</th>
-                                    <th>Pencapaian 4W (Persen)</th>
-                                    <th>Total Pencapaian (Persen)</th>
+                                    <th class="text-nowrap">Nama Area</th>
+                                    <th class="text-nowrap">Sales AOP</th>
+                                    <th class="text-nowrap">Target 2W</th>
+                                    <th class="text-nowrap">Target 4W</th>
+                                    <th class="text-nowrap">Total Target</th>
+                                    <th class="text-nowrap">Invoice 2W</th>
+                                    <th class="text-nowrap">Invoice 4W</th>
+                                    <th class="text-nowrap">Total Invoice AOP</th>
+                                    <th class="text-nowrap">Retur 2W</th>
+                                    <th class="text-nowrap">Retur 4W</th>
+                                    <th class="text-nowrap">Total Retur AOP</th>
+                                    <th class="text-nowrap">Total AOP</th>
+                                    <th class="text-nowrap">Pencapaian 2W</th>
+                                    <th class="text-nowrap">Pencapaian 4W</th>
+                                    <th class="text-nowrap">Total Pencapaian</th>
                                 </tr>
                             </thead>
                             <tbody>
