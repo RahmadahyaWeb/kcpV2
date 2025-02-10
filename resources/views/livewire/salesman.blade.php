@@ -99,13 +99,15 @@
                                 @endforeach
 
                                 <tr>
-                                    <td colspan="10">
+                                    <td colspan="11">
                                         <strong>TOTAL</strong>
                                     </td>
                                     <td>
                                         <strong>{{ number_format($total_invoce_aop, 0, ',', '.') }}</strong>
                                     </td>
-                                    <td></td>
+                                    <td colspan="3">
+
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
