@@ -22,15 +22,15 @@ class IndexPajakKeluaran extends Component
             'to_date'   => ['required']
         ]);
 
-        $fromDateFormatted = \Carbon\Carbon::parse($this->from_date)->format('Ymd');
-        $toDateFormatted = \Carbon\Carbon::parse($this->to_date)->format('Ymd');
+        $fromDateFormatted = \Carbon\Carbon::parse($this->from_date)->startOfDay();
+        $toDateFormatted = \Carbon\Carbon::parse($this->to_date)->endOfDay();
 
         $periode = date('Y-m', strtotime('2025-01'));
 
         $headers = $kcpinformation->table('trns_inv_header as header')
             ->join('mst_outlet as outlet', 'outlet.kd_outlet', 'header.kd_outlet')
-            // ->whereBetween('header.crea_date', [$fromDateFormatted, $toDateFormatted])
-            ->whereRaw("SUBSTR(header.crea_date, 1, 7) = ?", [$periode])
+            ->whereBetween('header.crea_date', [$fromDateFormatted, $toDateFormatted])
+            // ->whereRaw("SUBSTR(header.crea_date, 1, 7) = ?", [$periode])
             ->where('header.flag_batal', '<>', 'Y')
             ->where('outlet.kd_outlet', '<>', 'NW')
             ->whereNotIn('header.noinv', [
