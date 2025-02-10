@@ -31,11 +31,11 @@ class IndexPajakKeluaran extends Component
             ->where('header.flag_batal', '<>', 'Y')
             ->where('outlet.kd_outlet', '<>', 'NW')
             ->whereNotIn('header.noinv', [
-                'INV-202501-0001',
-                'INV-202501-0002',
-                'INV-202501-0003',
-                'INV-202501-0005',
-                'INV-202501-0006',
+                'INV-202501-00001',
+                'INV-202501-00002',
+                'INV-202501-00003',
+                'INV-202501-00005',
+                'INV-202501-00006',
             ])
             ->orderBy('header.noinv', 'asc')
             ->select([
@@ -52,6 +52,8 @@ class IndexPajakKeluaran extends Component
                 $header->baris = $index + 1;
                 return $header;
             });
+
+        dd($headers);
 
         $details = $kcpinformation->table('trns_inv_details as detail')
             ->whereIn('detail.noinv', $headers->pluck('referensi')->toArray())
