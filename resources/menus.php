@@ -130,6 +130,20 @@ return [
         "children" => []
     ],
     [
+        "label" => "Pajak",
+        "icon" => "bx bx-note",
+        "route" => null,
+        "roles" => ['super-user', 'finance'],
+        "active" => Request::is('pajak*'),
+        "children" => [
+            [
+                "label" => "Pajak Keluaran",
+                "route" => "pajak.pajak-keluaran.index",
+                "active" => Request::is('pajak/pajak-keluaran*')
+            ]
+        ]
+    ],
+    [
         "label" => "Report Finance",
         "icon" => "bx bx-layout",
         "route" => null,

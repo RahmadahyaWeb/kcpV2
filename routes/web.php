@@ -27,6 +27,7 @@ use App\Livewire\Master\EditMasterToko;
 use App\Livewire\Master\EditUser;
 use App\Livewire\Master\IndexMasterToko;
 use App\Livewire\Master\IndexUser;
+use App\Livewire\Pajak\IndexPajakKeluaran;
 use App\Livewire\Piutang\IndexPiutang;
 use App\Livewire\ProductPart;
 use App\Livewire\Purchase\CreatePurchaseNonAop;
@@ -163,6 +164,9 @@ Route::middleware('auth')->group(function () {
 
         // REPORT FINANCE
         Route::get('/report-finance/purchase/aop', PurchaseAopReport::class)->name('report-finance.purchase.aop.index');
+
+        // PAJAK
+        Route::get('/pajak/pajak-keluaran', IndexPajakKeluaran::class)->name('pajak.pajak-keluaran.index');
     });
 
     /**
