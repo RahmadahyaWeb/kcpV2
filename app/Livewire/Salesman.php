@@ -403,6 +403,16 @@ class Salesman extends Component
                 $report[$area]['persen_aop'] -= ($report[$area]['total_retur_astra'] / ($report[$area]['target_2w'] + $report[$area]['target_4w'])) * 100;
             }
 
+            // Hitung persentase AOP 2W
+            if ($report[$area]['target_2w'] > 0) {
+                $report[$area]['persen_2w_aop'] = ($report[$area]['retur_2w_aop'] / $report[$area]['target_2w']) * 100;
+            }
+
+            // Hitung persentase AOP 4W
+            if ($report[$area]['target_4w'] > 0) {
+                $report[$area]['persen_4w_aop'] = ($report[$area]['retur_4w_aop'] / $report[$area]['target_4w']) * 100;
+            }
+
             // Hitung persentase Non-AOP
             if ($report[$area]['target_non_aop'] > 0) {
                 $report[$area]['persen_non_aop'] -= ($report[$area]['total_retur_non_astra'] / $report[$area]['target_non_aop']) * 100;
