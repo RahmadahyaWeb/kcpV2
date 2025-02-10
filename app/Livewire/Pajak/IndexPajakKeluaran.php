@@ -30,6 +30,13 @@ class IndexPajakKeluaran extends Component
             ->whereBetween('header.crea_date', [$fromDateFormatted, $toDateFormatted])
             ->where('header.flag_batal', '<>', 'Y')
             ->where('outlet.kd_outlet', '<>', 'NW')
+            ->whereNotIn('header.noinv', [
+                'INV-202501-0001',
+                'INV-202501-0002',
+                'INV-202501-0003',
+                'INV-202501-0005',
+                'INV-202501-0006',
+            ])
             ->orderBy('header.noinv', 'asc')
             ->select([
                 'header.noinv as referensi',
