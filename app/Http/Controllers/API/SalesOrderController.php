@@ -142,11 +142,21 @@ class SalesOrderController extends Controller
     private function generateInvoiceItem($value, &$decDPPTotal, &$decTaxTotal)
     {
         // Calculate DPP and PPN for the item
-        $unitPrice = $value->nominal_total / $value->qty; // Harga per unit
-        $decPrice = $unitPrice; // Alias untuk harga per unit
-        $decAmount = $value->nominal_total; // Total nominal
-        $decDPP = $unitPrice * $value->qty / config('tax.ppn_factor'); // Dasar Pengenaan Pajak
-        $decTax = $decDPP * config('tax.ppn_percentage'); // PPN
+        // $unitPrice = $value->nominal_total / $value->qty; // Harga per unit
+        // $decPrice = $unitPrice; // Alias untuk harga per unit
+        // $decAmount = $value->nominal_total; // Total nominal
+        // $decDPP = $unitPrice * $value->qty / config('tax.ppn_factor'); // Dasar Pengenaan Pajak
+        // $decTax = $decDPP * config('tax.ppn_percentage'); // PPN
+
+        $unitPrice = $value->hrg_pcs / config('tax.ppn_factor');
+        $decPrice = $unitPrice;
+        $decDisc = $value->nominal_disc / config('tax.ppn_factor');
+        $decDiscPerItem = $decDisc / $value->qty;
+        $decDPP = round($decPrice * $value->qty - $decDisc);
+        $otherDpp = 11 / 12 * $decDPP;
+        $ppn = 12;
+        $decTax = round($otherDpp * $ppn / 100);
+        $decAmount = $decDPP + $decTax;
 
         // Update total DPP and PPN
         $decDPPTotal += $decDPP;
@@ -157,11 +167,11 @@ class SalesOrderController extends Controller
         return [
             'szOrderItemTypeId' => "JUAL",
             'szProductId' => $value->part_no,
-            'decDiscProcent' => 0,
+            'decDiscProcent' => $value->disc,
             'decQty' => $value->qty,
             'szUomId' => "PCS",
             'decPrice' => $decPrice,
-            'decDiscount' => 0,
+            'decDiscount' => $decDiscPerItem,
             'bTaxable' => true,
             'decTax' => $decTax,
             'decAmount' => $decAmount,
@@ -232,6 +242,8 @@ class SalesOrderController extends Controller
      */
     private function sendDataToBosnet($data)
     {
+        dd($data);
+
         $credential = TokenBosnetController::signInForSecretKey();
 
         if (isset($credential['status'])) {
@@ -281,7 +293,8 @@ class SalesOrderController extends Controller
             ->get();
     }
 
-    private function removeLeadingZero($str) {
+    private function removeLeadingZero($str)
+    {
         // Cek apakah string dimulai dengan angka 0
         if (preg_match('/^0\d/', $str)) {
             // Mengubah menjadi integer, lalu kembali ke string

@@ -180,10 +180,20 @@ class InvoiceController extends Controller
 
         // Loop through each sales order item and calculate the amounts
         foreach ($salesOrderItems as $orderItem) {
-            $decTax = round(((($orderItem->nominal_total / $orderItem->qty) * $orderItem->qty) / config('tax.ppn_factor')) * config('tax.ppn_percentage'));
-            $decAmount = ($orderItem->nominal_total / $orderItem->qty) * $orderItem->qty;
-            $decDPP = round((($orderItem->nominal_total / $orderItem->qty) * $orderItem->qty) / config('tax.ppn_factor'));
-            $decPrice = $orderItem->nominal_total / $orderItem->qty;
+            // $decTax = round(((($orderItem->nominal_total / $orderItem->qty) * $orderItem->qty) / config('tax.ppn_factor')) * config('tax.ppn_percentage'));
+            // $decAmount = ($orderItem->nominal_total / $orderItem->qty) * $orderItem->qty;
+            // $decDPP = round((($orderItem->nominal_total / $orderItem->qty) * $orderItem->qty) / config('tax.ppn_factor'));
+            // $decPrice = $orderItem->nominal_total / $orderItem->qty;
+
+            $unitPrice = $orderItem->hrg_pcs / config('tax.ppn_factor');
+            $decPrice = $unitPrice;
+            $decDisc = $orderItem->nominal_disc / config('tax.ppn_factor');
+            $decDiscPerItem = $decDisc / $orderItem->qty;
+            $decDPP = round($decPrice * $orderItem->qty - $decDisc);
+            $otherDpp = 11 / 12 * $decDPP;
+            $ppn = 12;
+            $decTax = round($otherDpp * $ppn / 100);
+            $decAmount = $decDPP + $decTax;
 
             // Update totals
             $decDPPTotal += $decDPP;
@@ -196,7 +206,7 @@ class InvoiceController extends Controller
                 'decQty'             => $orderItem->qty,
                 'szUomId'            => "PCS",
                 'decPrice'           => $decPrice,
-                'decDiscount'        => 0,
+                'decDiscount'        => $decDiscPerItem,
                 'bTaxable'           => true,
                 'decTax'             => $decTax,
                 'decAmount'          => $decAmount,
