@@ -220,7 +220,7 @@ class SalesOrderController extends Controller
             'szAppId' => "BDI.KCP",
             'fSoData' => [
                 // 'szFSoId'           => $header->noso,
-                'szFSoId'           => "SO-202502-00295-A",
+                'szFSoId'           => "SO-202502-00295-B",
                 'szOrderTypeId'     => 'JUAL',
                 'dtmOrder'          => date('Y-m-d H:i:s', strtotime($header->crea_date)),
                 'szCustId'          => $kd_outlet,
