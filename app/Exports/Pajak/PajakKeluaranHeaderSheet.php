@@ -89,7 +89,6 @@ class PajakKeluaranHeaderSheet implements FromCollection, WithMapping, WithEvent
                     $sheet->getDelegate()->setCellValueExplicit('N' . $row, $sheet->getCell('N' . $row)->getValue(), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
                     $sheet->getDelegate()->setCellValueExplicit('Q' . $row, $sheet->getCell('Q' . $row)->getValue(), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
                 }
-
             }
         ];
     }
@@ -125,10 +124,10 @@ class PajakKeluaranHeaderSheet implements FromCollection, WithMapping, WithEvent
         $id_tku_penjual = "0018606582731000000000";
 
         // NPWP
-        $npwp = (!empty($row->npwp) && $row->npwp != "000000000000000") ? $row->npwp  : "000000000000000";
+        $npwp = (!empty($row->npwp) && $row->npwp != "0000000000000000") ? "0" . $row->npwp  : "0000000000000000";
 
         // JENIS ID PEMBELI
-        $jenis_id_pembeli = ($npwp == "000000000000000" ? "National ID" : "TIN");
+        $jenis_id_pembeli = ($npwp == "0000000000000000" ? "National ID" : "TIN");
 
         // NEGARA PEMBELI
         $negara_pembeli = "IDN";
@@ -138,7 +137,7 @@ class PajakKeluaranHeaderSheet implements FromCollection, WithMapping, WithEvent
         $nomor_dokumen_pembeli  = ($jenis_id_pembeli == "TIN") ? "-" : $nik;
 
         // NAMA PEMBELI
-        $nama_pembeli = ($npwp == "000000000000000" ? "$nik" . $row->nama_pembeli : $row->nama_pembeli);
+        $nama_pembeli = ($npwp == "0000000000000000" ? "$nik" . $row->nama_pembeli : $row->nama_pembeli);
 
         // ALAMAT PEMBELI
         $alamat_pembeli = $row->alamat_pembeli;
@@ -147,7 +146,7 @@ class PajakKeluaranHeaderSheet implements FromCollection, WithMapping, WithEvent
         $email_pembeli = $row->email;
 
         // ID TKU PEMBELI
-        $id_tku_pembeli = ($npwp != "000000000000000" ? $npwp . "000000"  : "000000");
+        $id_tku_pembeli = ($npwp != "0000000000000000" ? "0" . $npwp . "000000"  : "000000");
 
         return [
             $baris,
