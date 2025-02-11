@@ -11,28 +11,34 @@ class IndexPajakKeluaran extends Component
 {
     public $target = '';
 
-    public $from_date, $to_date;
+    public $from_date, $to_date, $type_invoice;
 
     public function export_to_excel()
     {
         $kcpinformation = DB::connection('kcpinformation');
 
         $this->validate([
-            'from_date' => ['required'],
-            'to_date'   => ['required']
+            'from_date'     => ['required'],
+            'to_date'       => ['required'],
+            'type_invoice'  => ['required']
         ]);
 
         $fromDateFormatted = \Carbon\Carbon::parse($this->from_date)->startOfDay();
         $toDateFormatted = \Carbon\Carbon::parse($this->to_date)->endOfDay();
 
-        $periode = date('Y-m', strtotime('2025-01'));
+        $type_invoice = $this->type_invoice;
+
+        if ($type_invoice == 'non-kanvas') {
+            $operator_kd_outlet = "<>";
+        } else {
+            $operator_kd_outlet = "=";
+        }
 
         $headers = $kcpinformation->table('trns_inv_header as header')
             ->join('mst_outlet as outlet', 'outlet.kd_outlet', 'header.kd_outlet')
             ->whereBetween('header.crea_date', [$fromDateFormatted, $toDateFormatted])
-            // ->whereRaw("SUBSTR(header.crea_date, 1, 7) = ?", [$periode])
             ->where('header.flag_batal', '<>', 'Y')
-            ->where('outlet.kd_outlet', '<>', 'NW')
+            ->where('outlet.kd_outlet', $operator_kd_outlet, 'NW')
             ->whereNotIn('header.noinv', [
                 'INV-202501-00001',
                 'INV-202501-00002',
