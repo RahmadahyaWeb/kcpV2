@@ -185,15 +185,23 @@ class InvoiceController extends Controller
             // $decDPP = round((($orderItem->nominal_total / $orderItem->qty) * $orderItem->qty) / config('tax.ppn_factor'));
             // $decPrice = $orderItem->nominal_total / $orderItem->qty;
 
-            $unitPrice = $orderItem->hrg_pcs / config('tax.ppn_factor');
-            $decPrice = $unitPrice;
-            $decDisc = $orderItem->nominal_disc / config('tax.ppn_factor');
-            $decDiscPerItem = $decDisc / $orderItem->qty;
-            $decDPP = round($decPrice * $orderItem->qty - $decDisc);
-            $otherDpp = 11 / 12 * $decDPP;
-            $ppn = 12;
-            $decTax = round($otherDpp * $ppn / 100);
-            $decAmount = $decDPP + $decTax;
+            // $unitPrice = $orderItem->hrg_pcs / config('tax.ppn_factor');
+            // $decPrice = $unitPrice;
+            // $decDisc = $orderItem->nominal_disc / config('tax.ppn_factor');
+            // $decDiscPerItem = $decDisc / $orderItem->qty;
+            // $decDPP = round($decPrice * $orderItem->qty - $decDisc);
+            // $otherDpp = 11 / 12 * $decDPP;
+            // $ppn = 12;
+            // $decTax = round($otherDpp * $ppn / 100);
+            // $decAmount = $decDPP + $decTax;
+
+            $decPrice = $orderItem->hrg_pcs;
+            $qty = $orderItem->qty;
+            $decDisc =  $orderItem->nominal_disc;
+            $decDiscPerItem = $decDisc / $qty;
+            $decAmount = $decPrice * $qty;
+            $decDPP = round(($decAmount - $decDisc) / config('tax.ppn_factor'));
+            $decTax = round($decDPP * config('tax.ppn_percentage'));
 
             // Update totals
             $decDPPTotal += $decDPP;
