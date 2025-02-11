@@ -148,15 +148,23 @@ class SalesOrderController extends Controller
         // $decDPP = $unitPrice * $value->qty / config('tax.ppn_factor'); // Dasar Pengenaan Pajak
         // $decTax = $decDPP * config('tax.ppn_percentage'); // PPN
 
-        $unitPrice = $value->hrg_pcs / config('tax.ppn_factor');
-        $decPrice = $unitPrice;
-        $decDisc = $value->nominal_disc / config('tax.ppn_factor');
-        $decDiscPerItem = $decDisc / $value->qty;
-        $decDPP = round($decPrice * $value->qty - $decDisc);
-        $otherDpp = 11 / 12 * $decDPP;
-        $ppn = 12;
-        $decTax = round($otherDpp * $ppn / 100);
-        $decAmount = $decDPP + $decTax;
+        // $unitPrice = $value->hrg_pcs / config('tax.ppn_factor');
+        // $decPrice = $unitPrice;
+        // $decDisc = $value->nominal_disc / config('tax.ppn_factor');
+        // $decDiscPerItem = $decDisc / $value->qty;
+        // $decDPP = round($decPrice * $value->qty - $decDisc);
+        // $otherDpp = 11 / 12 * $decDPP;
+        // $ppn = 12;
+        // $decTax = round($otherDpp * $ppn / 100);
+        // $decAmount = $decDPP + $decTax;
+
+        $decPrice = $value->hrg_pcs / config('tax.ppn_factor');
+        $qty = $value->qty;
+        $decDisc =  $value->nominal_disc / config('tax.ppn_factor');
+        $decDiscPerItem = $decDisc / $qty;
+        $decAmount = $decPrice * $qty;
+        $decDPP = $decAmount - $decDisc;
+        $decTax = $decDPP * config('tax.ppn_percentage');
 
         // Update total DPP and PPN
         $decDPPTotal += $decDPP;
@@ -171,10 +179,10 @@ class SalesOrderController extends Controller
             'decQty' => $value->qty,
             'szUomId' => "PCS",
             'decPrice' => $decPrice,
-            'decDiscount' => $decDiscPerItem,
+            'decDiscount' => $decDisc,
             'bTaxable' => true,
             'decTax' => $decTax,
-            'decAmount' => $decAmount + $decDiscPerItem,
+            'decAmount' => $decAmount,
             'decDPP' => $decDPP,
             'szPaymentType' => "NON",
             'deliveryList' => [
@@ -243,6 +251,7 @@ class SalesOrderController extends Controller
      */
     private function sendDataToBosnet($data)
     {
+        dd($data);
         $credential = TokenBosnetController::signInForSecretKey();
 
         if (isset($credential['status'])) {
