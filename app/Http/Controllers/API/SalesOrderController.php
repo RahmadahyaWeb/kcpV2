@@ -158,12 +158,12 @@ class SalesOrderController extends Controller
         // $decTax = round($otherDpp * $ppn / 100);
         // $decAmount = $decDPP + $decTax;
 
-        $decPrice = $value->hrg_pcs  / config('tax.ppn_factor');
+        $decPrice = $value->hrg_pcs;
         $qty = $value->qty;
-        $decDisc =  $value->nominal_disc  / config('tax.ppn_factor');
+        $decDisc =  $value->nominal_disc;
         $decDiscPerItem = $decDisc / $qty;
         $decAmount = $decPrice * $qty;
-        $decDPP = round(($decAmount - $decDisc));
+        $decDPP = round(($decAmount - $decDisc) / config('tax.ppn_factor'));
         $decTax = round($decDPP * config('tax.ppn_percentage'));
 
         // Update total DPP and PPN
@@ -220,7 +220,7 @@ class SalesOrderController extends Controller
             'szAppId' => "BDI.KCP",
             'fSoData' => [
                 // 'szFSoId'           => $header->noso,
-                'szFSoId'           => "SO-202502-00295-E",
+                'szFSoId'           => "SO-202502-00295-F",
                 'szOrderTypeId'     => 'JUAL',
                 'dtmOrder'          => date('Y-m-d H:i:s', strtotime($header->crea_date)),
                 'szCustId'          => $kd_outlet,
