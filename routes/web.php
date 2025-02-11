@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\ReturManualController;
 use App\Http\Controllers\DksController;
 use App\Http\Controllers\UploadController;
 use App\Livewire\Auth\Login;
@@ -145,6 +146,9 @@ Route::middleware('auth')->group(function () {
         // RETUR INVOICE
         Route::get('/retur/invoice', IndexReturInvoice::class)->name('retur.invoice.index');
         Route::get('/retur/invoice/{no_retur}', DetailReturInvoice::class)->name('retur.invoice.detail');
+
+        // RETUR MANUAL
+        Route::get('/retur/manual/01004', [ReturManualController::class, 'sendToBosnet'])->name('retur.manual');
     });
 
     /**
