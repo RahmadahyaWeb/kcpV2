@@ -183,14 +183,18 @@ class DetailInvoice extends Component
      */
     public function sendToBosnet()
     {
-        // session()->flash('error', 'FITUR SEDANG DIPERBAIKI, SEMENTARA BELUM BISA DIPAKAI, TERIMA KASIH.');
-        try {
-            $controller = new SalesOrderController();
-            $controller->sendToBosnet(new Request(['invoice' => $this->invoice]));
+        $user = Auth::user();
+        if ($user->hasRole('super-user')) {
+            try {
+                $controller = new SalesOrderController();
+                $controller->sendToBosnet(new Request(['invoice' => $this->invoice]));
 
-            session()->flash('success', "Data SO berhasil diteruskan ke BOSNET");
-        } catch (\Exception $e) {
-            session()->flash('error', $e->getMessage());
+                session()->flash('success', "Data SO berhasil diteruskan ke BOSNET");
+            } catch (\Exception $e) {
+                session()->flash('error', $e->getMessage());
+            }
+        } else {
+            session()->flash('error', 'FITUR SEDANG DIPERBAIKI, SEMENTARA BELUM BISA DIPAKAI, TERIMA KASIH.');
         }
     }
 
