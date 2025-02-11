@@ -163,15 +163,13 @@ class ReturManualController extends Controller
         // Loop through each retur item and calculate the amounts
         foreach ($returItems as $returItem) {
 
-            $unitPrice = $returItem->hrg_pcs / config('tax.ppn_factor');
-            $decPrice = $unitPrice;
-            $decDisc = $returItem->nominal_disc / config('tax.ppn_factor');
-            $decDiscPerItem = $decDisc / $returItem->qty;
-            $decDPP = round($decPrice * $returItem->qty - $decDisc);
-            $otherDpp = 11 / 12 * $decDPP;
-            $ppn = 12;
-            $decTax = round($otherDpp * $ppn / 100);
-            $decAmount = $decDPP + $decTax;
+            $decPrice = $returItem->hrg_pcs;
+            $qty = $returItem->qty;
+            $decDisc =  $returItem->nominal_disc;
+            $decDiscPerItem = $decDisc / $qty;
+            $decAmount = $decPrice * $qty;
+            $decDPP = round(($decAmount - $decDisc) / config('tax.ppn_factor'));
+            $decTax = round($decDPP * config('tax.ppn_percentage'));
 
             // Update totals
             $decDPPTotal += $decDPP;
