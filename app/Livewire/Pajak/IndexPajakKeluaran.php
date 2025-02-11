@@ -47,6 +47,7 @@ class IndexPajakKeluaran extends Component
                 'INV-202501-00006',
             ])
             ->whereNot('header.noinv', 'like', 'RTU%')
+            ->where('header.amount_total', '<>', 0)
             ->orderBy('header.noinv', 'asc')
             ->select([
                 'header.noinv as referensi',
