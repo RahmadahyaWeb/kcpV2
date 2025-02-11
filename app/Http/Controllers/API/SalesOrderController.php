@@ -174,7 +174,7 @@ class SalesOrderController extends Controller
             'decDiscount' => $decDiscPerItem,
             'bTaxable' => true,
             'decTax' => $decTax,
-            'decAmount' => $decAmount,
+            'decAmount' => $decAmount + $decDiscPerItem,
             'decDPP' => $decDPP,
             'szPaymentType' => "NON",
             'deliveryList' => [
@@ -242,6 +242,7 @@ class SalesOrderController extends Controller
      */
     private function sendDataToBosnet($data)
     {
+        dd($data);
         $credential = TokenBosnetController::signInForSecretKey();
 
         if (isset($credential['status'])) {
