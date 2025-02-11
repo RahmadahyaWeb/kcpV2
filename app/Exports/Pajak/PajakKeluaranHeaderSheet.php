@@ -146,7 +146,7 @@ class PajakKeluaranHeaderSheet implements FromCollection, WithMapping, WithEvent
         $email_pembeli = $row->email;
 
         // ID TKU PEMBELI
-        $id_tku_pembeli = ($npwp != "0000000000000000" ? "0" . $npwp . "000000"  : "000000");
+        $id_tku_pembeli = ($npwp != "0000000000000000" ? $npwp . "000000"  : "000000");
 
         return [
             $baris,
