@@ -214,7 +214,7 @@ class InvoiceController extends Controller
                 'decQty'             => $orderItem->qty,
                 'szUomId'            => "PCS",
                 'decPrice'           => $decPrice,
-                'decDiscount'        => $decDiscPerItem,
+                'decDiscount'        => $decDisc,
                 'bTaxable'           => true,
                 'decTax'             => $decTax,
                 'decAmount'          => $decAmount,
