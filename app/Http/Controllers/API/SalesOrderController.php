@@ -163,7 +163,7 @@ class SalesOrderController extends Controller
         $decDisc =  $value->nominal_disc;
         $decDiscPerItem = $decDisc / $qty;
         $decAmount = $decPrice * $qty;
-        $decDPP = round($decAmount - $decDisc);
+        $decDPP = round(($decAmount - $decDisc) / config('tax.ppn_factor'));
         $decTax = round($decDPP * config('tax.ppn_percentage'));
 
         // Update total DPP and PPN
@@ -220,7 +220,7 @@ class SalesOrderController extends Controller
             'szAppId' => "BDI.KCP",
             'fSoData' => [
                 // 'szFSoId'           => $header->noso,
-                'szFSoId'           => "SO-202502-00295-C",
+                'szFSoId'           => "SO-202502-00295-D",
                 'szOrderTypeId'     => 'JUAL',
                 'dtmOrder'          => date('Y-m-d H:i:s', strtotime($header->crea_date)),
                 'szCustId'          => $kd_outlet,
@@ -251,7 +251,6 @@ class SalesOrderController extends Controller
      */
     private function sendDataToBosnet($data)
     {
-        dd($data);
         $credential = TokenBosnetController::signInForSecretKey();
 
         if (isset($credential['status'])) {
