@@ -158,12 +158,12 @@ class SalesOrderController extends Controller
         // $decTax = round($otherDpp * $ppn / 100);
         // $decAmount = $decDPP + $decTax;
 
-        $decPrice = $value->hrg_pcs;
+        $decPrice = $value->hrg_pcs  / config('tax.ppn_factor');
         $qty = $value->qty;
-        $decDisc =  $value->nominal_disc;
+        $decDisc =  $value->nominal_disc  / config('tax.ppn_factor');
         $decDiscPerItem = $decDisc / $qty;
         $decAmount = $decPrice * $qty;
-        $decDPP = round(($decAmount - $decDisc) / config('tax.ppn_factor'));
+        $decDPP = round(($decAmount - $decDisc));
         $decTax = round($decDPP * config('tax.ppn_percentage'));
 
         // Update total DPP and PPN
