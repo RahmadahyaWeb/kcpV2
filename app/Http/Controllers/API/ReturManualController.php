@@ -13,7 +13,7 @@ class ReturManualController extends Controller
 {
     public function sendToBosnet(Request $request)
     {
-        $no_retur = 'RTU-FIXING-01004';
+        $no_retur = 'RTU-FIXING-01004-P2';
         $no_invoice = 'INV-202502-01004';
 
         $this->sendPartialDataToBosnet($no_retur, $no_invoice);
