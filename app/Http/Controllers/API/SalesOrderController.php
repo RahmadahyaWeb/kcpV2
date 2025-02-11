@@ -211,7 +211,8 @@ class SalesOrderController extends Controller
         return [
             'szAppId' => "BDI.KCP",
             'fSoData' => [
-                'szFSoId'           => $header->noso,
+                // 'szFSoId'           => $header->noso,
+                'szFSoId'           => "SO-202502-00295-A",
                 'szOrderTypeId'     => 'JUAL',
                 'dtmOrder'          => date('Y-m-d H:i:s', strtotime($header->crea_date)),
                 'szCustId'          => $kd_outlet,
@@ -242,7 +243,6 @@ class SalesOrderController extends Controller
      */
     private function sendDataToBosnet($data)
     {
-        dd($data);
         $credential = TokenBosnetController::signInForSecretKey();
 
         if (isset($credential['status'])) {
