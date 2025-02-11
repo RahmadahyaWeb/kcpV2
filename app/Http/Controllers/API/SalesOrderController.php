@@ -219,7 +219,7 @@ class SalesOrderController extends Controller
         return [
             'szAppId' => "BDI.KCP",
             'fSoData' => [
-                'szFSoId'           => $header->noso . "-FIXING",
+                'szFSoId'           => $header->noso,
                 // 'szFSoId'           => "SO-202502-00295-F",
                 'szOrderTypeId'     => 'JUAL',
                 'dtmOrder'          => date('Y-m-d H:i:s', strtotime($header->crea_date)),

@@ -143,7 +143,7 @@ class InvoiceController extends Controller
         return [
             "szAppId"               => "BDI.KCP",
             "fdoData"   => [
-                "szDoId"            => $item->noinv,
+                "szDoId"            => $item->noinv . "-FIXING",
                 "szFSoId"           => $item->noso,
                 "szLogisticType"    => "POS",
                 "szOrderTypeId"     => "JUAL",
