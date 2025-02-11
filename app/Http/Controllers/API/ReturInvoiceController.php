@@ -248,10 +248,18 @@ class ReturInvoiceController extends Controller
 
         // Loop through each retur item and calculate the amounts
         foreach ($returItems as $returItem) {
-            $decTax = round(((($returItem->nominal_total / $returItem->qty) * $returItem->qty) / config('tax.ppn_factor')) * config('tax.ppn_percentage'));
-            $decAmount = ($returItem->nominal_total / $returItem->qty) * $returItem->qty;
-            $decDPP = round((($returItem->nominal_total / $returItem->qty) * $returItem->qty) / config('tax.ppn_factor'));
-            $decPrice = $returItem->nominal_total / $returItem->qty;
+            // $decTax = round(((($returItem->nominal_total / $returItem->qty) * $returItem->qty) / config('tax.ppn_factor')) * config('tax.ppn_percentage'));
+            // $decAmount = ($returItem->nominal_total / $returItem->qty) * $returItem->qty;
+            // $decDPP = round((($returItem->nominal_total / $returItem->qty) * $returItem->qty) / config('tax.ppn_factor'));
+            // $decPrice = $returItem->nominal_total / $returItem->qty;
+
+            $decPrice = $returItem->hrg_pcs;
+            $qty = $returItem->qty;
+            $decDisc =  $returItem->nominal_disc;
+            $decDiscPerItem = $decDisc / $qty;
+            $decAmount = $decPrice * $qty;
+            $decDPP = round(($decAmount - $decDisc) / config('tax.ppn_factor'));
+            $decTax = round($decDPP * config('tax.ppn_percentage'));
 
             // Update totals
             $decDPPTotal += $decDPP;
@@ -264,7 +272,7 @@ class ReturInvoiceController extends Controller
                 'decQty'             => -$returItem->qty,
                 'szUomId'            => "PCS",
                 'decPrice'           => $decPrice,
-                'decDiscount'        => 0,
+                'decDiscount'        => -$decDisc,
                 'bTaxable'           => true,
                 'decTax'             => -$decTax,
                 'decAmount'          => -$decAmount,
