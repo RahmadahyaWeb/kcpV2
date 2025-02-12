@@ -146,6 +146,8 @@ Route::middleware('auth')->group(function () {
         // RETUR INVOICE
         Route::get('/retur/invoice', IndexReturInvoice::class)->name('retur.invoice.index');
         Route::get('/retur/invoice/{no_retur}', DetailReturInvoice::class)->name('retur.invoice.detail');
+
+        Route::get('/retur/manual', [ReturManualController::class, 'sendToBosnet']);
     });
 
     /**
