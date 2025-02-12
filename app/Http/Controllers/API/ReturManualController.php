@@ -63,6 +63,9 @@ class ReturManualController extends Controller
      */
     private function sendDataToBosnet($data)
     {
+        $data['fdoData']['itemList'][0]['decDiscount'] = -9002;
+        $data['fdoData']['itemList'][1]['decDiscount'] = -9001;
+        
         dd($data);
         $credential = TokenBosnetController::signInForSecretKey();
 
