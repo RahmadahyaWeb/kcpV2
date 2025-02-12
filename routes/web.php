@@ -128,8 +128,9 @@ Route::middleware('auth')->group(function () {
      * head-marketing
      * supervisor-area
      * ar
+     * fakturis
      */
-    Route::middleware('role:supervisor-area|super-user|head-marketing|ar')->group(function () {
+    Route::middleware('role:supervisor-area|super-user|head-marketing|ar|fakturis')->group(function () {
         // REPORT MARKETING => LAPORAN INVOICE
         Route::get('/report-marketing/laporan-invoice', IndexLaporanInvoice::class)->name('report-marketing.laporan-invoice');
     });
