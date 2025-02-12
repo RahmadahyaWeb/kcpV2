@@ -197,9 +197,13 @@ class InvoiceController extends Controller
 
             $decPrice = $orderItem->hrg_pcs;
             $qty = $orderItem->qty;
-            $decDisc =  $orderItem->nominal_disc;
-            $decDiscPerItem = $decDisc / $qty;
+            $disc = $orderItem->disc;
+
             $decAmount = $decPrice * $qty;
+
+            $decDisc =  round($decAmount * ($disc / 100));
+            $decDiscPerItem = $decDisc / $qty;
+
             $decDPP = round(($decAmount - $decDisc) / config('tax.ppn_factor'));
             $decTax = round($decDPP * config('tax.ppn_percentage'));
 
@@ -211,7 +215,7 @@ class InvoiceController extends Controller
             $items[] = [
                 'szOrderItemTypeId'  => "JUAL",
                 'szProductId'        => $orderItem->part_no,
-                'decQty'             => $orderItem->qty,
+                'decQty'             => $qty,
                 'szUomId'            => "PCS",
                 'decPrice'           => $decPrice,
                 'decDiscount'        => $decDisc,
