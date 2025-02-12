@@ -65,8 +65,7 @@ class ReturManualController extends Controller
     {
         $data['fdoData']['itemList'][0]['decDiscount'] = -9002;
         $data['fdoData']['itemList'][1]['decDiscount'] = -9001;
-        
-        dd($data);
+
         $credential = TokenBosnetController::signInForSecretKey();
 
         if (isset($credential['status'])) {
