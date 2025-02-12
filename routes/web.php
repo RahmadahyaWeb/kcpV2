@@ -108,7 +108,7 @@ Route::middleware('auth')->group(function () {
      * admin
      * fakturis
      */
-    Route::middleware('role:salesman|super-user')->group(function () {
+    Route::middleware('role:salesman|super-user|admin|supervisor-area')->group(function () {
         Route::get('/stock-part', IndexStockPart::class)->name('stock-part.index');
     });
 

@@ -61,7 +61,7 @@ return [
         "label" => "Stock Part",
         "icon" => "bx bx-file",
         "route" => "stock-part.index",
-        "roles" => ['super-user', 'admin'],
+        "roles" => ['super-user', 'admin', 'head-marketing', 'supervisor-area', 'fakturis', 'salesman'],
         "active" => Request::is('stock-part*'),
         "children" => []
     ],
@@ -200,7 +200,7 @@ return [
         ]
     ],
     [
-        "label" => "Stock Part",
+        "label" => "Part Rak",
         "icon" => "bx bx-file",
         "route" => "part-rak.index",
         "roles" => ['super-user', 'head-warehouse', 'inventory', 'storer'],
