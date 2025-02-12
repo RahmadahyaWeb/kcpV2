@@ -143,8 +143,8 @@ class InvoiceController extends Controller
         return [
             "szAppId"               => "BDI.KCP",
             "fdoData"   => [
-                "szDoId"            => $item->noinv . "-FIXING",
-                "szFSoId"           => $item->noso . "-FIXING",
+                "szDoId"            => $item->noinv,
+                "szFSoId"           => $item->noso,
                 "szLogisticType"    => "POS",
                 "szOrderTypeId"     => "JUAL",
                 "dtmDelivery"       => Carbon::parse($item->crea_date)->toDateTimeString(),
