@@ -100,6 +100,11 @@ return [
                 "label" => "DKS",
                 "route" => "report-marketing.dks",
                 "active" => Request::is('report-marketing/dks*')
+            ],
+            [
+                "label" => "Laporan Invoice",
+                "route" => "report-marketing.laporan-invoice",
+                "active" => Request::is('report-marketing/laporan-invoice*')
             ]
         ]
     ],

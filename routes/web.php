@@ -43,6 +43,7 @@ use App\Livewire\ReturInvoice\IndexReturInvoice;
 use App\Livewire\Salesman;
 use App\Livewire\StockMovement\IndexStockMovement;
 use App\Livewire\Master\IndexMasterPart;
+use App\Livewire\ReportMarketing\IndexLaporanInvoice;
 use App\Livewire\StockPart\IndexStockPart;
 use App\Livewire\StockPart\IndexStockPartRak;
 use App\Livewire\StoreRak\IndexStoreRak;
@@ -121,6 +122,18 @@ Route::middleware('auth')->group(function () {
         Route::get('/report-marketing/dks', MonitoringDks::class)->name('report-marketing.dks');
         Route::get('/report-marketing/dks/rekap-punishment', RekapPunishment::class)->name('report-marketing.dks.rekap-punishment');
     });
+
+    /**
+     * super-user
+     * head-marketing
+     * supervisor-area
+     * ar
+     */
+    Route::middleware('role:supervisor-area|super-user|head-marketing|ar')->group(function () {
+        // REPORT MARKETING => LAPORAN INVOICE
+        Route::get('/report-marketing/laporan-invoice', IndexLaporanInvoice::class)->name('report-marketing.laporan-invoice');
+    });
+
 
     /**
      * super-user

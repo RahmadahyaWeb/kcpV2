@@ -9,7 +9,7 @@ use Livewire\WithPagination;
 class IndexStockPart extends Component
 {
     use WithPagination;
-    
+
     public $target = 'search';
     public $search;
 
