@@ -11,7 +11,8 @@ class IndexPajakKeluaran extends Component
 {
     public $target = '';
 
-    public $from_date, $to_date, $type_invoice;
+    public $from_date, $to_date, $type_invoice, $selected_stores = [], $search_toko;
+
 
     public function export_to_excel()
     {
@@ -39,6 +40,7 @@ class IndexPajakKeluaran extends Component
             ->whereBetween('header.crea_date', [$fromDateFormatted, $toDateFormatted])
             ->where('header.flag_batal', '<>', 'Y')
             ->where('outlet.kd_outlet', $operator_kd_outlet, 'NW')
+            ->whereIn('header.kd_outlet', $this->selected_stores)
             ->whereNotIn('header.noinv', [
                 'INV-202501-00001',
                 'INV-202501-00002',
@@ -107,6 +109,15 @@ class IndexPajakKeluaran extends Component
 
     public function render()
     {
-        return view('livewire.pajak.index-pajak-keluaran');
+        $master_toko = DB::connection('kcpinformation')
+            ->table('mst_outlet')
+            ->where('status', 'Y')
+            ->where(function ($query) {
+                $query->where('nm_outlet', 'like', '%' . $this->search_toko . '%')
+                    ->orWhere('kd_outlet', 'like', '%' . $this->search_toko . '%');
+            })
+            ->get();
+
+        return view('livewire.pajak.index-pajak-keluaran', compact('master_toko'));
     }
 }
