@@ -27,6 +27,14 @@ return [
         "children" => []
     ],
     [
+        "label" => "Part",
+        "icon" => "bx bx-wrench",
+        "route" => "master-part.index",
+        "roles" => ['super-user', 'admin'],
+        "active" => Request::is('master/part*'),
+        "children" => []
+    ],
+    [
         "label" => "Users",
         "icon" => "bx bx-user",
         "route" => "users.index",

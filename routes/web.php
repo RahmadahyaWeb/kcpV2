@@ -42,9 +42,9 @@ use App\Livewire\ReturInvoice\DetailReturInvoice;
 use App\Livewire\ReturInvoice\IndexReturInvoice;
 use App\Livewire\Salesman;
 use App\Livewire\StockMovement\IndexStockMovement;
+use App\Livewire\Master\IndexMasterPart;
 use App\Livewire\StockPart\IndexStockPartRak;
 use App\Livewire\StoreRak\IndexStoreRak;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -84,9 +84,10 @@ Route::middleware('auth')->group(function () {
         // MASTER TOKO
         Route::get('/master/toko', IndexMasterToko::class)->name('master-toko.index');
         Route::get('/master/toko/edit/{kode_toko}', EditMasterToko::class)->name('master-toko.edit');
-
-        // UPLOAD FREKUENSI TOKO
         Route::post('/master/toko/upload-frekuensi', [UploadController::class, 'import_frekuensi_toko'])->name('upload-frekuensi');
+
+        // MASTER PART
+        Route::get('/master/part', IndexMasterPart::class)->name('master-part.index');
     });
 
     /**
