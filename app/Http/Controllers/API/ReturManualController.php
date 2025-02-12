@@ -182,7 +182,7 @@ class ReturManualController extends Controller
                 'decQty'             => -$returItem->qty,
                 'szUomId'            => "PCS",
                 'decPrice'           => $decPrice,
-                'decDiscount'        => -$decDiscPerItem,
+                'decDiscount'        => -$decDisc,
                 'bTaxable'           => true,
                 'decTax'             => -$decTax,
                 'decAmount'          => -$decAmount,
