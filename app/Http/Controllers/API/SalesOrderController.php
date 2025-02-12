@@ -160,9 +160,13 @@ class SalesOrderController extends Controller
 
         $decPrice = $value->hrg_pcs;
         $qty = $value->qty;
-        $decDisc =  $value->nominal_disc;
-        $decDiscPerItem = $decDisc / $qty;
+        $disc = $value->disc;
+
         $decAmount = $decPrice * $qty;
+
+        $decDisc =  round($decAmount * ($disc / 100));
+        $decDiscPerItem = $decDisc / $qty;
+
         $decDPP = round(($decAmount - $decDisc) / config('tax.ppn_factor'));
         $decTax = round($decDPP * config('tax.ppn_percentage'));
 
@@ -175,8 +179,8 @@ class SalesOrderController extends Controller
         return [
             'szOrderItemTypeId' => "JUAL",
             'szProductId' => $value->part_no,
-            'decDiscProcent' => $value->disc,
-            'decQty' => $value->qty,
+            'decDiscProcent' => $disc,
+            'decQty' => $qty,
             'szUomId' => "PCS",
             'decPrice' => $decPrice,
             'decDiscount' => $decDisc,
