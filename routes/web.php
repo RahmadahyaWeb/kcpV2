@@ -43,6 +43,7 @@ use App\Livewire\ReturInvoice\IndexReturInvoice;
 use App\Livewire\Salesman;
 use App\Livewire\StockMovement\IndexStockMovement;
 use App\Livewire\Master\IndexMasterPart;
+use App\Livewire\StockPart\IndexStockPart;
 use App\Livewire\StockPart\IndexStockPartRak;
 use App\Livewire\StoreRak\IndexStoreRak;
 use Illuminate\Support\Facades\Auth;
@@ -99,6 +100,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/dks/scan', Scan::class)->name('dks.index');
         Route::get('/dks/scan/{kode_toko}', Submit::class)->name('dks.submit');
         Route::post('dks/scan/store', [DksController::class, 'store'])->name('dks.store');
+    });
+
+    /**
+     * super-user
+     * salesman
+     * admin
+     * fakturis
+     */
+    Route::middleware('role:salesman|super-user')->group(function () {
+        Route::get('/stock-part', IndexStockPart::class)->name('stock-part.index');
     });
 
     /**
