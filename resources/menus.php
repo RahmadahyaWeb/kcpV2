@@ -93,7 +93,7 @@ return [
         "label" => "Report Marketing",
         "icon" => "bx bx-layout",
         "route" => null,
-        "roles" => ['super-user', 'admin', 'head-marketing', 'supervisor-area'],
+        "roles" => ['super-user', 'admin', 'head-marketing', 'supervisor-area', 'fakturis', 'ar'],
         "active" => Request::is('report-marketing*'),
         "children" => [
             [
