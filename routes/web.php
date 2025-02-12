@@ -135,7 +135,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/store-rak', IndexStoreRak::class)->name('store-rak.index');
 
         // STOCK PART RAK
-        Route::get('/stock-part/rak', IndexStockPartRak::class)->name('stock-part.rak.index');
+        Route::get('/part-rak', IndexStockPartRak::class)->name('part-rak.index');
     });
 
     /**

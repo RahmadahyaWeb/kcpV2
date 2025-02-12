@@ -58,6 +58,14 @@ return [
         "header" => true
     ],
     [
+        "label" => "Stock Part",
+        "icon" => "bx bx-file",
+        "route" => "stock-part.index",
+        "roles" => ['super-user', 'admin'],
+        "active" => Request::is('stock-part*'),
+        "children" => []
+    ],
+    [
         "label" => "DKS Scan",
         "icon" => "bx bx-qr-scan",
         "route" => "dks.index",
@@ -194,16 +202,10 @@ return [
     [
         "label" => "Stock Part",
         "icon" => "bx bx-file",
-        "route" => null,
+        "route" => "part-rak.index",
         "roles" => ['super-user', 'head-warehouse', 'inventory', 'storer'],
-        "active" => Request::is('stock-part*'),
-        "children" => [
-            [
-                "label" => "Rak",
-                "route" => "stock-part.rak.index",
-                "active" => Request::is('stock-part/rak*')
-            ],
-        ]
+        "active" => Request::is('part-rak'),
+        "children" => []
     ],
     [
         "label" => "Delivery Order",
