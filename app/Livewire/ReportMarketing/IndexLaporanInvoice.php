@@ -53,6 +53,8 @@ class IndexLaporanInvoice extends Component
             ->select([
                 'header.noinv',
                 'header.amount_total',
+                'header.crea_date',
+                'header.tgl_jth_tempo',
                 'outlet.kd_outlet',
                 'outlet.nm_outlet'
             ])

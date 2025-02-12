@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithCustomStartCell;
@@ -10,6 +11,9 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
+use DateTime;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 class LaporanInvoiceExport implements FromCollection, WithMapping, WithTitle, WithColumnFormatting, WithHeadings, WithEvents
 {
@@ -42,7 +46,10 @@ class LaporanInvoiceExport implements FromCollection, WithMapping, WithTitle, Wi
             'NAMA TOKO',
             'PRODUK PART',
             'KELOMPOK PART',
-            'NOMINAL INVOICE'
+            'NOMINAL INVOICE',
+            'TANGGAL INVOICE',
+            'TANGGAL JATUH TEMPO',
+            'TELAT PEMBAYARAN (HARI)'
         ];
     }
 
@@ -69,18 +76,40 @@ class LaporanInvoiceExport implements FromCollection, WithMapping, WithTitle, Wi
         $produk_part = $row['product_part'];
         $kelompok_part = $row['kelompok_part'];
 
+        $tanggal_invoice = date('Y-m-d', strtotime($row['crea_date']));
+        $tanggal_jatuh_tempo = date('Y-m-d', strtotime($row['tgl_jth_tempo']));
+
+        $tanggal_invoice_excel = Date::dateTimeToExcel(new DateTime($tanggal_invoice));
+        $tanggal_jatuh_tempo_excel = Date::dateTimeToExcel(new DateTime($tanggal_jatuh_tempo));
+
+        // Konversi ke objek Carbon
+        $tanggal_sekarang = Carbon::now();
+
+        // Hitung telat pembayaran
+        if ($tanggal_sekarang->lessThanOrEqualTo(Carbon::parse($tanggal_jatuh_tempo))) {
+            $telat_pembayaran = 0; // Belum jatuh tempo
+        } else {
+            $telat_pembayaran = $tanggal_sekarang->diffInDays($tanggal_jatuh_tempo); // Selisih hari keterlambatan
+        }
+
         return [
             $noinv,
             $kd_outlet,
             $nm_outlet,
             $produk_part,
             $kelompok_part,
-            $nominal_invoice
+            $nominal_invoice,
+            $tanggal_invoice_excel,
+            $tanggal_jatuh_tempo_excel,
+            $telat_pembayaran
         ];
     }
 
     public function columnFormats(): array
     {
-        return [];
+        return [
+            'G' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'H' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+        ];
     }
 }
