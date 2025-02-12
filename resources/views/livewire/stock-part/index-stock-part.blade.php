@@ -37,7 +37,7 @@
                     <tbody>
                         @forelse ($items as $item)
                             <tr>
-                                <td class="text-nowrap">{{ $item->kd_gudang == "GD1" ? "KAL-SEL" : "KAL-TENG" }}</td>
+                                <td class="text-nowrap">{{ $item->kd_gudang == 'GD1' ? 'KAL-SEL' : 'KAL-TENG' }}</td>
                                 <td class="text-nowrap">{{ $item->part_no }}</td>
                                 <td>{{ $item->nm_part }}</td>
                                 <td>{{ $item->group_part }}</td>
@@ -57,6 +57,10 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+
+        <div class="card-footer">
+            {{ $items->links() }}
         </div>
     </div>
 </div>
