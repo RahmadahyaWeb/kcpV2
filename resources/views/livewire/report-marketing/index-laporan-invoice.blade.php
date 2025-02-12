@@ -12,6 +12,23 @@
                     <form wire:submit="export_to_excel">
                         <div class="row gap-3">
                             <div class="col-12">
+                                <label for="type_invoice" class="form-label">Tipe Invoice</label>
+                                <select name="type_invoice" id="type_invoice"
+                                    class="form-select @error('type_invoice') is-invalid @enderror"
+                                    wire:model="type_invoice">
+                                    <option value="">Pilih Tipe Invoice</option>
+
+                                    <option value="Y">LUNAS</option>
+                                    <option value="N">BELUM LUNAS</option>
+                                </select>
+
+                                @error('type_invoice')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="col-12">
                                 <label for="from_date" class="form-label">Dari Tanggal</label>
                                 <input type="date" class="form-control @error('from_date') is-invalid @enderror"
                                     name="from_date" id="from_date" wire:model="from_date">

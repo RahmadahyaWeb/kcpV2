@@ -10,7 +10,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class IndexLaporanInvoice extends Component
 {
     public $target = 'export_to_excel';
-    public $from_date, $to_date, $selected_stores = [];
+    public $from_date, $to_date, $selected_stores = [], $type_invoice;
     public $search_toko;
 
     public function export_to_excel()
@@ -18,6 +18,7 @@ class IndexLaporanInvoice extends Component
         $this->validate([
             'from_date'     => ['required'],
             'to_date'       => ['required'],
+            'type_invoice'  => ['required'],
         ]);
 
         $kcpinformation = DB::connection('kcpinformation');
@@ -26,7 +27,15 @@ class IndexLaporanInvoice extends Component
         $toDateFormatted = \Carbon\Carbon::parse($this->to_date)->endOfDay();
         $selected_stores = $this->selected_stores;
 
-        $invoices = $this->fetch_invoices($kcpinformation, $fromDateFormatted, $toDateFormatted, $selected_stores);
+        $type_invoice = $this->type_invoice;
+
+        if ($type_invoice == 'Y') {
+            $operator_flag_pembayaran_lunas = "=";
+        } else {
+            $operator_flag_pembayaran_lunas = "<>";
+        }
+
+        $invoices = $this->fetch_invoices($kcpinformation, $fromDateFormatted, $toDateFormatted, $selected_stores, $operator_flag_pembayaran_lunas);
 
         $product_parts = $this->get_product_parts($kcpinformation, $invoices->pluck('noinv')->toArray());
 
@@ -47,7 +56,7 @@ class IndexLaporanInvoice extends Component
         return Excel::download(new LaporanInvoiceExport($sorted_data), $filename);
     }
 
-    public function fetch_invoices($kcpinformation, $from_date, $to_date, $selected_stores)
+    public function fetch_invoices($kcpinformation, $from_date, $to_date, $selected_stores, $operator_flag_pembayaran_lunas)
     {
         $query = $kcpinformation->table('trns_inv_header as header')
             ->select([
@@ -63,6 +72,7 @@ class IndexLaporanInvoice extends Component
             ->join('mst_part as part', 'part.part_no', '=', 'details.part_no')
             ->whereBetween('header.crea_date', [$from_date, $to_date])
             ->where('flag_batal', '<>', 'Y')
+            ->where('flag_pembayaran_lunas', $operator_flag_pembayaran_lunas, 'Y')
             ->groupBy('header.noinv');
 
         // Tambahkan whereIn jika selected_stores tidak kosong
