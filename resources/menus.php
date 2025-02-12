@@ -54,7 +54,7 @@ return [
     // MARKETING
     [
         "label" => "Marketing",
-        "roles" => ['super-user', 'admin', 'head-marketing', 'supervisor-area', 'salesman', 'fakturis'],
+        "roles" => ['super-user', 'admin', 'head-marketing', 'supervisor-area', 'salesman', 'fakturis', 'finance', 'ar'],
         "header" => true
     ],
     [
@@ -93,7 +93,7 @@ return [
         "label" => "Report Marketing",
         "icon" => "bx bx-layout",
         "route" => null,
-        "roles" => ['super-user', 'admin', 'head-marketing', 'supervisor-area', 'fakturis', 'ar'],
+        "roles" => ['super-user', 'admin', 'head-marketing', 'supervisor-area', 'fakturis', 'ar', 'finance', 'fakturis'],
         "active" => Request::is('report-marketing*'),
         "children" => [
             [
