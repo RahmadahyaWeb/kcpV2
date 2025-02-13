@@ -82,11 +82,13 @@ class LaporanInvoiceExport implements FromCollection, WithMapping, WithTitle, Wi
         $tanggal_invoice_excel = Date::dateTimeToExcel(new DateTime($tanggal_invoice));
         $tanggal_jatuh_tempo_excel = Date::dateTimeToExcel(new DateTime($tanggal_jatuh_tempo));
 
-        if (Carbon::parse($tanggal_jatuh_tempo)->lessThanOrEqualTo($tanggal_invoice)) {
-            $telat_pembayaran = 0;
+        // Jika tanggal jatuh tempo lebih kecil dari tanggal invoice
+        if (Carbon::parse($tanggal_jatuh_tempo)->lessThan(Carbon::parse($tanggal_invoice))) {
+            $telat_pembayaran = Carbon::parse($tanggal_jatuh_tempo)->diffInDays(Carbon::parse($tanggal_invoice));
         } else {
-            $telat_pembayaran = Carbon::parse($tanggal_invoice)->startOfDay()->diffInDays($tanggal_jatuh_tempo);
+            $telat_pembayaran = 0; // Tidak terlambat
         }
+
         return [
             $noinv,
             $kd_outlet,
