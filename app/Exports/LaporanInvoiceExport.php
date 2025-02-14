@@ -84,13 +84,13 @@ class LaporanInvoiceExport implements FromCollection, WithMapping, WithTitle, Wi
 
         $flag_pembayaran_lunas = $row['flag_pembayaran_lunas'];
         $tanggal_jatuh_tempo = Carbon::createFromFormat('Y-m-d', $tanggal_jatuh_tempo);
-        $tanggal_sekarang = Carbon::now();
+        $tanggal_sekarang = Carbon::now()->startOfDay();
 
         if ($flag_pembayaran_lunas === 'Y') {
             $hari_terlambat = 0;
         } else {
-            if ($tanggal_sekarang->greaterThan($tanggal_jatuh_tempo)) {
-                $hari_terlambat = $tanggal_sekarang->diffInDays($tanggal_jatuh_tempo);
+            if ($tanggal_jatuh_tempo && $tanggal_sekarang->greaterThan($tanggal_jatuh_tempo)) {
+                $hari_terlambat = abs($tanggal_sekarang->diffInDays($tanggal_jatuh_tempo));
             } else {
                 $hari_terlambat = 0;
             }
