@@ -28,16 +28,14 @@
                     <tbody>
                         @forelse ($sales_orders as $sales_order)
                             <tr>
-                                <td>{{ $sales_order->noso }}</td>
+                                <td class="text-nowrap">{{ $sales_order->noso }}</td>
                                 <td>{{ $sales_order->kd_outlet }}</td>
                                 <td>{{ $sales_order->nm_outlet }}</td>
                                 <td>{{ number_format($sales_order->nominal_total, 0, ',', '.') }}</td>
                                 <td>{{ $sales_order->fullname }}</td>
-                                <td>
                                 <td style="white-space: nowrap">
-                                    <button type="button" class="btn btn-sm btn-primary">OK</button>
-                                    <button type="button" class="btn btn-sm btn-danger">Batal</button>
-                                </td>
+                                    <button wire:click="detail_so('{{ $sales_order->noso }}')" type="button"
+                                        class="btn btn-sm btn-primary">Details</button>
                                 </td>
                             </tr>
                         @empty

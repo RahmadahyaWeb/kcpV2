@@ -19,6 +19,7 @@ use App\Livewire\GoodsReceipt\GoodsReceiptAopDetail;
 use App\Livewire\GoodsReceipt\GoodsReceiptNonAop;
 use App\Livewire\GoodsReceipt\GoodsReceiptNonAopDetail;
 use App\Livewire\Invoice\DetailInvoice;
+use App\Livewire\Invoice\DetailSalesOrder;
 use App\Livewire\Invoice\IndexInvoice;
 use App\Livewire\Invoice\IndexInvoiceBosnet;
 use App\Livewire\KelompokPart;
@@ -205,10 +206,13 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:fakturis|super-user')->group(function () {
         // INVOICE
         Route::get('/invoice', IndexInvoice::class)->name('invoice.index');
-        Route::get('/invoice/{noinv}', DetailInvoice::class)->name('invoice.detail');
+        Route::get('/invoice/detail/{noinv}', DetailInvoice::class)->name('invoice.detail');
 
         // INVOICE BOSNET
         Route::get('/invoice-bosnet', IndexInvoiceBosnet::class)->name('invoice.bosnet');
+
+        // DETAIL SO (BELUM INVOICE)
+        Route::get('/invoice/sales-order/{noso}', DetailSalesOrder::class)->name('invoice.sales-order.detail');
     });
 
     /**

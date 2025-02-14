@@ -207,10 +207,8 @@
                                         $nominal_total += $invoice->nominal_total;
                                     @endphp
                                     <tr>
-                                        <td>
-                                            <span style="font-size: 0.9375rem; color: #646e78" class="badge p-0">
-                                                {{ $invoice->part_no }}
-                                            </span>
+                                        <td class="text-nowrap">
+                                            {{ $invoice->part_no }}
                                         </td>
                                         <td>{{ $invoice->nm_part }}</td>
                                         <td>{{ $invoice->qty }}</td>

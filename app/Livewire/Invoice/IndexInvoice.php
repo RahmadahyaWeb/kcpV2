@@ -13,6 +13,11 @@ class IndexInvoice extends Component
         $this->redirectRoute('invoice.detail', $noinv, true, true);
     }
 
+    public function detail_so($noso)
+    {
+        $this->redirectRoute('invoice.sales-order.detail', $noso, true, true);
+    }
+
     public function fetch_sales_orders($kcpinformation)
     {
 
