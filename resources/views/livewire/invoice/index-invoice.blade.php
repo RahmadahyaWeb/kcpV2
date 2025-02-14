@@ -1,4 +1,5 @@
 <div>
+    <x-alert />
     <x-loading target="" />
 
     <div class="row mb-3">
