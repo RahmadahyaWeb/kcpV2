@@ -31,6 +31,8 @@ class IndexLaporanInvoice extends Component
 
         if ($type_invoice == 'Y') {
             $operator_flag_pembayaran_lunas = "=";
+        } else if ($type_invoice == 'ALL') {
+            $operator_flag_pembayaran_lunas = "ALL";
         } else {
             $operator_flag_pembayaran_lunas = "<>";
         }
@@ -80,8 +82,11 @@ class IndexLaporanInvoice extends Component
             ->join('mst_part as part', 'part.part_no', '=', 'details.part_no')
             ->whereBetween('header.crea_date', [$from_date, $to_date])
             ->where('flag_batal', '<>', 'Y')
-            ->where('flag_pembayaran_lunas', $operator_flag_pembayaran_lunas, 'Y')
             ->groupBy('header.noinv');
+
+        if ($operator_flag_pembayaran_lunas != 'ALL') {
+            $query->where('flag_pembayaran_lunas', $operator_flag_pembayaran_lunas, 'Y');
+        }
 
         if (!empty($selected_stores)) {
             $query->whereIn('header.kd_outlet', $selected_stores);

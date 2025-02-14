@@ -17,7 +17,7 @@
                                     class="form-select @error('type_invoice') is-invalid @enderror"
                                     wire:model="type_invoice">
                                     <option value="">Pilih Tipe Invoice</option>
-
+                                    <option value="ALL">SEMUA</option>
                                     <option value="Y">LUNAS</option>
                                     <option value="N">BELUM LUNAS</option>
                                 </select>
