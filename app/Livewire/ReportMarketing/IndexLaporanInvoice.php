@@ -39,16 +39,23 @@ class IndexLaporanInvoice extends Component
 
         $product_parts = $this->get_product_parts($kcpinformation, $invoices->pluck('noinv')->toArray());
 
-        $merged_data = $invoices->map(function ($invoice) use ($product_parts) {
+        $tanggal_pembayaran = $this->fetch_tanggal_pembayaran($invoices->pluck('noinv')->toArray());
+
+        $merged_data = $invoices->map(function ($invoice) use ($product_parts, $tanggal_pembayaran) {
             $parts = $product_parts[$invoice->noinv] ?? [
                 'product_part' => null,
                 'supplier'     => null,
                 'kelompok_part' => null
             ];
 
-            return array_merge((array) $invoice, $parts);
+            $pembayaran = $tanggal_pembayaran[$invoice->noinv] ?? [
+                'tanggal_pembayaran' => null
+            ];
+
+            return array_merge((array) $invoice, $parts, $pembayaran);
         });
 
+        // Mengurutkan data berdasarkan 'kd_outlet'
         $sorted_data = $merged_data->sortBy('kd_outlet')->values();
 
         $filename = "laporan_invoice_" . $fromDateFormatted . "_" . $toDateFormatted . ".xlsx";
@@ -76,7 +83,6 @@ class IndexLaporanInvoice extends Component
             ->where('flag_pembayaran_lunas', $operator_flag_pembayaran_lunas, 'Y')
             ->groupBy('header.noinv');
 
-        // Tambahkan whereIn jika selected_stores tidak kosong
         if (!empty($selected_stores)) {
             $query->whereIn('header.kd_outlet', $selected_stores);
         }
@@ -102,6 +108,25 @@ class IndexLaporanInvoice extends Component
                     'product_part' => $item->produk_part,
                     'supplier'     => $item->supplier,
                     'kelompok_part' => $item->kelompok_part
+                ]];
+            });
+    }
+
+    public function fetch_tanggal_pembayaran($noinv_list)
+    {
+        $kcpapplication = DB::connection('mysql');
+
+        return $kcpapplication->table('customer_payment_details as details')
+            ->whereIn(DB::raw("REPLACE(details.noinv, '/', '-')"), $noinv_list)
+            ->whereIn('details.status', ['C', 'O'])
+            ->select([
+                'details.noinv',
+                'details.crea_date as tanggal_pembayaran'
+            ])
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->noinv => [
+                    'tanggal_pembayaran' => $item->tanggal_pembayaran
                 ]];
             });
     }

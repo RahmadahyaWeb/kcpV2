@@ -47,8 +47,10 @@ class LaporanInvoiceExport implements FromCollection, WithMapping, WithTitle, Wi
             'PRODUK PART',
             'KELOMPOK PART',
             'NOMINAL INVOICE',
+            'STATUS PEMBAYARAN',
             'TANGGAL INVOICE',
             'TANGGAL JATUH TEMPO',
+            'TANGGAL PEMBAYARAN INVOICE',
             'TELAT PEMBAYARAN (HARI)'
         ];
     }
@@ -78,23 +80,38 @@ class LaporanInvoiceExport implements FromCollection, WithMapping, WithTitle, Wi
 
         $tanggal_invoice = date('Y-m-d', strtotime($row['crea_date']));
         $tanggal_jatuh_tempo = date('Y-m-d', strtotime($row['tgl_jth_tempo']));
+        $tanggal_pembayaran = isset($row['tanggal_pembayaran']) ? date('Y-m-d', strtotime($row['tanggal_pembayaran'])) : null;
 
         $tanggal_invoice_excel = Date::dateTimeToExcel(new DateTime($tanggal_invoice));
         $tanggal_jatuh_tempo_excel = Date::dateTimeToExcel(new DateTime($tanggal_jatuh_tempo));
+        $tanggal_pembayaran_excel = isset($tanggal_pembayaran) ? Date::dateTimeToExcel(new DateTime($tanggal_pembayaran)) : null;
 
-        $flag_pembayaran_lunas = $row['flag_pembayaran_lunas'];
         $tanggal_jatuh_tempo = Carbon::createFromFormat('Y-m-d', $tanggal_jatuh_tempo)->startOfDay();
         $tanggal_sekarang = Carbon::now()->startOfDay();
+        $tanggal_pembayaran_carbon = $tanggal_pembayaran ? Carbon::createFromFormat('Y-m-d', $tanggal_pembayaran)->startOfDay() : null;
 
-        if ($flag_pembayaran_lunas === 'Y') {
-            $hari_terlambat = 0;
-        } else {
-            if ($tanggal_jatuh_tempo && $tanggal_sekarang->greaterThan($tanggal_jatuh_tempo)) {
-                $hari_terlambat = abs($tanggal_sekarang->diffInDays($tanggal_jatuh_tempo));
+        if ($tanggal_pembayaran_carbon) {
+            // Hitung keterlambatan hanya jika tanggal pembayaran ada
+            if ($tanggal_pembayaran_carbon->greaterThan($tanggal_jatuh_tempo)) {
+                $hari_terlambat = abs($tanggal_pembayaran_carbon->diffInDays($tanggal_jatuh_tempo));
             } else {
                 $hari_terlambat = 0;
             }
+        } else {
+            // Cek apakah belum jatuh tempo
+            if ($tanggal_sekarang->lessThanOrEqualTo($tanggal_jatuh_tempo)) {
+                $status_pembayaran = 'BELUM JATUH TEMPO';
+                $hari_terlambat = 0;
+            } else {
+                $status_pembayaran = 'JATUH TEMPO';
+                $hari_terlambat = abs($tanggal_sekarang->diffInDays($tanggal_jatuh_tempo));
+            }
         }
+
+        // Output status pembayaran dan keterlambatan
+        $flag_pembayaran_lunas = $row['flag_pembayaran_lunas'];
+
+        $status_pembayaran = $flag_pembayaran_lunas === 'Y' ? 'LUNAS' : ($status_pembayaran ?? 'BELUM LUNAS');
 
         return [
             $noinv,
@@ -103,8 +120,10 @@ class LaporanInvoiceExport implements FromCollection, WithMapping, WithTitle, Wi
             $produk_part,
             $kelompok_part,
             $nominal_invoice,
+            $status_pembayaran,
             $tanggal_invoice_excel,
             $tanggal_jatuh_tempo_excel,
+            $tanggal_pembayaran_excel,
             $hari_terlambat
         ];
     }
@@ -112,8 +131,9 @@ class LaporanInvoiceExport implements FromCollection, WithMapping, WithTitle, Wi
     public function columnFormats(): array
     {
         return [
-            'G' => NumberFormat::FORMAT_DATE_DDMMYYYY,
             'H' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'I' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'J' => NumberFormat::FORMAT_DATE_DDMMYYYY,
         ];
     }
 }
