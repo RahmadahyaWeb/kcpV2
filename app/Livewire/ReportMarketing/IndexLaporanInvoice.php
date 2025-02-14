@@ -64,6 +64,7 @@ class IndexLaporanInvoice extends Component
                 'header.amount_total',
                 'header.crea_date',
                 'header.tgl_jth_tempo',
+                'header.flag_pembayaran_lunas',
                 'outlet.kd_outlet',
                 'outlet.nm_outlet'
             ])
