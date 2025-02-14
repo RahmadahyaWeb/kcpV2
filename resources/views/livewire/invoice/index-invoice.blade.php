@@ -7,6 +7,50 @@
         <x-total-invoice-terbentuk-card :total="$total_invoice_terbentuk" />
     </div>
 
+    <div class="card mb-3">
+        <div class="card-header">
+            List SO Belum Invoice
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>No SO</th>
+                            <th>Kode Toko</th>
+                            <th>Nama Toko</th>
+                            <th>Nominal Invoice</th>
+                            <th>Nama Sales</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($sales_orders as $sales_order)
+                            <tr>
+                                <td>{{ $sales_order->noso }}</td>
+                                <td>{{ $sales_order->kd_outlet }}</td>
+                                <td>{{ $sales_order->nm_outlet }}</td>
+                                <td>{{ number_format($sales_order->nominal_total, 0, ',', '.') }}</td>
+                                <td>{{ $sales_order->fullname }}</td>
+                                <td>
+                                <td style="white-space: nowrap">
+                                    <button type="button" class="btn btn-sm btn-primary">OK</button>
+                                    <button type="button" class="btn btn-sm btn-danger">Batal</button>
+                                </td>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center">No Data</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <div class="card">
         <!-- Card Header -->
         <div class="card-header">
@@ -56,7 +100,7 @@
                                 <td style="white-space: nowrap">
                                     <button wire:click="print('{{ $invoice->noinv }}')" type="button"
                                         class="btn btn-sm btn-primary">Print</button>
-                                    <button type="button" class="btn btn-sm btn-danger">Batal</button>
+                                    {{-- <button type="button" class="btn btn-sm btn-danger">Batal</button> --}}
                                 </td>
                             </tr>
                         @empty
@@ -69,5 +113,4 @@
             </div>
         </div>
     </div>
-
 </div>
