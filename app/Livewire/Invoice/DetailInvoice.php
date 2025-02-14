@@ -319,15 +319,6 @@ class DetailInvoice extends Component
 
     public function render()
     {
-        $this->header = DB::connection('kcpinformation')
-            ->table('trns_inv_header')
-            ->where('noinv', $this->invoice)
-            ->first();
-
-        if ($this->header == null) {
-            abort(404);
-        }
-
         $this->details = DB::connection('kcpinformation')
             ->table('trns_inv_details')
             ->where('noinv', $this->invoice)
@@ -375,6 +366,11 @@ class DetailInvoice extends Component
 
             abort(500);
         }
+
+        $this->header = DB::connection('kcpinformation')
+        ->table('trns_inv_header')
+        ->where('noinv', $this->invoice)
+        ->first();
 
         $this->bonus_toko = DB::connection('kcpinformation')
             ->table('trns_ach_toko_bonus')
