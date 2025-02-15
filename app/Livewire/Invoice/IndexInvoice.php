@@ -67,12 +67,12 @@ class IndexInvoice extends Component
                 'a.kd_outlet',
                 'a.nm_outlet',
                 'a.tgl_jth_tempo',
-                DB::raw('ROUND(SUM(b.nominal)) as nominal_ppn'),
-                DB::raw('ROUND(SUM(b.nominal_disc)) as nominal_disc_ppn'),
-                DB::raw('ROUND(SUM(b.nominal_total)) as nominal_total_ppn'),
-                DB::raw('ROUND(SUM(b.nominal) / ' . $ppn_factor . ') as nominal_nonppn'),
-                DB::raw('ROUND(SUM(b.nominal_disc) / ' . $ppn_factor . ') as nominal_disc_noppn'),
-                DB::raw('ROUND(SUM(b.nominal_total) / ' . $ppn_factor . ') as nominal_total_noppn')
+                DB::raw('SUM(b.nominal) as nominal_ppn'),
+                DB::raw('SUM(b.nominal_disc) as nominal_disc_ppn'),
+                DB::raw('SUM(b.nominal_total) as nominal_total_ppn'),
+                DB::raw('SUM(b.nominal) / ' . $ppn_factor . ' as nominal_nonppn'),
+                DB::raw('SUM(b.nominal_disc) / ' . $ppn_factor . ' as nominal_disc_noppn'),
+                DB::raw('SUM(b.nominal_total) / ' . $ppn_factor . ' as nominal_total_noppn')
             )
             ->where('a.status', '=', 'O')
             ->where('a.flag_batal', '=', 'N')
