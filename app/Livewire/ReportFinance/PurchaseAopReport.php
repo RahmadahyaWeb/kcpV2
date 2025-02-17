@@ -3,6 +3,7 @@
 namespace App\Livewire\ReportFinance;
 
 use App\Exports\InvoiceAopExport;
+use App\Exports\InvoiceAopProgramExport;
 use App\Exports\InvoiceAopRekapExport;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
@@ -29,6 +30,9 @@ class PurchaseAopReport extends Component
             return $this->export_laporan($fromDateFormatted, $toDateFormatted);
         } else if ($this->jenis_laporan == 'rekap') {
             return $this->export_rekap($fromDateFormatted, $toDateFormatted);
+        } else if ($this->jenis_laporan == 'program')
+        {
+
         }
     }
 
@@ -44,6 +48,12 @@ class PurchaseAopReport extends Component
         $filename = "invoice_aop_{$fromDateFormatted}_-_{$toDateFormatted}.xlsx";
 
         return Excel::download(new InvoiceAopExport($this->from_date, $this->to_date), $filename);
+    }
+
+    public function export_program($fromDateFormatted, $toDateFormatted){
+        $filename = "program_invoice_aop_{$fromDateFormatted}_-_{$toDateFormatted}.xlsx";
+
+        return Excel::download(new InvoiceAopProgramExport($this->from_date, $this->to_date), $filename);
     }
 
     public function render()

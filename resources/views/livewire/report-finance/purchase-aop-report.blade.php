@@ -17,6 +17,7 @@
                                     <option value="">Pilih Jenis Laporan</option>
                                     <option value="laporan">Laporan</option>
                                     <option value="rekap">Rekap</option>
+                                    <option value="program">Program AOP</option>
                                 </select>
 
                                 @error('jenis_laporan')
