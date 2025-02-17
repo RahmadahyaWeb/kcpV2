@@ -32,7 +32,7 @@ class PurchaseAopReport extends Component
             return $this->export_rekap($fromDateFormatted, $toDateFormatted);
         } else if ($this->jenis_laporan == 'program')
         {
-
+            return $this->export_program($fromDateFormatted, $toDateFormatted);
         }
     }
 
