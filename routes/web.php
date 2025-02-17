@@ -44,6 +44,7 @@ use App\Livewire\ReturInvoice\IndexReturInvoice;
 use App\Livewire\Salesman;
 use App\Livewire\StockMovement\IndexStockMovement;
 use App\Livewire\Master\IndexMasterPart;
+use App\Livewire\ReportFinance\AgingReport;
 use App\Livewire\ReportMarketing\IndexLaporanInvoice;
 use App\Livewire\StockPart\IndexStockPart;
 use App\Livewire\StockPart\IndexStockPartRak;
@@ -233,6 +234,9 @@ Route::middleware('auth')->group(function () {
 
         // PIUTANG
         Route::get('/piutang', IndexPiutang::class)->name('piutang.index');
+
+        // AGING
+        Route::get('/report-finance/aging', AgingReport::class)->name('report-finance.aging.index');
     });
 
     // LOGOUT

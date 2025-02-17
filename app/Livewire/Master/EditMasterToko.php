@@ -40,6 +40,7 @@ class EditMasterToko extends Component
                 ->update([
                     'latitude'      => $this->latitude,
                     'longitude'     => $this->longitude,
+                    'frekuensi'     => $this->frekuensi
                 ]);
 
             $kcpinformation->commit();

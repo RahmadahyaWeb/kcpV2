@@ -175,7 +175,12 @@ return [
                 "label" => "Invoice AOP",
                 "route" => "report-finance.purchase.aop.index",
                 "active" => Request::is('report-finance/purchase/aop*')
-            ]
+            ],
+            [
+                "label" => "Aging",
+                "route" => "report-finance.aging.index",
+                "active" => Request::is('report-finance/aging*')
+            ],
         ]
     ],
 
