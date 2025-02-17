@@ -258,16 +258,16 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Discount (Rp)</th>
                                     <th>Keterangan</th>
+                                    <th>Discount (Rp)</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse ($programAop as $item)
                                     <tr>
-                                        <td>{{ number_format($item->potonganProgram, 0, ',', '.') }}</td>
                                         <td>{{ $item->keteranganProgram }}</td>
+                                        <td>{{ number_format($item->potonganProgram, 0, ',', '.') }}</td>
                                         <td>
                                             <button class="btn btn-danger btn-sm"
                                                 wire:click="destroyProgram({{ $item->id }})">
