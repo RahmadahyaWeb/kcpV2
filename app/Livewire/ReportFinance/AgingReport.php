@@ -37,73 +37,16 @@ class AgingReport extends Component
         $kcpinformation = DB::connection('kcpinformation');
 
         $dateEnd = '2025-02-17'; // Contoh tanggal akhir
+        $area = 'some_area'; // Ganti dengan filter area yang diperlukan
 
-        // Query utama
-        $invoices = $kcpinformation->table('trns_inv_header as inv')
-            ->select(
-                'inv.noinv',
-                'inv.area_inv',
-                'inv.kd_outlet',
-                'inv.nm_outlet',
-                'inv.amount_total',
-                'inv.crea_date',
-                'inv.tgl_jth_tempo',
-                DB::raw('IFNULL(byr.total_byr, 0) as total_byr'),
-                DB::raw('(inv.amount_total - IFNULL(byr.total_byr, 0)) as sisa')
-            )
-            ->leftJoin(
-                DB::raw("(SELECT b.noinv, SUM(b.nominal) as total_byr
-                          FROM trns_pembayaran_piutang_header a
-                          JOIN trns_pembayaran_piutang b
-                          ON a.nopiutang = b.nopiutang
-                          WHERE DATE_FORMAT(b.crea_date, '%Y-%m-%d') <= '{$dateEnd}'
-                          AND a.flag_batal = 'N'
-                          GROUP BY b.noinv) as byr"),
-                'inv.noinv',
-                '=',
-                'byr.noinv'
-            )
-            ->where('inv.flag_batal', 'N')
-            ->where('inv.flag_pembayaran_lunas', 'N')
-            ->whereDate('inv.crea_date', '<=', $dateEnd)
-            ->orderBy('inv.kd_outlet')
+        $invoices = $kcpinformation->table('trns_inv_header as header')
+            ->where('header.flag_pembayaran_lunas', '<>', 'Y')
+            ->where('header.flag_batal', '<>', 'Y')
+            ->where('header.status', '=', 'C')
+            ->whereDate('header.crea_date', '<=', $dateEnd)
             ->get();
 
-        // Menambahkan Aging berdasarkan selisih tanggal jatuh tempo
-        // Proses aging
-        $report = $invoices->map(function ($invoice) use ($dateEnd) {
-            $dueDate = strtotime($invoice->tgl_jth_tempo);
-            $currentDate = strtotime($dateEnd);
-            $overdueDays = ($currentDate - $dueDate) / (60 * 60 * 24);
-
-            // Default values
-            $invoice->belum_jatuh_tempo = 0;
-            $invoice->overdue_1_7 = 0;
-            $invoice->overdue_8_20 = 0;
-            $invoice->overdue_21_50 = 0;
-            $invoice->overdue_lebih_50 = 0;
-
-            if ($overdueDays < 0) {
-                $invoice->belum_jatuh_tempo = $invoice->sisa_piutang;
-            } elseif ($overdueDays >= 1 && $overdueDays <= 7) {
-                $invoice->overdue_1_7 = $invoice->sisa_piutang;
-            } elseif ($overdueDays >= 8 && $overdueDays <= 20) {
-                $invoice->overdue_8_20 = $invoice->sisa_piutang;
-            } elseif ($overdueDays >= 21 && $overdueDays <= 50) {
-                $invoice->overdue_21_50 = $invoice->sisa_piutang;
-            } elseif ($overdueDays > 50) {
-                $invoice->overdue_lebih_50 = $invoice->sisa_piutang;
-            }
-
-            $invoice->total_piutang = $invoice->sisa_piutang;
-
-            return $invoice;
-        });
-
-        dd($report);
-
-        // Menampilkan hasil
-        return $invoices;
+        dd($invoices);
     }
 
     public function render()
