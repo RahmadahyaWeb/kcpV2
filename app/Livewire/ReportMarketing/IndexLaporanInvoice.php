@@ -122,8 +122,9 @@ class IndexLaporanInvoice extends Component
         $kcpapplication = DB::connection('mysql');
 
         return $kcpapplication->table('customer_payment_details as details')
+            ->join('customer_payment_header as header', 'header.no_piutang', '=', 'details.no_piutang')
             ->whereIn(DB::raw("REPLACE(details.noinv, '/', '-')"), $noinv_list)
-            ->whereIn('details.status', ['C', 'O'])
+            ->whereIn('header.status', ['C', 'O'])
             ->select([
                 'details.noinv',
                 'details.crea_date as tanggal_pembayaran'

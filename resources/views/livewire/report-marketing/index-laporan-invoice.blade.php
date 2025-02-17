@@ -53,7 +53,8 @@
                             <div class="col-12">
                                 <label class="form-label">Pilih Toko</label>
 
-                                <input type="text" class="form-control mb-1" placeholder="Cari Toko" wire:model.live.debounce.150ms="search_toko">
+                                <input type="text" class="form-control mb-1" placeholder="Cari Toko"
+                                    wire:model.live.debounce.150ms="search_toko">
 
                                 <div class="checkbox-container"
                                     style="max-height: 200px; overflow-y: auto; border: 1px solid #ced4da; padding: 10px; border-radius: 4px;">
