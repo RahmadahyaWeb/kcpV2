@@ -98,6 +98,7 @@ class AgingReport extends Component
             ->whereIn('invoice.kd_outlet', $list_toko->pluck('kd_outlet')->toArray())
             ->whereRaw('invoice.amount_total <> IFNULL(payment.total_payment, 0)')
             ->whereDate('invoice.crea_date', '<=', $to_date)
+            ->where('invoice.noinv', 'NOT LIKE', 'RTU%')
             ->get();
 
         // Mapping per outlet dan kategori overdue
