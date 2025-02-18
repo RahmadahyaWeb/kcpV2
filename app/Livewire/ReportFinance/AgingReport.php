@@ -126,6 +126,7 @@ class AgingReport extends Component
                 'overdue_8_20' => ['total_amount' => 0, 'invoice_count' => 0, 'invoice_numbers' => []],
                 'overdue_21_50' => ['total_amount' => 0, 'invoice_count' => 0, 'invoice_numbers' => []],
                 'overdue_over_50' => ['total_amount' => 0, 'invoice_count' => 0, 'invoice_numbers' => []],
+                'not_overdue' => ['total_amount' => 0, 'invoice_count' => 0, 'invoice_numbers' => []], // Kategori baru untuk not overdue
                 'total_piutang' => 0, // Inisialisasi total piutang
             ];
 
