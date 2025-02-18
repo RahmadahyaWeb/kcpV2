@@ -178,9 +178,13 @@ class AgingReport extends Component
     public function render()
     {
         $perPage = 10;
-        $search_kd_outlet = $this->search_kd_outlet ?? ''; // Ambil input pencarian
+        $search_kd_outlet = $this->search_kd_outlet ?? '';
 
-        $this->fetch_data($this->to_date, $search_kd_outlet); // Pass pencarian ke fetch_data
+        if ($search_kd_outlet) {
+            $this->result = collect($this->result)->filter(function ($item, $key) use ($search_kd_outlet) {
+                return strpos($key, $search_kd_outlet) !== false;
+            })->toArray();
+        }
 
         $collection = collect($this->result);
         $items = $collection->forPage($this->paginators['page'] ?? 1, $perPage);
