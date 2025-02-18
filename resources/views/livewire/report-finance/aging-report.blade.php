@@ -100,33 +100,26 @@
                                             <td>{{ number_format($data['limit_kredit'], 0, ',', '.') }}</td>
                                             <td>{{ number_format($data['sisa_limit_kredit'], 0, ',', '.') }}</td>
                                             <td>{{ number_format($data['not_overdue']['total_amount'], 0, ',', '.') }}
+                                            </td>
                                             <td>{{ number_format($data['overdue_1_7']['total_amount'], 0, ',', '.') }}
                                             </td>
                                             <td>
-                                                @foreach ($data['overdue_1_7']['invoice_numbers'] as $invoice_number)
-                                                    {{ $invoice_number }},
-                                                @endforeach
+                                                {{ implode(', ', $data['overdue_1_7']['invoice_numbers']) }}
                                             </td>
                                             <td>{{ number_format($data['overdue_8_20']['total_amount'], 0, ',', '.') }}
                                             </td>
                                             <td>
-                                                @foreach ($data['overdue_8_20']['invoice_numbers'] as $invoice_number)
-                                                    {{ $invoice_number }},
-                                                @endforeach
+                                                {{ implode(', ', $data['overdue_8_20']['invoice_numbers']) }}
                                             </td>
                                             <td>{{ number_format($data['overdue_21_50']['total_amount'], 0, ',', '.') }}
                                             </td>
                                             <td>
-                                                @foreach ($data['overdue_21_50']['invoice_numbers'] as $invoice_number)
-                                                    {{ $invoice_number }},
-                                                @endforeach
+                                                {{ implode(', ', $data['overdue_21_50']['invoice_numbers']) }}
                                             </td>
                                             <td>{{ number_format($data['overdue_over_50']['total_amount'], 0, ',', '.') }}
                                             </td>
                                             <td>
-                                                @foreach ($data['overdue_over_50']['invoice_numbers'] as $invoice_number)
-                                                    {{ $invoice_number }},
-                                                @endforeach
+                                                {{ implode(', ', $data['overdue_over_50']['invoice_numbers']) }}
                                             </td>
                                             <td>{{ number_format($data['total_piutang'], 0, ',', '.') }}</td>
                                         </tr>
