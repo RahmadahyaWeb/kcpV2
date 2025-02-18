@@ -12,7 +12,7 @@ class AgingReport extends Component
 {
     use WithPagination;
 
-    public $target = 'export_to_excel';
+    public $target = 'export_to_excel, show_data';
     public $from_date, $to_date, $jenis_laporan;
 
     public $show = false;
@@ -43,13 +43,31 @@ class AgingReport extends Component
 
     public function export_aging($from_date, $to_date)
     {
+
+    }
+
+    public function show_data()
+    {
+        $this->validate([
+            'from_date' => ['required'],
+            'to_date' => ['required'],
+            'jenis_laporan' => ['required'],
+        ]);
+
+        $fromDateFormatted = \Carbon\Carbon::parse($this->from_date)->startOfDay();
+        $toDateFormatted = \Carbon\Carbon::parse($this->to_date)->endOfDay();
+
+        $this->fetch_data($toDateFormatted);
+    }
+
+    public function fetch_data($to_date)
+    {
         $kcpinformation = DB::connection('kcpinformation');
 
         // Ambil list toko
         $list_toko = $kcpinformation->table('mst_outlet')
             ->where('status', 'Y')
-            ->pluck('kd_outlet')
-            ->toArray();
+            ->get();
 
         // Ambil semua data invoice
         $query = $kcpinformation->table('kcpinformation.trns_inv_header AS invoice')
@@ -80,7 +98,7 @@ class AgingReport extends Component
             ->leftJoin('trns_plafond AS plafond', 'invoice.kd_outlet', '=', 'plafond.kd_outlet') // Join tabel plafond
             ->where('invoice.flag_batal', 'N')
             ->where('invoice.flag_pembayaran_lunas', 'N')
-            ->whereIn('invoice.kd_outlet', $list_toko)
+            ->whereIn('invoice.kd_outlet', $list_toko->pluck('kd_outlet')->toArray())
             ->whereRaw('invoice.amount_total <> IFNULL(payment.total_payment, 0)')
             ->whereDate('invoice.crea_date', '<=', $to_date)
             ->get();
@@ -91,14 +109,21 @@ class AgingReport extends Component
         // Inisialisasi hasil akhir
         $result = [];
 
-        foreach ($groupedData as $kd_outlet => $invoices) {
-            $nm_outlet = $invoices->first()->nm_outlet ?? ''; // Ambil nama outlet dari invoice pertama
-            $limit_kredit = $invoices->first()->limit_kredit ?? 0; // Ambil limit kredit dari invoice pertama
+        // Tambahkan outlet yang tidak memiliki piutang ke dalam hasil
+        foreach ($list_toko as $outlet) {
+            $kd_outlet = $outlet->kd_outlet;
+
+            // Jika outlet memiliki invoice, ambil data tersebut, jika tidak, buat entry baru
+            $invoices = $groupedData->get($kd_outlet, collect([]));
+
+            // Ambil nama outlet dan limit kredit dari invoice pertama atau set default
+            $nm_outlet = $outlet->nm_outlet;
+            $limit_kredit = $invoices->first()->limit_kredit ?? 0;
 
             $result[$kd_outlet] = [
-                'nm_outlet' => $nm_outlet, // Tambahkan nama outlet ke hasil akhir
-                'limit_kredit' => $limit_kredit, // Tambahkan limit kredit
-                'sisa_limit_kredit' => $limit_kredit, // Inisialisasi sisa limit kredit, akan dikurangi total piutang nanti
+                'nm_outlet' => $nm_outlet, // Nama outlet
+                'limit_kredit' => $limit_kredit, // Limit kredit
+                'sisa_limit_kredit' => $limit_kredit, // Inisialisasi sisa limit kredit
                 'overdue_1_7' => ['total_amount' => 0, 'invoice_count' => 0],
                 'overdue_8_20' => ['total_amount' => 0, 'invoice_count' => 0],
                 'overdue_21_50' => ['total_amount' => 0, 'invoice_count' => 0],
@@ -106,7 +131,7 @@ class AgingReport extends Component
                 'total_piutang' => 0, // Inisialisasi total piutang
             ];
 
-            // Iterasi setiap invoice
+            // Iterasi setiap invoice untuk outlet yang memiliki piutang
             foreach ($invoices as $invoice) {
                 $overdue_days = $invoice->overdue_days;
 

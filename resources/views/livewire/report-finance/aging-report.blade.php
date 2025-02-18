@@ -9,7 +9,7 @@
                     Aging
                 </div>
                 <div class="card-body">
-                    <form wire:submit="export_to_excel">
+                    <form wire:submit="show_data">
                         <div class="row gap-3">
                             <div class="col-12">
                                 <label for="jenis_laporan" class="form-label">Jenis Laporan</label>
@@ -49,7 +49,7 @@
                                 @enderror
                             </div>
                             <div class="col-12 d-flex justify-content-end">
-                                <button type="submit" class="btn btn-primary">Export</button>
+                                <button type="submit" class="btn btn-primary">Tampilkan</button>
                             </div>
                         </div>
                     </form>
@@ -60,6 +60,17 @@
         @if ($show)
             <div class="col-12">
                 <div class="card">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                Preview Aging
+                            </div>
+
+                            <div class="col d-flex justify-content-end">
+                                <button class="btn btn-sm btn-success">Export</button>
+                            </div>
+                        </div>
+                    </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table">
