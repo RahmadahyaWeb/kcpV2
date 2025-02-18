@@ -140,8 +140,10 @@ class AgingReport extends Component
                     $category = 'overdue_8_20';
                 } elseif ($overdue_days >= 21 && $overdue_days <= 50) {
                     $category = 'overdue_21_50';
-                } else {
+                } elseif ($overdue_days > 50) {
                     $category = 'overdue_over_50';
+                } else {
+                    $category = 'not_overdue'; // Untuk invoice yang belum overdue
                 }
 
                 // Tambahkan amount dan hitung jumlah invoice
