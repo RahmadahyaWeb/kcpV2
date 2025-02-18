@@ -12,8 +12,9 @@ class AgingReport extends Component
 {
     use WithPagination;
 
-    public $target = 'export_to_excel, show_data';
+    public $target = 'export_to_excel, show_data, search_kd_outlet';
     public $from_date, $to_date, $jenis_laporan;
+    public $search_kd_outlet;
 
     public $show = false;
 
@@ -54,17 +55,24 @@ class AgingReport extends Component
         $fromDateFormatted = \Carbon\Carbon::parse($this->from_date)->startOfDay();
         $toDateFormatted = \Carbon\Carbon::parse($this->to_date)->endOfDay();
 
+        $this->reset('search_kd_outlet');
         $this->fetch_data($toDateFormatted);
     }
 
-    public function fetch_data($to_date)
+    public function fetch_data($to_date, $search_kd_outlet = null)
     {
         $kcpinformation = DB::connection('kcpinformation');
 
         // Ambil list toko
-        $list_toko = $kcpinformation->table('mst_outlet')
-            ->where('status', 'Y')
-            ->get();
+        $list_toko_query = $kcpinformation->table('mst_outlet')
+            ->where('status', 'Y');
+
+        // Jika ada parameter pencarian, tambahkan filter untuk kd_outlet
+        if ($search_kd_outlet) {
+            $list_toko_query->where('kd_outlet', 'LIKE', '%' . $search_kd_outlet . '%');
+        }
+
+        $list_toko = $list_toko_query->get();
 
         // Ambil semua data invoice
         $query = $kcpinformation->table('kcpinformation.trns_inv_header AS invoice')
@@ -170,13 +178,15 @@ class AgingReport extends Component
     public function render()
     {
         $perPage = 10;
+        $search_kd_outlet = $this->search_kd_outlet ?? ''; // Ambil input pencarian
+
+        $this->fetch_data($this->to_date, $search_kd_outlet); // Pass pencarian ke fetch_data
 
         $collection = collect($this->result);
-
         $items = $collection->forPage($this->paginators['page'] ?? 1, $perPage);
 
         $items = new LengthAwarePaginator($items, $collection->count(), $perPage, $this->paginators['page'] ?? 1);
 
-        return view('livewire.report-finance.aging-report', compact('items'));
+        return view('livewire.report-finance.aging-report', compact('items', 'search_kd_outlet'));
     }
 }

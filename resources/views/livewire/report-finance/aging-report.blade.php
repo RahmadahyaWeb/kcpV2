@@ -72,6 +72,12 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="search_kd_outlet">Kode Toko</label>
+                                <input id="search_kd_outlet" type="search" class="form-control" wire:model.live.debounce.150ms="search_kd_outlet">
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
