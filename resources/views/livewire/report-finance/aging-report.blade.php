@@ -102,28 +102,28 @@
                                             </td>
                                             <td>
                                                 @foreach ($data['overdue_1_7']['invoice_numbers'] as $invoice_number)
-                                                    {{ $invoice_number }}<br>
+                                                    {{ $invoice_number }},
                                                 @endforeach
                                             </td>
                                             <td>{{ number_format($data['overdue_8_20']['total_amount'], 0, ',', '.') }}
                                             </td>
                                             <td>
                                                 @foreach ($data['overdue_8_20']['invoice_numbers'] as $invoice_number)
-                                                    {{ $invoice_number }}<br>
+                                                    {{ $invoice_number }},
                                                 @endforeach
                                             </td>
                                             <td>{{ number_format($data['overdue_21_50']['total_amount'], 0, ',', '.') }}
                                             </td>
                                             <td>
                                                 @foreach ($data['overdue_21_50']['invoice_numbers'] as $invoice_number)
-                                                    {{ $invoice_number }}<br>
+                                                    {{ $invoice_number }},
                                                 @endforeach
                                             </td>
                                             <td>{{ number_format($data['overdue_over_50']['total_amount'], 0, ',', '.') }}
                                             </td>
                                             <td>
                                                 @foreach ($data['overdue_over_50']['invoice_numbers'] as $invoice_number)
-                                                    {{ $invoice_number }}<br>
+                                                    {{ $invoice_number }},
                                                 @endforeach
                                             </td>
                                             <td>{{ number_format($data['total_piutang'], 0, ',', '.') }}</td>
