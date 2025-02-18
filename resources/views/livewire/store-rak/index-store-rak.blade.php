@@ -3,41 +3,43 @@
 
     <x-loading :target="$target" />
 
-    <div class="card mb-3">
-        <div class="card-header">
-            Form scan part number & rak
-        </div>
-        <div class="card-body">
-            <form wire:submit.prevent="save">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="part_number" class="form-label">Part Number</label>
-                        <input type="text" class="form-control @error('part_number') is-invalid @enderror"
-                            name="part_number" id="part_number" wire:model="part_number" placeholder="Scan part number"
-                            autofocus @keyup.enter="$nextTick(() => $refs.kdRak.focus())">
+    @hasanyrole(['storer', 'super-user'])
+        <div class="card mb-3">
+            <div class="card-header">
+                Form scan part number & rak
+            </div>
+            <div class="card-body">
+                <form wire:submit.prevent="save">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="part_number" class="form-label">Part Number</label>
+                            <input type="text" class="form-control @error('part_number') is-invalid @enderror"
+                                name="part_number" id="part_number" wire:model="part_number" placeholder="Scan part number"
+                                autofocus @keyup.enter="$nextTick(() => $refs.kdRak.focus())">
 
-                        @error('part_number')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="kd_rak" class="form-label">Kode Rak</label>
-                        <input type="text" class="form-control @error('kd_rak') is-invalid @enderror" name="kd_rak"
-                            id="kd_rak" wire:model="kd_rak" placeholder="Scan kode rak" x-ref="kdRak"
-                            @keyup.enter="$nextTick(() => $wire.call('save'))">
+                            @error('part_number')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="kd_rak" class="form-label">Kode Rak</label>
+                            <input type="text" class="form-control @error('kd_rak') is-invalid @enderror" name="kd_rak"
+                                id="kd_rak" wire:model="kd_rak" placeholder="Scan kode rak" x-ref="kdRak"
+                                @keyup.enter="$nextTick(() => $wire.call('save'))">
 
-                        @error('kd_rak')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
+                            @error('kd_rak')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
+    @endhasanyrole
 
     <div class="card">
         <div class="card-header">
