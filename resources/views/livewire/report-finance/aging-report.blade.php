@@ -3,7 +3,7 @@
     <x-alert />
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 mb-3">
             <div class="card">
                 <div class="card-header">
                     Aging
@@ -13,7 +13,9 @@
                         <div class="row gap-3">
                             <div class="col-12">
                                 <label for="jenis_laporan" class="form-label">Jenis Laporan</label>
-                                <select name="jenis_laporan" id="jenis_laporan" class="form-select @error('jenis_laporan') is-invalid @enderror" wire:model="jenis_laporan">
+                                <select name="jenis_laporan" id="jenis_laporan"
+                                    class="form-select @error('jenis_laporan') is-invalid @enderror"
+                                    wire:model="jenis_laporan">
                                     <option value="">Pilih Jenis Laporan</option>
                                     <option value="aging">Aging</option>
                                 </select>
@@ -54,5 +56,50 @@
                 </div>
             </div>
         </div>
+
+        @if ($show)
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-nowrap">KODE TOKO</th>
+                                        <th class="text-nowrap">NAMA TOKO</th>
+                                        <th class="text-nowrap">LIMIT KREDIT</th>
+                                        <th class="text-nowrap">SISA LIMIT KREDIT</th>
+                                        <th class="text-nowrap">OVERDUE 1-7</th>
+                                        <th class="text-nowrap">OVERDUE 8-20</th>
+                                        <th class="text-nowrap">OVERDUE 21-50</th>
+                                        <th class="text-nowrap">OVERDUE > 50</th>
+                                        <th class="text-nowrap">TOTAL PIUTANG</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($items as $kd_outlet => $data)
+                                        <tr>
+                                            <td>{{ $kd_outlet }}</td>
+                                            <td>{{ $data['nm_outlet'] }}</td>
+                                            <td>{{ number_format($data['limit_kredit'], 0, ',', '.') }}</td>
+                                            <td>{{ number_format($data['sisa_limit_kredit'], 0, ',', '.') }}</td>
+                                            <td>{{ number_format($data['overdue_1_7']['total_amount'], 0, ',', '.') }}</td>
+                                            <td>{{ number_format($data['overdue_8_20']['total_amount'], 0, ',', '.') }}</td>
+                                            <td>{{ number_format($data['overdue_21_50']['total_amount'], 0, ',', '.') }}</td>
+                                            <td>{{ number_format($data['overdue_over_50']['total_amount'], 0, ',', '.') }}</td>
+                                            <td>{{ number_format($data['total_piutang'], 0, ',', '.') }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        {{ $items->links() }}
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 </div>

@@ -2,13 +2,22 @@
 
 namespace App\Livewire\ReportFinance;
 
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class AgingReport extends Component
 {
-    public $target = 'export';
+    use WithPagination;
+
+    public $target = 'export_to_excel';
     public $from_date, $to_date, $jenis_laporan;
+
+    public $show = false;
+
+    public $result = [];
 
     public function mount()
     {
@@ -36,20 +45,24 @@ class AgingReport extends Component
     {
         $kcpinformation = DB::connection('kcpinformation');
 
-        $dateEnd = '2025-02-17'; // Contoh tanggal akhir
-        $area = 'some_area'; // Ganti dengan filter area yang diperlukan
+        // Ambil list toko
+        $list_toko = $kcpinformation->table('mst_outlet')
+            ->where('status', 'Y')
+            ->pluck('kd_outlet')
+            ->toArray();
 
-        $query = DB::connection('kcpinformation')->table('kcpinformation.trns_inv_header AS invoice')
+        // Ambil semua data invoice
+        $query = $kcpinformation->table('kcpinformation.trns_inv_header AS invoice')
             ->select(
                 'invoice.noinv',
-                'invoice.area_inv',
                 'invoice.kd_outlet',
-                'invoice.nm_outlet',
                 'invoice.amount_total',
-                'invoice.crea_date',
                 'invoice.tgl_jth_tempo',
+                'mst_outlet.nm_outlet',
+                'plafond.nominal_plafond_upload AS limit_kredit', // Ambil limit kredit dari tabel plafond
                 DB::raw('IFNULL(payment.total_payment, 0) AS total_payment'),
-                DB::raw('(invoice.amount_total - IFNULL(payment.total_payment, 0)) AS remaining_balance')
+                DB::raw('(invoice.amount_total - IFNULL(payment.total_payment, 0)) AS remaining_balance'),
+                DB::raw('DATEDIFF(CURRENT_DATE, invoice.tgl_jth_tempo) AS overdue_days') // Hitung overdue dalam hari
             )
             ->leftJoin(DB::raw('(SELECT
             payment_details.noinv,
@@ -63,24 +76,78 @@ class AgingReport extends Component
             payment_header.flag_batal = "N"
         GROUP BY
             payment_details.noinv) AS payment'), 'invoice.noinv', '=', 'payment.noinv')
+            ->leftJoin('mst_outlet', 'invoice.kd_outlet', '=', 'mst_outlet.kd_outlet')
+            ->leftJoin('trns_plafond AS plafond', 'invoice.kd_outlet', '=', 'plafond.kd_outlet') // Join tabel plafond
             ->where('invoice.flag_batal', 'N')
             ->where('invoice.flag_pembayaran_lunas', 'N')
-            ->where('invoice.kd_outlet', 'ES')
-            ->whereRaw('invoice.amount_total <> IFNULL(payment.total_payment, 0)');
+            ->whereIn('invoice.kd_outlet', $list_toko)
+            ->whereRaw('invoice.amount_total <> IFNULL(payment.total_payment, 0)')
+            ->whereDate('invoice.crea_date', '<=', $to_date)
+            ->get();
 
-        // Ambil data untuk tabel
-        $items = $query->get();
+        // Mapping per outlet dan kategori overdue
+        $groupedData = $query->groupBy('kd_outlet');
 
-        // Hitung total piutang dan total pembayaran jika tidak ada data
-        $totals = $query->selectRaw('SUM(invoice.amount_total) AS total_piutang')
-            ->selectRaw('SUM(IFNULL(payment.total_payment, 0)) AS total_payment')
-            ->first();
+        // Inisialisasi hasil akhir
+        $result = [];
 
-        dd($items);
+        foreach ($groupedData as $kd_outlet => $invoices) {
+            $nm_outlet = $invoices->first()->nm_outlet ?? ''; // Ambil nama outlet dari invoice pertama
+            $limit_kredit = $invoices->first()->limit_kredit ?? 0; // Ambil limit kredit dari invoice pertama
+
+            $result[$kd_outlet] = [
+                'nm_outlet' => $nm_outlet, // Tambahkan nama outlet ke hasil akhir
+                'limit_kredit' => $limit_kredit, // Tambahkan limit kredit
+                'sisa_limit_kredit' => $limit_kredit, // Inisialisasi sisa limit kredit, akan dikurangi total piutang nanti
+                'overdue_1_7' => ['total_amount' => 0, 'invoice_count' => 0],
+                'overdue_8_20' => ['total_amount' => 0, 'invoice_count' => 0],
+                'overdue_21_50' => ['total_amount' => 0, 'invoice_count' => 0],
+                'overdue_over_50' => ['total_amount' => 0, 'invoice_count' => 0],
+                'total_piutang' => 0, // Inisialisasi total piutang
+            ];
+
+            // Iterasi setiap invoice
+            foreach ($invoices as $invoice) {
+                $overdue_days = $invoice->overdue_days;
+
+                // Tentukan kategori overdue
+                if ($overdue_days >= 1 && $overdue_days <= 7) {
+                    $category = 'overdue_1_7';
+                } elseif ($overdue_days >= 8 && $overdue_days <= 20) {
+                    $category = 'overdue_8_20';
+                } elseif ($overdue_days >= 21 && $overdue_days <= 50) {
+                    $category = 'overdue_21_50';
+                } else {
+                    $category = 'overdue_over_50';
+                }
+
+                // Tambahkan amount dan hitung jumlah invoice
+                $result[$kd_outlet][$category]['total_amount'] += $invoice->remaining_balance;
+                $result[$kd_outlet][$category]['invoice_count']++;
+
+                // Tambahkan nilai remaining_balance ke total_piutang
+                $result[$kd_outlet]['total_piutang'] += $invoice->remaining_balance;
+            }
+
+            // Hitung sisa limit kredit
+            $result[$kd_outlet]['sisa_limit_kredit'] = $result[$kd_outlet]['limit_kredit'] - $result[$kd_outlet]['total_piutang'];
+        }
+
+        // Output hasil
+        $this->result = $result;
+        $this->show = true;
     }
 
     public function render()
     {
-        return view('livewire.report-finance.aging-report');
+        $perPage = 10;
+
+        $collection = collect($this->result);
+
+        $items = $collection->forPage($this->paginators['page'] ?? 1, $perPage);
+
+        $items = new LengthAwarePaginator($items, $collection->count(), $perPage, $this->paginators['page'] ?? 1);
+
+        return view('livewire.report-finance.aging-report', compact('items'));
     }
 }
