@@ -51,7 +51,9 @@ class IndexLaporanInvoice extends Component
             ];
 
             $pembayaran = $tanggal_pembayaran[$invoice->noinv] ?? [
-                'tanggal_pembayaran' => null
+                'tanggal_pembayaran' => null,
+                'pembayaran_via' => null,
+                'bank' => null,
             ];
 
             return array_merge((array) $invoice, $parts, $pembayaran);
@@ -127,12 +129,16 @@ class IndexLaporanInvoice extends Component
             ->whereIn('header.status', ['C', 'O'])
             ->select([
                 'details.noinv',
-                'details.crea_date as tanggal_pembayaran'
+                'details.crea_date as tanggal_pembayaran',
+                'details.pembayaran_via',
+                'details.bank'
             ])
             ->get()
             ->mapWithKeys(function ($item) {
                 return [$item->noinv => [
-                    'tanggal_pembayaran' => $item->tanggal_pembayaran
+                    'tanggal_pembayaran' => $item->tanggal_pembayaran,
+                    'pembayaran_via' => $item->pembayaran_via,
+                    'bank' => $item->bank,
                 ]];
             });
     }

@@ -51,6 +51,8 @@ class LaporanInvoiceExport implements FromCollection, WithMapping, WithTitle, Wi
             'TANGGAL INVOICE',
             'TANGGAL JATUH TEMPO',
             'TANGGAL PEMBAYARAN INVOICE',
+            'PEMBAYARAN VIA',
+            'BANK',
             'TELAT PEMBAYARAN (HARI)'
         ];
     }
@@ -77,6 +79,8 @@ class LaporanInvoiceExport implements FromCollection, WithMapping, WithTitle, Wi
         $nominal_invoice = $row['amount_total'];
         $produk_part = $row['product_part'];
         $kelompok_part = $row['kelompok_part'];
+        $pembayaran_via = $row['pembayaran_via'];
+        $bank = $row['bank'];
 
         $tanggal_invoice = date('Y-m-d', strtotime($row['crea_date']));
         $tanggal_jatuh_tempo = date('Y-m-d', strtotime($row['tgl_jth_tempo']));
@@ -124,6 +128,8 @@ class LaporanInvoiceExport implements FromCollection, WithMapping, WithTitle, Wi
             $tanggal_invoice_excel,
             $tanggal_jatuh_tempo_excel,
             $tanggal_pembayaran_excel,
+            $pembayaran_via,
+            $bank,
             $hari_terlambat
         ];
     }
