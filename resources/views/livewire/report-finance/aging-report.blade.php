@@ -81,15 +81,10 @@
                                         <th class="text-nowrap">LIMIT KREDIT</th>
                                         <th class="text-nowrap">SISA LIMIT KREDIT</th>
                                         <th class="text-nowrap">BELUM OVERDUE</th>
-                                        <th class="text-nowrap">INVOICE BELUM OVERDUE</th>
                                         <th class="text-nowrap">OVERDUE 1-7</th>
-                                        <th class="text-nowrap">INVOICE OVERDUE 1-7</th>
                                         <th class="text-nowrap">OVERDUE 8-20</th>
-                                        <th class="text-nowrap">INVOICE OVERDUE 8-20</th>
                                         <th class="text-nowrap">OVERDUE 21-50</th>
-                                        <th class="text-nowrap">INVOICE OVERDUE 21-50</th>
                                         <th class="text-nowrap">OVERDUE > 50</th>
-                                        <th class="text-nowrap">INVOICE OVERDUE > 50</th>
                                         <th class="text-nowrap">TOTAL PIUTANG</th>
                                     </tr>
                                 </thead>
@@ -102,28 +97,13 @@
                                             <td>{{ number_format($data['sisa_limit_kredit'], 0, ',', '.') }}</td>
                                             <td>{{ number_format($data['not_overdue']['total_amount'], 0, ',', '.') }}
                                             </td>
-                                            <td>
-                                                {{ implode(', ', $data['not_overdue']['invoice_numbers']) }}
-                                            </td>
                                             <td>{{ number_format($data['overdue_1_7']['total_amount'], 0, ',', '.') }}
-                                            </td>
-                                            <td>
-                                                {{ implode(', ', $data['overdue_1_7']['invoice_numbers']) }}
                                             </td>
                                             <td>{{ number_format($data['overdue_8_20']['total_amount'], 0, ',', '.') }}
                                             </td>
-                                            <td>
-                                                {{ implode(', ', $data['overdue_8_20']['invoice_numbers']) }}
-                                            </td>
                                             <td>{{ number_format($data['overdue_21_50']['total_amount'], 0, ',', '.') }}
                                             </td>
-                                            <td>
-                                                {{ implode(', ', $data['overdue_21_50']['invoice_numbers']) }}
-                                            </td>
                                             <td>{{ number_format($data['overdue_over_50']['total_amount'], 0, ',', '.') }}
-                                            </td>
-                                            <td>
-                                                {{ implode(', ', $data['overdue_over_50']['invoice_numbers']) }}
                                             </td>
                                             <td>{{ number_format($data['total_piutang'], 0, ',', '.') }}</td>
                                         </tr>
