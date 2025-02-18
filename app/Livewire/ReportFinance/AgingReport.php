@@ -41,10 +41,7 @@ class AgingReport extends Component
         }
     }
 
-    public function export_aging($from_date, $to_date)
-    {
-
-    }
+    public function export_aging($from_date, $to_date) {}
 
     public function show_data()
     {
@@ -83,16 +80,16 @@ class AgingReport extends Component
                 DB::raw('DATEDIFF(CURRENT_DATE, invoice.tgl_jth_tempo) AS overdue_days') // Hitung overdue dalam hari
             )
             ->leftJoin(DB::raw('(SELECT
-            payment_details.noinv,
-            SUM(payment_details.nominal) AS total_payment
-        FROM
-            kcpinformation.trns_pembayaran_piutang_header AS payment_header
-        JOIN
-            kcpinformation.trns_pembayaran_piutang AS payment_details
-            ON payment_header.nopiutang = payment_details.nopiutang
-        WHERE
-            payment_header.flag_batal = "N"
-        GROUP BY
+                    payment_details.noinv,
+                    SUM(payment_details.nominal) AS total_payment
+                FROM
+                    kcpinformation.trns_pembayaran_piutang_header AS payment_header
+                JOIN
+                    kcpinformation.trns_pembayaran_piutang AS payment_details
+                    ON payment_header.nopiutang = payment_details.nopiutang
+                WHERE
+                    payment_header.flag_batal = "N"
+                GROUP BY
             payment_details.noinv) AS payment'), 'invoice.noinv', '=', 'payment.noinv')
             ->leftJoin('mst_outlet', 'invoice.kd_outlet', '=', 'mst_outlet.kd_outlet')
             ->leftJoin('trns_plafond AS plafond', 'invoice.kd_outlet', '=', 'plafond.kd_outlet') // Join tabel plafond
@@ -124,10 +121,10 @@ class AgingReport extends Component
                 'nm_outlet' => $nm_outlet, // Nama outlet
                 'limit_kredit' => $limit_kredit, // Limit kredit
                 'sisa_limit_kredit' => $limit_kredit, // Inisialisasi sisa limit kredit
-                'overdue_1_7' => ['total_amount' => 0, 'invoice_count' => 0],
-                'overdue_8_20' => ['total_amount' => 0, 'invoice_count' => 0],
-                'overdue_21_50' => ['total_amount' => 0, 'invoice_count' => 0],
-                'overdue_over_50' => ['total_amount' => 0, 'invoice_count' => 0],
+                'overdue_1_7' => ['total_amount' => 0, 'invoice_count' => 0, 'invoice_numbers' => []],
+                'overdue_8_20' => ['total_amount' => 0, 'invoice_count' => 0, 'invoice_numbers' => []],
+                'overdue_21_50' => ['total_amount' => 0, 'invoice_count' => 0, 'invoice_numbers' => []],
+                'overdue_over_50' => ['total_amount' => 0, 'invoice_count' => 0, 'invoice_numbers' => []],
                 'total_piutang' => 0, // Inisialisasi total piutang
             ];
 
@@ -149,6 +146,9 @@ class AgingReport extends Component
                 // Tambahkan amount dan hitung jumlah invoice
                 $result[$kd_outlet][$category]['total_amount'] += $invoice->remaining_balance;
                 $result[$kd_outlet][$category]['invoice_count']++;
+
+                // Tambahkan nomor invoice ke dalam daftar invoice_numbers untuk kategori ini
+                $result[$kd_outlet][$category]['invoice_numbers'][] = $invoice->noinv;
 
                 // Tambahkan nilai remaining_balance ke total_piutang
                 $result[$kd_outlet]['total_piutang'] += $invoice->remaining_balance;

@@ -81,9 +81,13 @@
                                         <th class="text-nowrap">LIMIT KREDIT</th>
                                         <th class="text-nowrap">SISA LIMIT KREDIT</th>
                                         <th class="text-nowrap">OVERDUE 1-7</th>
+                                        <th class="text-nowrap">INVOICE OVERDUE 1-7</th>
                                         <th class="text-nowrap">OVERDUE 8-20</th>
+                                        <th class="text-nowrap">INVOICE OVERDUE 8-20</th>
                                         <th class="text-nowrap">OVERDUE 21-50</th>
+                                        <th class="text-nowrap">INVOICE OVERDUE 21-50</th>
                                         <th class="text-nowrap">OVERDUE > 50</th>
+                                        <th class="text-nowrap">INVOICE OVERDUE > 50</th>
                                         <th class="text-nowrap">TOTAL PIUTANG</th>
                                     </tr>
                                 </thead>
@@ -94,10 +98,34 @@
                                             <td>{{ $data['nm_outlet'] }}</td>
                                             <td>{{ number_format($data['limit_kredit'], 0, ',', '.') }}</td>
                                             <td>{{ number_format($data['sisa_limit_kredit'], 0, ',', '.') }}</td>
-                                            <td>{{ number_format($data['overdue_1_7']['total_amount'], 0, ',', '.') }}</td>
-                                            <td>{{ number_format($data['overdue_8_20']['total_amount'], 0, ',', '.') }}</td>
-                                            <td>{{ number_format($data['overdue_21_50']['total_amount'], 0, ',', '.') }}</td>
-                                            <td>{{ number_format($data['overdue_over_50']['total_amount'], 0, ',', '.') }}</td>
+                                            <td>{{ number_format($data['overdue_1_7']['total_amount'], 0, ',', '.') }}
+                                            </td>
+                                            <td>
+                                                @foreach ($data['overdue_1_7']['invoice_numbers'] as $invoice_number)
+                                                    {{ $invoice_number }}<br>
+                                                @endforeach
+                                            </td>
+                                            <td>{{ number_format($data['overdue_8_20']['total_amount'], 0, ',', '.') }}
+                                            </td>
+                                            <td>
+                                                @foreach ($data['overdue_8_20']['invoice_numbers'] as $invoice_number)
+                                                    {{ $invoice_number }}<br>
+                                                @endforeach
+                                            </td>
+                                            <td>{{ number_format($data['overdue_21_50']['total_amount'], 0, ',', '.') }}
+                                            </td>
+                                            <td>
+                                                @foreach ($data['overdue_21_50']['invoice_numbers'] as $invoice_number)
+                                                    {{ $invoice_number }}<br>
+                                                @endforeach
+                                            </td>
+                                            <td>{{ number_format($data['overdue_over_50']['total_amount'], 0, ',', '.') }}
+                                            </td>
+                                            <td>
+                                                @foreach ($data['overdue_over_50']['invoice_numbers'] as $invoice_number)
+                                                    {{ $invoice_number }}<br>
+                                                @endforeach
+                                            </td>
                                             <td>{{ number_format($data['total_piutang'], 0, ',', '.') }}</td>
                                         </tr>
                                     @endforeach
@@ -105,7 +133,6 @@
                             </table>
                         </div>
                     </div>
-
                     <div class="card-footer">
                         {{ $items->links() }}
                     </div>
