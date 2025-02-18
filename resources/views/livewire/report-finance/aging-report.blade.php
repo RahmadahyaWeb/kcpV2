@@ -81,6 +81,7 @@
                                         <th class="text-nowrap">LIMIT KREDIT</th>
                                         <th class="text-nowrap">SISA LIMIT KREDIT</th>
                                         <th class="text-nowrap">BELUM OVERDUE</th>
+                                        <th class="text-nowrap">INVOICE BELUM OVERDUE</th>
                                         <th class="text-nowrap">OVERDUE 1-7</th>
                                         <th class="text-nowrap">INVOICE OVERDUE 1-7</th>
                                         <th class="text-nowrap">OVERDUE 8-20</th>
@@ -100,6 +101,9 @@
                                             <td>{{ number_format($data['limit_kredit'], 0, ',', '.') }}</td>
                                             <td>{{ number_format($data['sisa_limit_kredit'], 0, ',', '.') }}</td>
                                             <td>{{ number_format($data['not_overdue']['total_amount'], 0, ',', '.') }}
+                                            </td>
+                                            <td>
+                                                {{ implode(', ', $data['overdue_1_7']['invoice_numbers']) }}
                                             </td>
                                             <td>{{ number_format($data['overdue_1_7']['total_amount'], 0, ',', '.') }}
                                             </td>
