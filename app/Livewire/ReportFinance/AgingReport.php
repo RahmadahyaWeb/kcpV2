@@ -182,7 +182,7 @@ class AgingReport extends Component
 
         if ($search_kd_outlet) {
             $this->result = collect($this->result)->filter(function ($item, $key) use ($search_kd_outlet) {
-                return strpos($key, $search_kd_outlet) !== false;
+                return stripos($key, $search_kd_outlet) !== false;
             })->toArray();
         }
 
