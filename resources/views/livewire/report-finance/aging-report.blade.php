@@ -103,7 +103,7 @@
                                             <td>{{ number_format($data['not_overdue']['total_amount'], 0, ',', '.') }}
                                             </td>
                                             <td>
-                                                {{ implode(', ', $data['overdue_1_7']['invoice_numbers']) }}
+                                                {{ implode(', ', $data['not_overdue']['invoice_numbers']) }}
                                             </td>
                                             <td>{{ number_format($data['overdue_1_7']['total_amount'], 0, ',', '.') }}
                                             </td>
