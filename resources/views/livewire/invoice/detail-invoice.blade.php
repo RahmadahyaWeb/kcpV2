@@ -82,7 +82,7 @@
         </div>
 
         <!-- Add Support Program (Only for KCP Status) -->
-        @if ($header->cetak == 0)
+        {{-- @if ($header->cetak == 0)
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
@@ -136,10 +136,10 @@
                     </div>
                 </div>
             </div>
-        @endif
+        @endif --}}
 
         <!-- Displaying Support Programs -->
-        <div class="col-12">
+        {{-- <div class="col-12">
             <div class="card">
                 <div class="card-header">
                     Support Program
@@ -178,7 +178,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Material Details Section -->
         <div class="col-12">
