@@ -44,8 +44,8 @@ class PajakMasukanExport implements FromCollection, WithTitle, WithMapping, With
         $alamat_lengkap = "";
         $jumlah_dpp = $row->netSales;
         $jumlah_ppn = $row->tax;
-        $jumlah_ppnb = 0;
-        $is_creditable = 1;
+        $jumlah_ppnb = "0";
+        $is_creditable = "1";
 
         return [
             $fm,
