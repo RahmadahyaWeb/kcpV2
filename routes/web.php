@@ -44,6 +44,7 @@ use App\Livewire\ReturInvoice\IndexReturInvoice;
 use App\Livewire\Salesman;
 use App\Livewire\StockMovement\IndexStockMovement;
 use App\Livewire\Master\IndexMasterPart;
+use App\Livewire\Pajak\IndexPajakMasukan;
 use App\Livewire\ReportFinance\AgingReport;
 use App\Livewire\ReportMarketing\IndexLaporanInvoice;
 use App\Livewire\StockPart\IndexStockPart;
@@ -196,8 +197,11 @@ Route::middleware('auth')->group(function () {
         // REPORT FINANCE
         Route::get('/report-finance/purchase/aop', PurchaseAopReport::class)->name('report-finance.purchase.aop.index');
 
-        // PAJAK
+        // PAJAK KELUARAN
         Route::get('/pajak/pajak-keluaran', IndexPajakKeluaran::class)->name('pajak.pajak-keluaran.index');
+
+        // PAJAK MASUKAN
+        Route::get('/pajak/pajak-masukan', IndexPajakMasukan::class)->name('pajak.pajak-masukan.index');
     });
 
     /**

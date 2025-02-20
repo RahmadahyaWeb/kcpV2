@@ -161,7 +161,12 @@ return [
                 "label" => "Pajak Keluaran",
                 "route" => "pajak.pajak-keluaran.index",
                 "active" => Request::is('pajak/pajak-keluaran*')
-            ]
+            ],
+            [
+                "label" => "Pajak Masukan",
+                "route" => "pajak.pajak-masukan.index",
+                "active" => Request::is('pajak/pajak-masukan*')
+            ],
         ]
     ],
     [
