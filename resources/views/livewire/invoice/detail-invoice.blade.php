@@ -227,14 +227,14 @@
                                     <td colspan="7" class="fw-bold">Total</td>
                                     <td>{{ number_format($nominal_total, 0, ',', '.') }}</td>
                                 </tr>
-                                <tr>
+                                {{-- <tr>
                                     <td colspan="7" class="fw-bold">Support Program</td>
                                     <td>{{ number_format($supportProgram, 0, ',', '.') }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="7" class="fw-bold">Grand Total</td>
                                     <td>{{ number_format($nominal_total - $supportProgram, 0, ',', '.') }}</td>
-                                </tr>
+                                </tr> --}}
                             </tbody>
                         </table>
                     </div>
