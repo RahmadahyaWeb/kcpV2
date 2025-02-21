@@ -27,11 +27,11 @@ class StoreRakExport implements FromCollection, WithHeadings
                 'part_number',
                 'nama_part',
                 'kd_rak',
-                'updated_at'
+                'created_at'
             ])
             ->where('status', 'finished')
-            ->whereBetween('updated_at', [$this->from_date, $this->to_date])
-            ->orderBy('updated_at', 'desc')
+            ->whereBetween('created_at', [$this->from_date, $this->to_date])
+            ->orderBy('created_at', 'desc')
             ->get();
     }
 
@@ -41,7 +41,7 @@ class StoreRakExport implements FromCollection, WithHeadings
             'PART NUMBER',
             'NAMA PART',
             'KODE RAK',
-            'FINISHED AT'
+            'SCANNED AT'
         ];
     }
 }
