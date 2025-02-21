@@ -139,9 +139,10 @@ class IndexStoreRak extends Component
                 'nama_part',
                 'kd_rak',
                 'users.username',
-                'trans_store_rak.created_at'
+                'trans_store_rak.created_at',
+                'trans_store_rak.updated_at',
             ])
-            ->orderBy('created_at', 'desc');
+            ->orderBy('updated_at', 'desc');
 
         if ($user->hasRole('inventory')) {
             $items->where('trans_store_rak.status', $status);
@@ -153,7 +154,7 @@ class IndexStoreRak extends Component
         $toDateFormatted = \Carbon\Carbon::parse($this->to_date)->format('Y-m-d');
 
         $items = $items->when($this->from_date && $this->to_date, function ($query) use ($fromDateFormatted, $toDateFormatted) {
-            return $query->whereBetween(DB::raw('DATE(trans_store_rak.created_at)'), [$fromDateFormatted, $toDateFormatted]);
+            return $query->whereBetween(DB::raw('DATE(trans_store_rak.updated_at)'), [$fromDateFormatted, $toDateFormatted]);
         })->paginate();
 
         return view('livewire.store-rak.index-store-rak', compact('items'));

@@ -83,6 +83,7 @@
                             <th>Kode Rak</th>
                             <th>Scan by</th>
                             <th>Scanned at</th>
+                            <th>Finished at</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -94,6 +95,7 @@
                                 <td>{{ $item->kd_rak }}</td>
                                 <td>{{ $item->username }}</td>
                                 <td>{{ $item->created_at }}</td>
+                                <td>{{ $item->updated_at }}</td>
                                 <td>
                                     <button type="button" wire:click="destroy({{ $item->id }})"
                                         class="btn btn-sm btn-danger">Hapus</button>
