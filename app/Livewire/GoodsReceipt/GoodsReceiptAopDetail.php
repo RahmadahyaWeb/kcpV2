@@ -79,7 +79,7 @@ class GoodsReceiptAopDetail extends Component
 
     public function render()
     {
-        $kcp_information = DB::connection('kcpinformation');
+        $kcpinformation = DB::connection('kcpinformation');
 
         // Ambil SPB dari invoice_aop_header
         $spb = DB::table('invoice_aop_header')
@@ -98,7 +98,7 @@ class GoodsReceiptAopDetail extends Component
             ->count();
 
         // Ambil data intransit dari intransit_details
-        $intransit = $kcp_information->table('intransit_details')
+        $intransit = $kcpinformation->table('intransit_details')
             ->where('no_sp_aop', $spb)
             ->get();
 
@@ -114,6 +114,8 @@ class GoodsReceiptAopDetail extends Component
                 $grouped_data[$part_no] = $value->qty_terima;
             }
         }
+
+        dd($grouped_data);
 
         // Proses items dan tambahkan informasi jika qty_terima lebih besar
         $items_with_qty = $items->map(function ($item) use ($grouped_data, $spb) {

@@ -75,7 +75,8 @@ class IndexStoreRak extends Component
             $update = DB::table('trans_store_rak')
                 ->where('status', 'unfinished')
                 ->update([
-                    'status' => 'finished'
+                    'status' => 'finished',
+                    'updated_at' => now()
                 ]);
 
             if ($update > 0) {
@@ -94,8 +95,8 @@ class IndexStoreRak extends Component
 
     public function export()
     {
-        $from_date = Carbon::parse($this->from_date);
-        $to_date = Carbon::parse($this->to_date);
+        $from_date = Carbon::parse($this->from_date)->startOfDay();
+        $to_date = Carbon::parse($this->to_date)->endOfDay();
 
         $filename = 'store_rak_result_' . $from_date . '_' . $to_date . '.xlsx';
 
