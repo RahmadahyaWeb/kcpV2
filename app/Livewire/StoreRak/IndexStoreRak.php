@@ -142,6 +142,8 @@ class IndexStoreRak extends Component
                 'created_at'    => now()
             ]);
 
+        $this->reset('label');
+
         $this->dispatch('success', ['message' => 'Berhasil buat label.']);
     }
 
