@@ -49,6 +49,7 @@ use App\Livewire\ReportFinance\AgingReport;
 use App\Livewire\ReportMarketing\IndexLaporanInvoice;
 use App\Livewire\StockPart\IndexStockPart;
 use App\Livewire\StockPart\IndexStockPartRak;
+use App\Livewire\StoreRak\DetailStoreRak;
 use App\Livewire\StoreRak\IndexStoreRak;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -150,6 +151,7 @@ Route::middleware('auth')->group(function () {
 
         // STORE RAK
         Route::get('/store-rak', IndexStoreRak::class)->name('store-rak.index');
+        Route::get('/store-rak/detail/{header_id}', DetailStoreRak::class)->name('store-rak.detail');
 
         // STOCK PART RAK
         Route::get('/part-rak', IndexStockPartRak::class)->name('part-rak.index');

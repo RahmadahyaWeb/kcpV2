@@ -7,20 +7,24 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
-use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
 
-class IndexStoreRak extends Component
+class DetailStoreRak extends Component
 {
-    use WithPagination;
-
     public $target = "save, to_date";
     public $part_number;
     public $kd_rak;
     public $from_date;
     public $to_date;
 
+    public $header_id;
     public $label;
+    public $status;
+
+    public function mount($header_id)
+    {
+        $this->header_id = $header_id;
+    }
 
     public function save()
     {
@@ -46,11 +50,12 @@ class IndexStoreRak extends Component
                 throw new \Exception('Part number tidak ditemukan.');
             }
 
-            $kcpApplication->table('trans_store_rak')->insert([
+            $kcpApplication->table('store_rak_details')->insert([
+                'header_id'   => $this->header_id,
                 'part_number' => $partNumber,
                 'nama_part'   => $namaPart,
                 'kd_rak'      => $kdRak,
-                'user_id'     => Auth::id(),
+                'user_id'     => Auth::user()->username,
                 'created_at'  => now()
             ]);
 
@@ -73,10 +78,11 @@ class IndexStoreRak extends Component
         try {
             DB::beginTransaction();
 
-            $update = DB::table('trans_store_rak')
-                ->where('status', 'unfinished')
+            $update = DB::table('store_rak_header')
+                ->where('id', $this->header_id)
+                ->where('status', 'N')
                 ->update([
-                    'status' => 'finished',
+                    'status' => 'Y',
                     'updated_at' => now()
                 ]);
 
@@ -96,12 +102,9 @@ class IndexStoreRak extends Component
 
     public function export()
     {
-        $from_date = Carbon::parse($this->from_date)->startOfDay();
-        $to_date = Carbon::parse($this->to_date)->endOfDay();
+        $filename = 'store_rak_result_' . $this->label . '.xlsx';
 
-        $filename = 'store_rak_result_' . $from_date . '_' . $to_date . '.xlsx';
-
-        return Excel::download(new StoreRakExport($from_date, $to_date), $filename);
+        return Excel::download(new StoreRakExport($this->label, $this->header_id), $filename);
     }
 
     public function destroy($id)
@@ -109,7 +112,7 @@ class IndexStoreRak extends Component
         try {
             DB::beginTransaction();
 
-            $deleted = DB::table('trans_store_rak')
+            $deleted = DB::table('store_rak_details')
                 ->where('id', $id)
                 ->delete();
 
@@ -127,34 +130,19 @@ class IndexStoreRak extends Component
         }
     }
 
-    public function create_label()
-    {
-        $this->validate([
-            'label' => ['required']
-        ]);
-
-        $kcpApplication = DB::connection('mysql');
-
-        $kcpApplication->table('store_rak_header')
-            ->insert([
-                'label'         => $this->label,
-                'user_id'       => Auth::user()->username,
-                'created_at'    => now()
-            ]);
-
-        $this->dispatch('success', ['message' => 'Berhasil buat label.']);
-    }
-
-    public function lihat_detail($header_id)
-    {
-        $this->redirectRoute('store-rak.detail', ['header_id' => $header_id]);
-    }
-
     public function render()
     {
-        $items = DB::table('store_rak_header')
+        $items = DB::table('store_rak_details')
+            ->where('header_id', $this->header_id)
             ->get();
 
-        return view('livewire.store-rak.index-store-rak', compact('items'));
+        $header = DB::table('store_rak_header')
+            ->where('id', $this->header_id)
+            ->first();
+
+        $this->label = $header->label;
+        $this->status = $header->status;
+
+        return view('livewire.store-rak.detail-store-rak', compact('items'));
     }
 }

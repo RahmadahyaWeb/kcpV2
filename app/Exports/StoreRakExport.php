@@ -8,13 +8,13 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class StoreRakExport implements FromCollection, WithHeadings
 {
-    public $from_date;
-    public $to_date;
+    public $label;
+    public $header_id;
 
-    public function __construct($from_date, $to_date)
+    public function __construct($label, $header_id)
     {
-        $this->from_date = $from_date;
-        $this->to_date = $to_date;
+        $this->label = $label;
+        $this->header_id = $header_id;
     }
 
     /**
@@ -22,15 +22,16 @@ class StoreRakExport implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        return DB::table('trans_store_rak')
+        return DB::table('store_rak_details as details')
+            ->join('store_rak_header as header', 'header.id', '=', 'details.header_id')
             ->select([
-                'part_number',
-                'nama_part',
-                'kd_rak',
-                'created_at'
+                'header.label',
+                'details.part_number',
+                'details.nama_part',
+                'details.kd_rak',
+                'details.user_id',
+                'details.created_at'
             ])
-            ->where('status', 'finished')
-            ->whereBetween('created_at', [$this->from_date, $this->to_date])
             ->orderBy('created_at', 'desc')
             ->get();
     }
@@ -38,10 +39,12 @@ class StoreRakExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
+            'LABEL',
             'PART NUMBER',
             'NAMA PART',
             'KODE RAK',
-            'SCANNED AT'
+            'SCAN BY',
+            'TANGGAL SCAN'
         ];
     }
 }
