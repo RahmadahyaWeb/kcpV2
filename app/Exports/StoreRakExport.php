@@ -32,6 +32,7 @@ class StoreRakExport implements FromCollection, WithHeadings
                 'details.user_id',
                 'details.created_at'
             ])
+            ->where('header.id', $this->header_id)
             ->orderBy('created_at', 'desc')
             ->get();
     }
