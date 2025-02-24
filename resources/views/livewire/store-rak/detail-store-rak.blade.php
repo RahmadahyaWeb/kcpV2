@@ -63,6 +63,7 @@
                         <tr>
                             <th>Part Number</th>
                             <th>Nama Part</th>
+                            <th>Kode Rak</th>
                             <th>Scan By</th>
                             <th>Tanggal Scan</th>
                             <th></th>
@@ -74,6 +75,7 @@
                             <tr>
                                 <td class="text-nowrap">{{ $item->part_number }}</td>
                                 <td>{{ $item->nama_part }}</td>
+                                <td>{{ $item->kd_rak }}</td>
                                 <td>{{ $item->user_id }}</td>
                                 <td>{{ $item->created_at }}</td>
                                 <td>
@@ -85,7 +87,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center">No Data</td>
+                                <td colspan="6" class="text-center">No Data</td>
                             </tr>
                         @endforelse
                     </tbody>
