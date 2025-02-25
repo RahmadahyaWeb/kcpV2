@@ -86,8 +86,6 @@ class GoodsReceiptAopDetail extends Component
             ->where('invoiceAop', $this->invoiceAop)
             ->value('SPB');
 
-        dd($spb);
-
         // Ambil data items dari invoice_aop_detail
         $items = DB::table('invoice_aop_detail')
             ->where('invoiceAop', $this->invoiceAop)
@@ -103,8 +101,6 @@ class GoodsReceiptAopDetail extends Component
         $intransit = $kcpinformation->table('intransit_details')
             ->where('no_sp_aop', $spb)
             ->get();
-
-        dd($intransit);
 
         // Kelompokkan qty_terima berdasarkan part_no
         $grouped_data = [];
