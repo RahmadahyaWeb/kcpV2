@@ -102,8 +102,6 @@ class GoodsReceiptAopDetail extends Component
             ->where('no_sp_aop', 'like', '%' . $spb . '%')
             ->get();
 
-        dd($intransit);
-
         // Kelompokkan qty_terima berdasarkan part_no
         $grouped_data = [];
 
