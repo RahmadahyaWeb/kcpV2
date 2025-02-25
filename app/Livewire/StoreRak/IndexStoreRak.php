@@ -155,6 +155,7 @@ class IndexStoreRak extends Component
     public function render()
     {
         $items = DB::table('store_rak_header')
+            ->orderBy('created_at', 'desc')
             ->get();
 
         return view('livewire.store-rak.index-store-rak', compact('items'));
