@@ -86,6 +86,8 @@ class GoodsReceiptAopDetail extends Component
             ->where('invoiceAop', $this->invoiceAop)
             ->value('SPB');
 
+        dd($spb);
+
         // Ambil data items dari invoice_aop_detail
         $items = DB::table('invoice_aop_detail')
             ->where('invoiceAop', $this->invoiceAop)
