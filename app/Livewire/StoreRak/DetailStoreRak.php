@@ -7,10 +7,13 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
 
 class DetailStoreRak extends Component
 {
+    use WithPagination;
+
     public $target = "save, to_date";
     public $part_number;
     public $kd_rak;
@@ -135,7 +138,7 @@ class DetailStoreRak extends Component
         $items = DB::table('store_rak_details')
             ->where('header_id', $this->header_id)
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate();
 
         $header = DB::table('store_rak_header')
             ->where('id', $this->header_id)
