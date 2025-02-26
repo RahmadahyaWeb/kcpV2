@@ -134,6 +134,7 @@ class DetailStoreRak extends Component
     {
         $items = DB::table('store_rak_details')
             ->where('header_id', $this->header_id)
+            ->orderBy('created_at', 'desc')
             ->get();
 
         $header = DB::table('store_rak_header')
