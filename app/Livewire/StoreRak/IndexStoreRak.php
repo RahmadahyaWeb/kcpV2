@@ -19,6 +19,7 @@ class IndexStoreRak extends Component
     public $kd_rak;
     public $from_date;
     public $to_date;
+    public $status = 'N';
 
     public $label;
 
@@ -64,32 +65,6 @@ class IndexStoreRak extends Component
 
             $this->reset('part_number', 'kd_rak');
             $this->dispatch('saved');
-            $this->dispatch('error', ['message' => $e->getMessage()]);
-        }
-    }
-
-    public function update_status()
-    {
-        try {
-            DB::beginTransaction();
-
-            $update = DB::table('trans_store_rak')
-                ->where('status', 'unfinished')
-                ->update([
-                    'status' => 'finished',
-                    'updated_at' => now()
-                ]);
-
-            if ($update > 0) {
-                DB::commit();
-
-                $this->dispatch('success', ['message' => 'Berhasil update status.']);
-            } else {
-                throw new \Exception("Tidak ada data yang diupdate.");
-            }
-        } catch (\Exception $e) {
-            DB::rollBack();
-
             $this->dispatch('error', ['message' => $e->getMessage()]);
         }
     }
@@ -155,8 +130,9 @@ class IndexStoreRak extends Component
     public function render()
     {
         $items = DB::table('store_rak_header')
+            ->where('status', $this->status)
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate();
 
         return view('livewire.store-rak.index-store-rak', compact('items'));
     }

@@ -41,6 +41,16 @@
                 </div>
 
                 <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="status" class="form-label">Status</label>
+                            <select name="status" id="status" wire:model.change="status">
+                                <option value="Y">Selesai</option>
+                                <option value="N">Belum Selesai</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
