@@ -14,7 +14,7 @@ class IndexStoreRak extends Component
 {
     use WithPagination;
 
-    public $target = "save, to_date";
+    public $target = "save, status";
     public $part_number;
     public $kd_rak;
     public $from_date;
