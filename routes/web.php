@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\ReturManualController;
 use App\Http\Controllers\DksController;
+use App\Http\Controllers\SyncController;
 use App\Http\Controllers\UploadController;
 use App\Livewire\Auth\Login;
 use App\Livewire\Comparator\IndexComparator;
@@ -80,6 +81,9 @@ Route::middleware('auth')->group(function () {
 
         // LOG VIEWER
         Route::get('/master/log-viewer', LogViewer::class)->name('log-viewer.index');
+
+        // SYNC
+        Route::get('/sync/limit_kredit/{kd_outlet}', [SyncController::class, 'sync_limit_kredit'])->name('sync.limit-kredit');
     });
 
     /**
