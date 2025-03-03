@@ -295,7 +295,7 @@ class PurchaseAop extends Component
                         'customerTo'            => $data['CUSTOMER_NUMBER'],
                         'materialNumber'        => $data['MATERIAL_NUMBER'],
                         'qty'                   => $data['BILLING_QTY'],
-                        'price'                 => (($data['BILLING_AMOUNT'] + $data['EXTRA_DISCOUNT']) - $data['ADD_DISCOUNT']) / $data['BILLING_QTY'],
+                        'price'                 => $data['BILLING_AMOUNT'],
                         'extraPlafonDiscount'   => $data['EXTRA_DISCOUNT'],
                         'amount'                => $data['BILLING_AMOUNT'] + $data['EXTRA_DISCOUNT'],
                         'addDiscount'           => $data['ADD_DISCOUNT'],
