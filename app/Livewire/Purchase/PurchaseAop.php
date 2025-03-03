@@ -21,6 +21,10 @@ class PurchaseAop extends Component
 
     public function save()
     {
+        session()->flash('error', 'Fitur sedang dalam perbaikan');
+        exit;
+        return;
+
         $this->validate([
             'surat_tagihan' => 'required|file|mimes:txt|max:2048',
             'rekap_tagihan' => 'required|file|mimes:txt|max:2048',
