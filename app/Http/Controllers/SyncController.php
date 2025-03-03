@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class SyncController extends Controller
 {
@@ -86,6 +87,61 @@ class SyncController extends Controller
 
             return !$intransit_aop->contains($no_sp_aop); // Cocokkan dengan no_sp_aop yang ada di intransit
         });
+
+        if ($not_intransit->isEmpty()) {
+            Log::info("Tidak ada invoice pembelian.");
+            return;
+        }
+
+        foreach ($not_intransit as $value) {
+            try {
+
+                $kcpinformation->beginTransaction();
+
+                $no_sp_aop = $value->no_sp_aop;
+                $kd_gudang_aop = $value->customerTo;
+
+                // INTRANSIT HEADER
+                $kcpinformation->table('intransit_header')
+                    ->insert([
+                        'no_sp_aop' => $no_sp_aop,
+                        'kd_gudang_aop' => $kd_gudang_aop,
+                        'tgl_packingsheet' => now(),
+                        'status' => 'I',
+                        'ket_status' => 'INTRANSIT',
+                        'crea_date' => now(),
+                        'crea_by' => 'SYSTEM'
+                    ]);
+
+                $invoice_aop_details = $kcpapplication->table('invoice_aop_detail')
+                    ->where('SPB', $value->SPB)
+                    ->get();
+
+                foreach ($invoice_aop_details as $item) {
+                    // INTRANSIT DETAILS
+                    $kcpinformation->table('intransit_details')
+                        ->insert([
+                            'no_sp_aop' => $no_sp_aop,
+                            'kd_gudang_aop' => $kd_gudang_aop,
+                            'part_no' => $item->materialNumber,
+                            'qty' => $item->qty,
+                            'status' => 'I',
+                            'crea_date' => now(),
+                            'crea_by' => 'SYSTEM'
+                        ]);
+                }
+
+                $kcpinformation->commit();
+
+                Log::info("Berhasil convert invoice $no_sp_aop");
+            } catch (\Exception $e) {
+                $kcpinformation->rollBack();
+
+                Log::info("Gagal convert invoice $no_sp_aop menjadi intransit: " . $e->getMessage());
+
+                continue;
+            }
+        }
 
         // Hasil: list invoice yang belum ada di intransit
         return $not_intransit;
