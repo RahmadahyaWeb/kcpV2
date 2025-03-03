@@ -21,45 +21,45 @@ class PurchaseAop extends Component
 
     public function save()
     {
-        // session()->flash('error', 'Fitur sedang dalam perbaikan');
+        session()->flash('error', 'Fitur sedang dalam perbaikan');
 
-        $this->validate([
-            'surat_tagihan' => 'required|file|mimes:txt|max:2048',
-            'rekap_tagihan' => 'required|file|mimes:txt|max:2048',
-        ], [
-            'surat_tagihan.required' => 'Upload file surat tagihan.',
-            'rekap_tagihan.required' => 'Upload file rekap tagihan.',
-        ]);
+        // $this->validate([
+        //     'surat_tagihan' => 'required|file|mimes:txt|max:2048',
+        //     'rekap_tagihan' => 'required|file|mimes:txt|max:2048',
+        // ], [
+        //     'surat_tagihan.required' => 'Upload file surat tagihan.',
+        //     'rekap_tagihan.required' => 'Upload file rekap tagihan.',
+        // ]);
 
-        $suratTagihanFileName = $this->surat_tagihan->getClientOriginalName();
-        $rekapTagihanFileName = $this->rekap_tagihan->getClientOriginalName();
+        // $suratTagihanFileName = $this->surat_tagihan->getClientOriginalName();
+        // $rekapTagihanFileName = $this->rekap_tagihan->getClientOriginalName();
 
-        preg_match('/_(\d{8})_/', $rekapTagihanFileName, $rekapTanggalMatch);
-        preg_match('/_(\d{8})_/', $suratTagihanFileName, $suratTanggalMatch);
+        // preg_match('/_(\d{8})_/', $rekapTagihanFileName, $rekapTanggalMatch);
+        // preg_match('/_(\d{8})_/', $suratTagihanFileName, $suratTanggalMatch);
 
-        if (!empty($rekapTanggalMatch[1]) && !empty($suratTanggalMatch[1])) {
-            $rekapTanggal = $rekapTanggalMatch[1];
-            $suratTanggal = $suratTanggalMatch[1];
+        // if (!empty($rekapTanggalMatch[1]) && !empty($suratTanggalMatch[1])) {
+        //     $rekapTanggal = $rekapTanggalMatch[1];
+        //     $suratTanggal = $suratTanggalMatch[1];
 
-            if ($rekapTanggal !== $suratTanggal) {
-                $this->addError('surat_tagihan', 'Tanggal surat tagihan dan rekap tagihan tidak sesuai.');
-            }
-        }
+        //     if ($rekapTanggal !== $suratTanggal) {
+        //         $this->addError('surat_tagihan', 'Tanggal surat tagihan dan rekap tagihan tidak sesuai.');
+        //     }
+        // }
 
-        // VALIDASI NAMA FILE
-        if ($this->surat_tagihan && !str_contains($suratTagihanFileName, 'surat_tagihan')) {
-            $this->addError('surat_tagihan', 'File tidak sesuai.');
-        }
+        // // VALIDASI NAMA FILE
+        // if ($this->surat_tagihan && !str_contains($suratTagihanFileName, 'surat_tagihan')) {
+        //     $this->addError('surat_tagihan', 'File tidak sesuai.');
+        // }
 
-        if ($this->rekap_tagihan && !str_contains($rekapTagihanFileName, 'rekap_tagihan')) {
-            $this->addError('rekap_tagihan', 'File tidak sesuai.');
-        }
+        // if ($this->rekap_tagihan && !str_contains($rekapTagihanFileName, 'rekap_tagihan')) {
+        //     $this->addError('rekap_tagihan', 'File tidak sesuai.');
+        // }
 
-        $listOfError = $this->getErrorBag();
+        // $listOfError = $this->getErrorBag();
 
-        if (empty($listOfError->all())) {
-            $this->explodeLines();
-        }
+        // if (empty($listOfError->all())) {
+        //     $this->explodeLines();
+        // }
     }
 
     public function explodeLines()
