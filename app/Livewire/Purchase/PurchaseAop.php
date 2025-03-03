@@ -242,7 +242,7 @@ class PurchaseAop extends Component
 
             $price = $amount + $addDiscount;
             $netSales = $amount - $extraPlafonDiscount;
-            $tax = round($netSales * config('tax.ppn_percentage'));
+            $tax = floor($netSales * config('tax.ppn_percentage'));
             $grandTotal = intval($netSales + $tax);
 
             // CEK APAKAH DATA SUDAH ADA SEBELUMNYA
