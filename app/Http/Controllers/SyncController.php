@@ -57,4 +57,37 @@ class SyncController extends Controller
 
         dd($result);
     }
+
+    public function sync_intransit()
+    {
+        // Koneksi ke database
+        $kcpapplication = DB::connection('mysql');
+        $kcpinformation = DB::connection('kcpinformation');
+
+        // Ambil data dari tabel invoice_aop_header
+        $invoice_aop = $kcpapplication->table('invoice_aop_header')
+            ->orderBy('created_at', 'desc')
+            ->select('SPB', 'invoiceAop', 'customerTo')
+            ->get();
+
+        // Ambil data dari tabel intransit_header
+        $intransit_aop = $kcpinformation->table('intransit_header')
+            ->orderBy('crea_date', 'desc')
+            ->pluck('no_sp_aop');
+
+        // Filter invoice yang belum masuk ke intransit
+        $not_intransit = $invoice_aop->filter(function ($invoice) use ($intransit_aop) {
+            // Membuat no_sp_aop sesuai kondisi
+            $no_sp_aop = (strpos($invoice->SPB, 'DN') !== false)
+                ? $invoice->SPB
+                : $invoice->SPB . $invoice->customerTo; // Gabungkan SPB dan customerTo jika SPB tidak mengandung 'DN'
+
+            $invoice->no_sp_aop = $no_sp_aop;
+
+            return !$intransit_aop->contains($no_sp_aop); // Cocokkan dengan no_sp_aop yang ada di intransit
+        });
+
+        // Hasil: list invoice yang belum ada di intransit
+        return $not_intransit;
+    }
 }
