@@ -88,7 +88,7 @@ class SyncController extends Controller
             return !$intransit_aop->contains($no_sp_aop); // Cocokkan dengan no_sp_aop yang ada di intransit
         });
 
-        if ($not_intransit->isEmpty()) {
+        if (!$not_intransit->isEmpty()) {
             Log::info("Tidak ada invoice pembelian.");
             return;
         }
