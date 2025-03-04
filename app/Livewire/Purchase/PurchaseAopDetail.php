@@ -10,7 +10,7 @@ use Livewire\Component;
 
 class PurchaseAopDetail extends Component
 {
-    public $target = 'updateFlag, saveFakturPajak, saveProgram, destroyProgram, sendToBosnet';
+    public $target = 'updateFlag, saveFakturPajak, saveProgram, destroyProgram, sendToBosnet, calculate';
 
     public $fakturPajak;
     public $editingFakturPajak;
@@ -142,6 +142,28 @@ class PurchaseAopDetail extends Component
         } catch (\Exception $e) {
             session()->flash('error', "Gagal update flag: " . $e->getMessage());
         }
+    }
+
+    public function calculate($type)
+    {
+        $sum_amount = DB::table('invoice_aop_detail')
+            ->where('invoiceAop', $this->invoiceAop)
+            ->sum('amount');
+
+        if ($type == 'floor') {
+            $tax = floor($sum_amount * config('tax.ppn_percentage'));
+        } else {
+            $tax = round($sum_amount * config('tax.ppn_percentage'));
+        }
+
+        $grand_total = $tax + $sum_amount;
+
+        DB::table('invoice_aop_header')
+            ->where('invoiceAop', $this->invoiceAop)
+            ->update([
+                'tax' => $tax,
+                'grandTotal' => $grand_total
+            ]);
     }
 
     public function render()

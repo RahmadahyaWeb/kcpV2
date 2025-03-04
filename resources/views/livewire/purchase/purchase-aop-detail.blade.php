@@ -201,6 +201,12 @@
                     </div>
                     @if ($header->flag_final == 'N' && $isAvailable)
                         <div class="row">
+                            <div class="col-6 d-grid">
+                                <button type="button" wire:click="calculate('round')" class="btn btn-success">Pembulatan ke atas</button>
+                            </div>
+                            <div class="col-6 d-grid">
+                                <button type="button" wire:click="calculate('floor')" class="btn btn-danger">Pembulatan ke bawah</button>
+                            </div>
                             <form wire:submit="updateFlag({{ $header->invoiceAop }})"
                                 wire:confirm="Yakin ingin update flag?">
                                 <div class="col d-grid">

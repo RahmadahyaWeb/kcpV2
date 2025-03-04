@@ -101,6 +101,12 @@ class SyncController extends Controller
                 $no_sp_aop = $value->no_sp_aop;
                 $kd_gudang_aop = $value->customerTo;
 
+                $invoice_aop_details = $kcpapplication->table('invoice_aop_detail')
+                    ->where('SPB', $value->SPB)
+                    ->get();
+
+                dd($invoice_aop_details);
+
                 // INTRANSIT HEADER
                 $kcpinformation->table('intransit_header')
                     ->insert([
@@ -112,10 +118,6 @@ class SyncController extends Controller
                         'crea_date' => now(),
                         'crea_by' => 'SYSTEM'
                     ]);
-
-                $invoice_aop_details = $kcpapplication->table('invoice_aop_detail')
-                    ->where('SPB', $value->SPB)
-                    ->get();
 
                 foreach ($invoice_aop_details as $item) {
                     // INTRANSIT DETAILS
@@ -131,7 +133,7 @@ class SyncController extends Controller
                         ]);
                 }
 
-                $kcpinformation->commit();
+                // $kcpinformation->commit();
 
                 Log::info("Berhasil convert invoice $no_sp_aop");
             } catch (\Exception $e) {
