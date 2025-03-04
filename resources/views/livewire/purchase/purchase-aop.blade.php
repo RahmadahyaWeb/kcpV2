@@ -60,7 +60,15 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    Data AOP
+                    <div class="row">
+                        <div class="col">
+                            Data AOP
+                        </div>
+                        <div class="col d-flex justify-content-end">
+                            <button type="button" class="btn btn-danger" wire:click="sync_intransit">Sync
+                                Intransit</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="row mb-3">
@@ -113,7 +121,8 @@
                                 @forelse ($items as $item)
                                     <tr>
                                         <td style="white-space: nowrap">
-                                            <a href="{{ route('purchase.aop.detail', $item->invoiceAop) }}" wire:navigate>
+                                            <a href="{{ route('purchase.aop.detail', $item->invoiceAop) }}"
+                                                wire:navigate>
                                                 {{ $item->invoiceAop }}
                                             </a>
                                         </td>

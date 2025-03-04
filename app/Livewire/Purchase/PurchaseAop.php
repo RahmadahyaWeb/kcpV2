@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Purchase;
 
+use App\Http\Controllers\SyncController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithoutUrlPagination;
@@ -14,10 +16,24 @@ class PurchaseAop extends Component
     use WithFileUploads;
     use WithPagination, WithoutUrlPagination;
 
-    public $target = 'save, invoiceAop, tanggalJatuhTempo, flag_po, billing_doc_date';
+    public $target = 'save, invoiceAop, tanggalJatuhTempo, flag_po, billing_doc_date, dn, sync_intransit';
     public $surat_tagihan, $rekap_tagihan, $invoiceAop, $tanggalJatuhTempo, $dn, $billing_doc_date;
 
     public $flag_po = 'N';
+
+    public function sync_intransit()
+    {
+        try {
+            $controller = new SyncController();
+            $controller->sync_intransit();
+
+            session()->flash('success', 'Berhasil sync intransit');
+        } catch (\Exception $e) {
+            session()->flash('error', 'Error: ' . $e->getMessage());
+
+            Log::error('Error: ' . $e->getMessage());
+        }
+    }
 
     public function save()
     {
