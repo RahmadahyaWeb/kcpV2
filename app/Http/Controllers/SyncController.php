@@ -90,6 +90,7 @@ class SyncController extends Controller
 
         if (!$not_intransit->isEmpty()) {
             Log::info("Tidak ada invoice pembelian.");
+            throw new \Exception("Tidak ada invoice pembelian yang perlu di sync.");
             return;
         }
 
