@@ -106,8 +106,6 @@ class SyncController extends Controller
                     ->where('SPB', $value->SPB)
                     ->get();
 
-                dd($invoice_aop_details);
-
                 // INTRANSIT HEADER
                 $kcpinformation->table('intransit_header')
                     ->insert([
