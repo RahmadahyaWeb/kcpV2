@@ -86,7 +86,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/sync/limit_kredit/{kd_outlet}', [SyncController::class, 'sync_limit_kredit'])->name('sync.limit-kredit');
 
         // SYNC INTRANSI
-        Route::get('/sync/intransit', [SyncController::class, 'sync_intransit'])->name('sync.intransit');
+        // Route::get('/sync/intransit', [SyncController::class, 'sync_intransit'])->name('sync.intransit');
     });
 
     /**
