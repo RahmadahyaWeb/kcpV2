@@ -29,7 +29,8 @@
                                 <td class="text-nowrap">{{ $item->delivery_note }}</td>
                                 <td>{{ $item->kd_gudang_aop }}</td>
                                 <td>
-                                    <a href="" class="btn btn-primary">Detail</a>
+                                    <a href="{{ route('intransit.detail', $item->delivery_note) }}"
+                                        class="btn btn-primary">Detail</a>
                                 </td>
                             </tr>
                         @empty
