@@ -297,8 +297,6 @@ class SyncController extends Controller
                         ->where('part_no', $item->materialNumber)
                         ->exists();
 
-                    dd($exists_detail);
-
                     if ($exists_detail) {
                         continue; // Skip jika sudah ada
                     }
@@ -315,6 +313,8 @@ class SyncController extends Controller
                             'crea_date' => now(),
                             'crea_by' => 'SYSTEM'
                         ]);
+
+                    dd($item);
                 }
 
                 // $kcpinformation->commit();
