@@ -30,13 +30,13 @@ class FormUpdateIntransit extends Component
         $this->qty_terima = $item->qty_terima;
         $this->kd_rak = $item->kd_rak;
 
-        dd($item);
+        $kd_gudang = ($item->kd_gudang_aop == 'KCP01001') ? 'GD1' : 'GD2';
 
         $list_rak = $kcpinformation->table('mst_rakgudang')
             ->select([
                 'kd_rak'
             ])
-            ->where('kd_gudang', $item->kd_gudang_aop)
+            ->where('kd_gudang', $kd_gudang)
             ->orderBy('kd_rak')
             ->get();
 
