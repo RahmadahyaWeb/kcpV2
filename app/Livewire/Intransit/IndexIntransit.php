@@ -11,6 +11,7 @@ class IndexIntransit extends Component
     use WithPagination;
 
     public $target = '';
+    public $delivery_note;
 
     public function render()
     {
@@ -22,6 +23,7 @@ class IndexIntransit extends Component
                 'kd_gudang_aop'
             ])
             ->where('status', 'I')
+            ->where('delivery_note', 'like', '%' . $this->delivery_note . '%')
             ->whereDate('tgl_packingsheet', '>', '2017-07-01')
             ->groupBy('delivery_note', 'kd_gudang_aop')
             ->get();

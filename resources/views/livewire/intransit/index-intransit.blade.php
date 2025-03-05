@@ -8,6 +8,14 @@
         </div>
 
         <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Delivery Note</label>
+                    <input type="search" class="form-control" wire:model.live.debounce.1000ms="delivery_note"
+                        placeholder="Delivery Note">
+                </div>
+            </div>
+
             <div class="table-responsive">
                 <table class="table">
                     <thead>
