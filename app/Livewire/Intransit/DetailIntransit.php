@@ -31,6 +31,8 @@ class DetailIntransit extends Component
             ->whereIn('id', $this->selectedItems)
             ->get();
 
+        dd($items);
+
         try {
             $kcpinformation->beginTransaction();
 
@@ -111,7 +113,7 @@ class DetailIntransit extends Component
                     $kcpinformation->table('trns_log_stock')
                         ->insert([
                             'status' => 'PENERIMAAN',
-                            'keterangan' => "PENERIMAAN " . $item->no_sp_aop . " dengan P/S " . $item->no_packingsheet,
+                            'keterangan' => "PENERIMAAN " . $item->delivery_note . " dengan P/S " . $item->no_packingsheet,
                             'kd_gudang' => $kd_gudang,
                             'part_no' => $item->part_no,
                             'qty' => $item->qty,
@@ -161,7 +163,7 @@ class DetailIntransit extends Component
         $kcpinformation->table('trns_log_stock_rak')
             ->insert([
                 'status' => 'PENERIMAAN',
-                'keterangan' => "PENERIMAAN " . $item->no_sp_aop . " dengan P/S " . $item->no_packingsheet,
+                'keterangan' => "PENERIMAAN " . $item->delivery_note . " dengan P/S " . $item->no_packingsheet,
                 'kd_gudang' => $kd_gudang,
                 'kd_rak' => $item->kd_rak,
                 'part_no' => $item->part_no,
@@ -179,9 +181,14 @@ class DetailIntransit extends Component
         $kcpinformation = DB::connection('kcpinformation');
 
         $items = $kcpinformation->table('intransit_details')
-            ->where('no_sp_aop', $this->delivery_note)
+            ->where('delivery_note', $this->delivery_note)
             ->where('status', 'I')
             ->get();
+
+        // if ($items->count() <= 0) {
+        //     $intransit_header = $kcpinformation->table('intransit_header')
+        //         ->where('')
+        // }
 
         return view('livewire.intransit.detail-intransit', compact('items'));
     }
