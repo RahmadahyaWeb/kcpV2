@@ -34,6 +34,10 @@
                                 <td>{{ $item->qty_terima }}</td>
                                 <td>{{ $item->qty - $item->qty_terima }}</td>
                                 <td>{{ $item->kd_rak }}</td>
+                                <td>
+                                    <a href="{{ route('intransit.update', $item->id) }}"
+                                        class="btn btn-sm btn-warning">Edit</a>
+                                </td>
                             </tr>
                         @empty
                             <tr>
