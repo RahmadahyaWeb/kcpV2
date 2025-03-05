@@ -210,8 +210,6 @@ class SyncController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        dd($invoice_aop);
-
         // Ambil data dari tabel intransit_header
         // $intransit_aop = $kcpinformation->table('intransit_header')
         //     ->orderBy('crea_date', 'desc')
@@ -236,13 +234,16 @@ class SyncController extends Controller
             try {
                 $kcpinformation->beginTransaction();
 
+                $invoiceAop = $value->invoiceAop;
                 $spb = $value->SPB;
                 $kd_gudang_aop = $value->customerTo;
                 $no_sp_aop = "$spb" . "$kd_gudang_aop";
 
                 $invoice_aop_details = $kcpapplication->table('invoice_aop_detail')
-                    ->where('SPB', $spb)
+                    ->where('invoiceAop', $invoiceAop)
                     ->get();
+
+                dd($invoiceAop);
 
                 // Mengambil data nm_part dari database 'kcpinformation'
                 $partNumbers = $invoice_aop_details->pluck('materialNumber'); // Ambil semua materialNumber
