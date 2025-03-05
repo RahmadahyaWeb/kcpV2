@@ -255,8 +255,6 @@ class SalesOrderController extends Controller
      */
     private function sendDataToBosnet($data)
     {
-        dd($data);
-
         $credential = TokenBosnetController::signInForSecretKey();
 
         if (isset($credential['status'])) {
