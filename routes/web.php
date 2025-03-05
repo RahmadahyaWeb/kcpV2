@@ -91,6 +91,7 @@ Route::middleware('auth')->group(function () {
 
         // INTRANSIT
         Route::get('/intransit', IndexIntransit::class)->name('intransit.index');
+        Route::get('/intransit/detail/{delivery_note}', IndexIntransit::class)->name('intransit.detail');
     });
 
     /**
