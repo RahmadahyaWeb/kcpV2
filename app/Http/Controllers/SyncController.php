@@ -297,6 +297,8 @@ class SyncController extends Controller
                         ->where('part_no', $item->materialNumber)
                         ->exists();
 
+                    dd($exists_detail);
+
                     if ($exists_detail) {
                         continue; // Skip jika sudah ada
                     }
