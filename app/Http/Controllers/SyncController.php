@@ -89,8 +89,6 @@ class SyncController extends Controller
             return !$intransit_aop->contains($no_sp_aop); // Cocokkan dengan no_sp_aop yang ada di intransit
         });
 
-        dd($not_intransit);
-
         if ($not_intransit->isEmpty()) {
             Log::info("Tidak ada invoice pembelian.");
             throw new \Exception("Tidak ada invoice pembelian yang perlu di sync.");
@@ -107,7 +105,10 @@ class SyncController extends Controller
 
                 $invoice_aop_details = $kcpapplication->table('invoice_aop_detail')
                     ->where('SPB', $value->SPB)
+                    ->where('invoiceAop', '4009708980')
                     ->get();
+
+                dd($invoice_aop_details);
 
                 // INTRANSIT HEADER
                 $kcpinformation->table('intransit_header')
