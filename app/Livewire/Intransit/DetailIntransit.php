@@ -24,7 +24,13 @@ class DetailIntransit extends Component
 
     public function save()
     {
-        dd($this->selectedItems);
+        $kcpinformation = DB::connection('kcpinformation');
+
+        $items = $kcpinformation->table('intransit_details')
+            ->whereIn('id', $this->selectedItems)
+            ->get();
+
+        dd($items);
     }
 
     public function render()
