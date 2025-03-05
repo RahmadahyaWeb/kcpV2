@@ -57,6 +57,60 @@
             </div>
         </div>
 
+        {{-- @if (session()->has('sync_result'))
+            <div class="col-12">
+                @php
+                    $result = session('sync_result');
+                @endphp
+
+                <div class="card mt-3">
+                    <div class="card-header">
+                        Hasil Sync Intransit
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Berhasil:</strong> {{ $result['success_count'] }}</p>
+                        <p><strong>Gagal:</strong> {{ $result['failed_count'] }}</p>
+                        <p><strong>Diskip:</strong> {{ $result['skipped_count'] }}</p>
+
+                        @if (!empty($result['success_invoices']))
+                            <h5>Invoice Berhasil</h5>
+                            <ul>
+                                @foreach ($result['success_invoices'] as $invoice)
+                                    <li>
+                                        {{ $invoice['invoice'] }} -
+                                        {{ count($invoice['details']) }} item(s)
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endif
+
+                        @if (!empty($result['failed_invoices']))
+                            <h5>Invoice Gagal</h5>
+                            <ul>
+                                @foreach ($result['failed_invoices'] as $invoice)
+                                    <li>
+                                        {{ $invoice['invoice'] }} - Error: {{ $invoice['error'] }}
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endif
+
+                        @if (!empty($result['skipped_invoices']))
+                            <h5>Invoice Diskip</h5>
+                            <ul>
+                                @foreach ($result['skipped_invoices'] as $invoice)
+                                    <li>
+                                        {{ $invoice['invoice'] }} - Tidak valid:
+                                        {{ implode(', ', $invoice['invalid_items']) }}
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        @endif --}}
+
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
@@ -104,6 +158,7 @@
                             <thead>
                                 <tr>
                                     <th>Invoice AOP</th>
+                                    <th>SPB</th>
                                     <th>Customer To</th>
                                     <th>Billing Document Date</th>
                                     <th>Tgl. Jatuh Tempo</th>
@@ -126,6 +181,7 @@
                                                 {{ $item->invoiceAop }}
                                             </a>
                                         </td>
+                                        <td>{{ $item->SPB }}</td>
                                         <td>{{ $item->customerTo }}</td>
                                         <td style="white-space: nowrap">
                                             {{ date('d-m-Y', strtotime($item->billingDocumentDate)) }}

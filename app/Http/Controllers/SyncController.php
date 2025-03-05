@@ -69,7 +69,6 @@ class SyncController extends Controller
         $invoice_aop = $kcpapplication->table('invoice_aop_header')
             ->orderBy('created_at', 'desc')
             ->select('SPB', 'invoiceAop', 'customerTo')
-            ->where('invoiceAop', '4009708980')
             ->get();
 
         // Ambil data dari tabel intransit_header
@@ -95,9 +94,17 @@ class SyncController extends Controller
             return;
         }
 
+        $result = [
+            'success_count' => 0,
+            'failed_count' => 0,
+            'skipped_count' => 0,
+            'success_invoices' => [],
+            'failed_invoices' => [],
+            'skipped_invoices' => []
+        ];
+
         foreach ($not_intransit as $value) {
             try {
-
                 $kcpinformation->beginTransaction();
 
                 $no_sp_aop = $value->no_sp_aop;
@@ -105,8 +112,34 @@ class SyncController extends Controller
 
                 $invoice_aop_details = $kcpapplication->table('invoice_aop_detail')
                     ->where('SPB', $value->SPB)
-                    ->where('invoiceAop', '4009708980')
                     ->get();
+
+                // Mengambil data nm_part dari database 'kcpinformation'
+                $partNumbers = $invoice_aop_details->pluck('materialNumber'); // Ambil semua materialNumber
+                $partData = $kcpinformation
+                    ->table('mst_part')
+                    ->whereIn('part_no', $partNumbers)
+                    ->get(['part_no', 'nm_part']);
+
+                // Gabungkan data nm_part ke dalam $details
+                $details = $invoice_aop_details->map(function ($item) use ($partData) {
+                    $nmPart = $partData->firstWhere('part_no', $item->materialNumber);
+                    $item->nm_part = $nmPart ? $nmPart->nm_part : null; // Menambahkan nm_part ke item
+                    return $item;
+                });
+
+                // Cek apakah ada item yang tidak memiliki nm_part
+                $invalidItems = $details->filter(fn($item) => is_null($item->nm_part));
+
+                if ($invalidItems->isNotEmpty()) {
+                    $result['skipped_count']++;
+                    $result['skipped_invoices'][] = [
+                        'invoice' => $no_sp_aop,
+                        'invalid_items' => $invalidItems->pluck('materialNumber')->toArray(),
+                    ];
+                    $kcpinformation->rollBack();
+                    continue;
+                }
 
                 // INTRANSIT HEADER
                 $kcpinformation->table('intransit_header')
@@ -135,18 +168,26 @@ class SyncController extends Controller
                 }
 
                 $kcpinformation->commit();
-
-                Log::info("Berhasil convert invoice $no_sp_aop");
+                $result['success_count']++;
+                $result['success_invoices'][] = [
+                    'invoice' => $no_sp_aop,
+                    'details' => $invoice_aop_details->map(fn($item) => [
+                        'part_no' => $item->materialNumber,
+                        'qty' => $item->qty
+                    ])->toArray(),
+                ];
             } catch (\Exception $e) {
                 $kcpinformation->rollBack();
-
-                Log::info("Gagal convert invoice $no_sp_aop menjadi intransit: " . $e->getMessage());
-
+                $result['failed_count']++;
+                $result['failed_invoices'][] = [
+                    'invoice' => $no_sp_aop,
+                    'error' => $e->getMessage(),
+                ];
                 continue;
             }
         }
 
-        // Hasil: list invoice yang belum ada di intransit
-        return $not_intransit;
+        // Return hasil dalam bentuk array
+        return $result;
     }
 }

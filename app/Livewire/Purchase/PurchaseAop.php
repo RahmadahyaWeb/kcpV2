@@ -23,16 +23,15 @@ class PurchaseAop extends Component
 
     public function sync_intransit()
     {
-        try {
-            $controller = new SyncController();
-            $controller->sync_intransit();
+        // try {
+        //     $controller = new SyncController();
+        //     $result = $controller->sync_intransit();
 
-            session()->flash('success', 'Berhasil sync intransit');
-        } catch (\Exception $e) {
-            session()->flash('error', 'Error: ' . $e->getMessage());
-
-            Log::error('Error: ' . $e->getMessage());
-        }
+        //     session()->flash('sync_result', $result);
+        // } catch (\Exception $e) {
+        //     session()->flash('error', 'Error: ' . $e->getMessage());
+        //     Log::error('Error: ' . $e->getMessage());
+        // }
     }
 
     public function save()
