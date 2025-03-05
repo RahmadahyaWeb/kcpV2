@@ -12,14 +12,20 @@
                 <table class="table">
                     <thead>
                         <tr>
+                            <th>No</th>
                             <th>Delivery Note</th>
                             <th>Kode Gudang</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
+                        @php
+                            $no = 0;
+                        @endphp
+
                         @forelse ($items as $item)
                             <tr>
+                                <td>{{ $no++ }}</td>
                                 <td class="text-nowrap">{{ $item->delivery_note }}</td>
                                 <td>{{ $item->kd_gudang_aop }}</td>
                                 <td>
@@ -28,7 +34,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="3" class="text-center">No Data</td>
+                                <td colspan="4" class="text-center">No Data</td>
                             </tr>
                         @endforelse
                     </tbody>
