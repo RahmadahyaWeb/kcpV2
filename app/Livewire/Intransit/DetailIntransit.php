@@ -35,7 +35,6 @@ class DetailIntransit extends Component
             $kcpinformation->beginTransaction();
 
             foreach ($items as $item) {
-                dd($item);
                 if ($item->qty == $item->qty_terima && $item->status == 'I' && $item->kd_rak <> '') {
                     // KODE GUDANG
                     $kd_gudang = ($item->kd_gudang_aop == 'KCP01001') ? 'GD1' : 'GD2';
@@ -65,6 +64,8 @@ class DetailIntransit extends Component
                         ->where('stock_part.part_no', $item->part_no)
                         ->where('stock_part.status', 'A')
                         ->first();
+
+                    dd($data_stock_part);
 
                     if (!$data_stock_part) {
                         $kcpinformation->table('stock_part')
@@ -101,6 +102,22 @@ class DetailIntransit extends Component
                             'status' => 'T',
                             'modi_date' => now(),
                             'mode_by' => $user
+                        ]);
+
+                    // LOG STOCK
+                    $cek_stock = $kcpinformation->table('stock_part')
+                        ->where('kd_gudang', $item->kd_gudang_aop);
+
+                    $kcpinformation->table('trns_log_stock')
+                        ->insert([
+                            'status' => 'PENERIMAAN',
+                            'keteranagn' => "PENERIMAAN " . $item->no_sp_aop . " dengan P/S " . $item->no_packingsheet,
+                            'kd_gudang' => $kd_gudang,
+                            'part_no' => $item->part_no,
+                            'qty' => $item->qty,
+                            'debet' => $item->qty,
+                            'kredit' => 0,
+                            'stock' => 0
                         ]);
                 }
             }
