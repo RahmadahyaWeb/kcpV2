@@ -59,7 +59,7 @@ class SyncController extends Controller
         dd($result);
     }
 
-    public function sync_intransit()
+    public function sync_intransit_v1()
     {
         // Koneksi ke database
         $kcpapplication = DB::connection('mysql');
@@ -70,10 +70,8 @@ class SyncController extends Controller
             ->whereDate('billingDocumentDate', '>=', '2025-02-28')
             ->select('SPB', 'customerTo')
             ->orderBy('created_at', 'desc')
-            // ->groupBy('SPB', 'customerTo')
+            ->groupBy('SPB', 'customerTo')
             ->get();
-
-        dd($invoice_aop);
 
         // Ambil data dari tabel intransit_header
         $intransit_aop = $kcpinformation->table('intransit_header')
@@ -115,6 +113,132 @@ class SyncController extends Controller
 
                 $no_sp_aop = $value->no_sp_aop;
                 $kd_gudang_aop = $value->customerTo;
+
+                $invoice_aop_details = $kcpapplication->table('invoice_aop_detail')
+                    ->where('SPB', $value->SPB)
+                    ->get();
+
+                // Mengambil data nm_part dari database 'kcpinformation'
+                $partNumbers = $invoice_aop_details->pluck('materialNumber'); // Ambil semua materialNumber
+                $partData = $kcpinformation
+                    ->table('mst_part')
+                    ->whereIn('part_no', $partNumbers)
+                    ->get(['part_no', 'nm_part']);
+
+                // Gabungkan data nm_part ke dalam $details
+                $details = $invoice_aop_details->map(function ($item) use ($partData) {
+                    $nmPart = $partData->firstWhere('part_no', $item->materialNumber);
+                    $item->nm_part = $nmPart ? $nmPart->nm_part : null; // Menambahkan nm_part ke item
+                    return $item;
+                });
+
+                // Cek apakah ada item yang tidak memiliki nm_part
+                $invalidItems = $details->filter(fn($item) => is_null($item->nm_part));
+
+                if ($invalidItems->isNotEmpty()) {
+                    $result['skipped_count']++;
+                    $result['skipped_invoices'][] = [
+                        'invoice' => $no_sp_aop,
+                        'invalid_items' => $invalidItems->pluck('materialNumber')->toArray(),
+                    ];
+                    $kcpinformation->rollBack();
+                    continue;
+                }
+
+                // INTRANSIT HEADER
+                $kcpinformation->table('intransit_header')
+                    ->insert([
+                        'no_sp_aop' => $no_sp_aop,
+                        'kd_gudang_aop' => $kd_gudang_aop,
+                        'tgl_packingsheet' => now(),
+                        'status' => 'I',
+                        'ket_status' => 'INTRANSIT',
+                        'crea_date' => now(),
+                        'crea_by' => 'SYSTEM'
+                    ]);
+
+                foreach ($invoice_aop_details as $item) {
+                    // INTRANSIT DETAILS
+                    $kcpinformation->table('intransit_details')
+                        ->insert([
+                            'no_sp_aop' => $no_sp_aop,
+                            'kd_gudang_aop' => $kd_gudang_aop,
+                            'part_no' => $item->materialNumber,
+                            'qty' => $item->qty,
+                            'status' => 'I',
+                            'crea_date' => now(),
+                            'crea_by' => 'SYSTEM'
+                        ]);
+                }
+
+                $kcpinformation->commit();
+                $result['success_count']++;
+                $result['success_invoices'][] = [
+                    'invoice' => $no_sp_aop,
+                    'details' => $invoice_aop_details->map(fn($item) => [
+                        'part_no' => $item->materialNumber,
+                        'qty' => $item->qty
+                    ])->toArray(),
+                ];
+            } catch (\Exception $e) {
+                $kcpinformation->rollBack();
+                $result['failed_count']++;
+                $result['failed_invoices'][] = [
+                    'invoice' => $no_sp_aop,
+                    'error' => $e->getMessage(),
+                ];
+                continue;
+            }
+        }
+
+        dd($result);
+
+        // Return hasil dalam bentuk array
+        return $result;
+    }
+
+    public function sync_intransit()
+    {
+        // Koneksi ke database
+        $kcpapplication = DB::connection('mysql');
+        $kcpinformation = DB::connection('kcpinformation');
+
+        // Ambil data dari tabel invoice_aop_header
+        $invoice_aop = $kcpapplication->table('invoice_aop_header')
+            ->whereDate('billingDocumentDate', '>=', '2025-02-28')
+            ->select('SPB', 'customerTo')
+            ->orderBy('created_at', 'desc')
+            ->groupBy('SPB', 'customerTo')
+            ->get();
+
+        // Ambil data dari tabel intransit_header
+        // $intransit_aop = $kcpinformation->table('intransit_header')
+        //     ->orderBy('crea_date', 'desc')
+        //     ->pluck('no_sp_aop');
+
+        if ($invoice_aop->isEmpty()) {
+            Log::info("Tidak ada invoice pembelian.");
+            throw new \Exception("Tidak ada invoice pembelian yang perlu di sync.");
+            return;
+        }
+
+        $result = [
+            'success_count' => 0,
+            'failed_count' => 0,
+            'skipped_count' => 0,
+            'success_invoices' => [],
+            'failed_invoices' => [],
+            'skipped_invoices' => []
+        ];
+
+        foreach ($invoice_aop as $key => $value) {
+            try {
+                $kcpinformation->beginTransaction();
+
+                $no_sp_aop = "$value->SPB" . "$value->customerTo";
+                $kd_gudang_aop = $value->customerTo;
+
+                dd($no_sp_aop);
 
                 $invoice_aop_details = $kcpapplication->table('invoice_aop_detail')
                     ->where('SPB', $value->SPB)
