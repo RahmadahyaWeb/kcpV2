@@ -211,8 +211,6 @@ class SyncController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        dd($invoice_aop);
-
         // Ambil data dari tabel intransit_header
         // $intransit_aop = $kcpinformation->table('intransit_header')
         //     ->orderBy('crea_date', 'desc')
@@ -274,20 +272,36 @@ class SyncController extends Controller
                 }
 
                 // INTRANSIT HEADER
-                $kcpinformation->table('intransit_header')
-                    ->insert([
-                        'no_sp_aop' => $invoiceAop,
-                        'delivery_note' => $no_sp_aop,
-                        'kd_gudang_aop' => $kd_gudang_aop,
-                        'tgl_packingsheet' => now(),
-                        'status' => 'I',
-                        'ket_status' => 'INTRANSIT',
-                        'crea_date' => now(),
-                        'crea_by' => 'SYSTEM'
-                    ]);
+                $exists_header = $kcpinformation->table('intransit_header')
+                    ->where('no_sp_aop', $invoiceAop)
+                    ->exists();
+
+                if (!$exists_header) {
+                    $kcpinformation->table('intransit_header')
+                        ->insert([
+                            'no_sp_aop' => $invoiceAop,
+                            'delivery_note' => $no_sp_aop,
+                            'kd_gudang_aop' => $kd_gudang_aop,
+                            'tgl_packingsheet' => now(),
+                            'status' => 'I',
+                            'ket_status' => 'INTRANSIT',
+                            'crea_date' => now(),
+                            'crea_by' => 'SYSTEM'
+                        ]);
+                }
 
                 foreach ($invoice_aop_details as $item) {
-                    // INTRANSIT DETAILS
+                    // Cek apakah data sudah ada
+                    $exists_detail = $kcpinformation->table('intransit_details')
+                        ->where('no_sp_aop', $invoiceAop)
+                        ->where('part_no', $item->materialNumber)
+                        ->exists();
+
+                    if ($exists_detail) {
+                        continue; // Skip jika sudah ada
+                    }
+
+                    // Insert jika belum ada
                     $kcpinformation->table('intransit_details')
                         ->insert([
                             'no_sp_aop' => $invoiceAop,
@@ -301,7 +315,7 @@ class SyncController extends Controller
                         ]);
                 }
 
-                $kcpinformation->commit();
+                // $kcpinformation->commit();
                 $result['success_count']++;
                 $result['success_invoices'][] = [
                     'invoice' => $no_sp_aop,
@@ -320,6 +334,8 @@ class SyncController extends Controller
                 continue;
             }
         }
+
+        dd($result);
 
         // Return hasil dalam bentuk array
         return $result;
