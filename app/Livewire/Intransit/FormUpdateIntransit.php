@@ -7,7 +7,7 @@ use Livewire\Component;
 
 class FormUpdateIntransit extends Component
 {
-    public $target = '';
+    public $target = 'save';
 
     public $id;
 

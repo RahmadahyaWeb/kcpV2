@@ -10,7 +10,7 @@ class IndexIntransit extends Component
 {
     use WithPagination;
 
-    public $target = '';
+    public $target = 'delivery_note';
     public $delivery_note;
 
     public function render()
