@@ -327,7 +327,7 @@
                                     <th>Material Number</th>
                                     <th>Material Name</th>
                                     <th>Qty</th>
-                                    <th>Price</th>
+                                    <th>Amount</th>
                                 </tr>
                             </thead>
                             <tbody>
