@@ -215,6 +215,14 @@ return [
         ]
     ],
     [
+        "label" => "Intransit",
+        "icon" => "bx bx-file",
+        "route" => "intransit.index",
+        "roles" => ['super-user', 'head-warehouse', 'inventory', 'storer'],
+        "active" => Request::is('intransit*'),
+        "children" => []
+    ],
+    [
         "label" => "Part Rak",
         "icon" => "bx bx-file",
         "route" => "part-rak.index",

@@ -19,6 +19,7 @@ use App\Livewire\GoodsReceipt\GoodsReceiptAop;
 use App\Livewire\GoodsReceipt\GoodsReceiptAopDetail;
 use App\Livewire\GoodsReceipt\GoodsReceiptNonAop;
 use App\Livewire\GoodsReceipt\GoodsReceiptNonAopDetail;
+use App\Livewire\Intransit\IndexIntransit;
 use App\Livewire\Invoice\DetailInvoice;
 use App\Livewire\Invoice\DetailSalesOrder;
 use App\Livewire\Invoice\IndexInvoice;
@@ -87,6 +88,9 @@ Route::middleware('auth')->group(function () {
 
         // SYNC INTRANSI
         // Route::get('/sync/intransit', [SyncController::class, 'sync_intransit'])->name('sync.intransit');
+
+        // INTRANSIT
+        Route::get('/intransit', IndexIntransit::class)->name('intransit.index');
     });
 
     /**
