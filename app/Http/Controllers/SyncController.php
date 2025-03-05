@@ -275,7 +275,7 @@ class SyncController extends Controller
                 $kcpinformation->table('intransit_header')
                     ->insert([
                         'no_sp_aop' => $invoiceAop,
-                        'delivery_note' => $spb,
+                        'delivery_note' => $no_sp_aop,
                         'kd_gudang_aop' => $kd_gudang_aop,
                         'tgl_packingsheet' => now(),
                         'status' => 'I',
@@ -289,7 +289,7 @@ class SyncController extends Controller
                     $kcpinformation->table('intransit_details')
                         ->insert([
                             'no_sp_aop' => $invoiceAop,
-                            'delivery_note' => $spb,
+                            'delivery_note' => $no_sp_aop,
                             'kd_gudang_aop' => $kd_gudang_aop,
                             'part_no' => $item->materialNumber,
                             'qty' => $item->qty,

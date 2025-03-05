@@ -27,7 +27,7 @@ class PurchaseAop extends Component
             $controller = new SyncController();
             $result = $controller->sync_intransit();
 
-            // session()->flash('sync_result', $result);
+            session()->flash('sync_result', $result);
         } catch (\Exception $e) {
             session()->flash('error', 'Error: ' . $e->getMessage());
             Log::error('Error: ' . $e->getMessage());

@@ -57,7 +57,7 @@
             </div>
         </div>
 
-        {{-- @if (session()->has('sync_result'))
+        @if (session()->has('sync_result'))
             <div class="col-12">
                 @php
                     $result = session('sync_result');
@@ -109,7 +109,7 @@
                     </div>
                 </div>
             </div>
-        @endif --}}
+        @endif
 
         <div class="col-12">
             <div class="card">
