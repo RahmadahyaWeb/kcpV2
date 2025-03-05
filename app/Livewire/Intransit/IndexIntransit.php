@@ -18,11 +18,12 @@ class IndexIntransit extends Component
 
         $items = $kcpinformation->table('intransit_header')
             ->select([
-                'delivery_note'
+                'delivery_note',
+                'kd_gudang_aop'
             ])
             ->where('status', 'I')
             ->whereDate('tgl_packingsheet', '>', '2017-07-01')
-            ->groupBy('delivery_note')
+            ->groupBy('delivery_note', 'kd_gudang_aop')
             ->get();
 
         return view('livewire.intransit.index-intransit', compact('items'));
