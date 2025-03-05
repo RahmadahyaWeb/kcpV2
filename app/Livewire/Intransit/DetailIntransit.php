@@ -108,8 +108,6 @@ class DetailIntransit extends Component
                         ->where('part_no', $item->part_no)
                         ->first();
 
-                    dd($cek_stock);
-
                     $kcpinformation->table('trns_log_stock')
                         ->insert([
                             'status' => 'PENERIMAAN',
@@ -126,7 +124,8 @@ class DetailIntransit extends Component
                 }
             }
 
-            // $kcpinformation->commit();
+            $kcpinformation->commit();
+            session()->flash('success', 'Berhasil update stock intransit menjadi stock on hand.');
         } catch (\Exception $e) {
             $kcpinformation->rollBack();
             session()->flash('error', $e->getMessage());
