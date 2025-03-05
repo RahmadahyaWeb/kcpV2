@@ -65,8 +65,6 @@ class DetailIntransit extends Component
                         ->where('stock_part.status', 'A')
                         ->first();
 
-                    dd($data_stock_part);
-
                     if (!$data_stock_part) {
                         $kcpinformation->table('stock_part')
                             ->insert([
@@ -80,6 +78,8 @@ class DetailIntransit extends Component
                             ]);
                     } else {
                         $stock_update = $data_stock_part->stock + $item->qty;
+
+                        dd($stock_update);
 
                         $kcpinformation->table('stock_part')
                             ->where('part_no', $item->part_no)
