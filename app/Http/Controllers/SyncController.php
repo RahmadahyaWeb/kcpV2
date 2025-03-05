@@ -74,8 +74,8 @@ class SyncController extends Controller
 
         // Ambil data dari tabel intransit_header
         $intransit_aop = $kcpinformation->table('intransit_header')
-            ->where('status', 'I')
-            ->whereDate('tgl_packingsheet', '>', '2017-07-01')
+            // ->where('status', 'I')
+            // ->whereDate('tgl_packingsheet', '>', '2017-07-01')
             ->orderBy('crea_date', 'desc')
             ->pluck('no_sp_aop');
 
