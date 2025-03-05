@@ -67,13 +67,10 @@ class SyncController extends Controller
 
         // Ambil data dari tabel invoice_aop_header
         $invoice_aop = $kcpapplication->table('invoice_aop_header')
-            ->where('SPB', '8700001234')
             ->select('SPB', 'customerTo')
             ->orderBy('created_at', 'desc')
             ->groupBy('SPB', 'customerTo')
             ->get();
-
-        dd($invoice_aop);
 
         // Ambil data dari tabel intransit_header
         $intransit_aop = $kcpinformation->table('intransit_header')
