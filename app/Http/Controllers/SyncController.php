@@ -69,6 +69,7 @@ class SyncController extends Controller
         $invoice_aop = $kcpapplication->table('invoice_aop_header')
             ->orderBy('created_at', 'desc')
             ->select('SPB', 'invoiceAop', 'customerTo')
+            ->where('invoiceAop', '4009708980')
             ->get();
 
         // Ambil data dari tabel intransit_header
@@ -87,6 +88,8 @@ class SyncController extends Controller
 
             return !$intransit_aop->contains($no_sp_aop); // Cocokkan dengan no_sp_aop yang ada di intransit
         });
+
+        dd($not_intransit);
 
         if ($not_intransit->isEmpty()) {
             Log::info("Tidak ada invoice pembelian.");
