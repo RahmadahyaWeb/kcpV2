@@ -36,6 +36,11 @@ class DetailIntransit extends Component
 
             foreach ($items as $item) {
                 if ($item->qty == $item->qty_terima && $item->status == 'I' && $item->kd_rak <> '') {
+                    // KODE GUDANG
+                    $kd_gudang = ($item->kd_gudang_aop == 'KCP01001') ? 'GD1' : 'GD2';
+
+                    // USER
+                    $user = Auth::user()->username;
 
                     // DATA MASTER PART
                     $data_master_part = $kcpinformation->table('mst_part')
@@ -48,7 +53,7 @@ class DetailIntransit extends Component
                                 'part_no' => $item->part_no,
                                 'status' => 'Y',
                                 'crea_date' => now(),
-                                'crea_by' => Auth::user()->username,
+                                'crea_by' => $user,
                             ]);
                     }
 
@@ -60,7 +65,25 @@ class DetailIntransit extends Component
                         ->where('stock_part.status', 'A')
                         ->get();
 
-                    dd($data_stock_part);
+                    if ($data_stock_part->count() == 0) {
+                        $kcpinformation->table('stock_part')
+                            ->insert([
+                                'kd_gudang' => $kd_gudang,
+                                'part_no' => $item->part_no,
+                                'stock' => $item->qty,
+                                'status' => 'A',
+                                'ket_status' => 'READY',
+                                'crea_date' => now(),
+                                'crea_by' => $user
+                            ]);
+
+                        $id_stock_part = $kcpinformation->table('stock_part')
+                            ->where('part_no', $item->part_no)
+                            ->where('kd_gudang', $kd_gudang)
+                            ->get();
+
+                        dd($id_stock_part);
+                    }
                 }
             }
         } catch (\Exception $e) {
