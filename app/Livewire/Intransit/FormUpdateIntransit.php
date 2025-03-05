@@ -30,6 +30,8 @@ class FormUpdateIntransit extends Component
         $this->qty_terima = $item->qty_terima;
         $this->kd_rak = $item->kd_rak;
 
+        dd($item);
+
         $list_rak = $kcpinformation->table('mst_rakgudang')
             ->select([
                 'kd_rak'
