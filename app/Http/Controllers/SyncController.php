@@ -290,6 +290,8 @@ class SyncController extends Controller
                         ]);
                 }
 
+                $isInserted = false;
+
                 foreach ($invoice_aop_details as $item) {
                     // Cek apakah data sudah ada
                     $exists_detail = $kcpinformation->table('intransit_details')
@@ -314,18 +316,26 @@ class SyncController extends Controller
                             'crea_by' => 'SYSTEM'
                         ]);
 
-                    dd($item);
+                    $isInserted = true;
                 }
 
                 // $kcpinformation->commit();
-                $result['success_count']++;
-                $result['success_invoices'][] = [
-                    'invoice' => $no_sp_aop,
-                    'details' => $invoice_aop_details->map(fn($item) => [
-                        'part_no' => $item->materialNumber,
-                        'qty' => $item->qty
-                    ])->toArray(),
-                ];
+                if ($isInserted) {
+                    $result['success_count']++;
+                    $result['success_invoices'][] = [
+                        'invoice' => $no_sp_aop,
+                        'details' => $invoice_aop_details->map(fn($item) => [
+                            'part_no' => $item->materialNumber,
+                            'qty' => $item->qty
+                        ])->toArray(),
+                    ];
+                } else {
+                    $result['skipped_count']++;
+                    $result['skipped_invoices'][] = [
+                        'invoice' => $no_sp_aop,
+                        'reason' => 'Semua data sudah ada di intransit_details',
+                    ];
+                }
             } catch (\Exception $e) {
                 $kcpinformation->rollBack();
                 $result['failed_count']++;
