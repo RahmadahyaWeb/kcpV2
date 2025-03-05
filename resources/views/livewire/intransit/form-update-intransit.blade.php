@@ -28,7 +28,7 @@
                                     class="form-select @error('kd_rak') is-invalid @enderror" wire:model="kd_rak">
                                     <option value="">Pilih Kode Rak</option>
 
-                                    @foreach ($lsit_rak as $rak)
+                                    @foreach ($list_rak as $rak)
                                         <option value="{{ $rak->kd_rak }}">{{ $rak->kd_rak }}</option>
                                     @endforeach
                                 </select>
