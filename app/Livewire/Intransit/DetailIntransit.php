@@ -99,7 +99,7 @@ class DetailIntransit extends Component
                         ->update([
                             'status' => 'T',
                             'modi_date' => now(),
-                            'mode_by' => $user
+                            'modi_by' => $user
                         ]);
 
                     // LOG STOCK
