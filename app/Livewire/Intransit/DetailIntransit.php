@@ -35,6 +35,7 @@ class DetailIntransit extends Component
             $kcpinformation->beginTransaction();
 
             foreach ($items as $item) {
+                dd($item);
                 if ($item->qty == $item->qty_terima && $item->status == 'I' && $item->kd_rak <> '') {
                     // KODE GUDANG
                     $kd_gudang = ($item->kd_gudang_aop == 'KCP01001') ? 'GD1' : 'GD2';
@@ -79,8 +80,6 @@ class DetailIntransit extends Component
                     } else {
                         $stock_update = $data_stock_part->stock + $item->qty;
 
-                        dd($stock_update);
-
                         $kcpinformation->table('stock_part')
                             ->where('part_no', $item->part_no)
                             ->where('kd_gudang', $kd_gudang)
@@ -94,6 +93,15 @@ class DetailIntransit extends Component
 
                     // HANDLE RAK
                     $this->handleStockRak($kcpinformation, $id_stock_part->id, $item, $kd_gudang, $user);
+
+                    // UPDATE INTRANSIT DETAIL
+                    $kcpinformation->table('intransit_details')
+                        ->where('id', $item->id)
+                        ->update([
+                            'status' => 'T',
+                            'modi_date' => now(),
+                            'mode_by' => $user
+                        ]);
                 }
             }
 
