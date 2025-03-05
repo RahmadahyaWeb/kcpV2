@@ -30,7 +30,7 @@
                         @forelse ($items as $item)
                             <tr>
                                 <td>
-                                    <input type="checkbox" wire:model="selectedItems" value="{{ $item->id }}">
+                                    <input type="checkbox" wire:model.change="selectedItems" value="{{ $item->id }}">
                                 </td>
                                 <td>{{ $no++ }}</td>
                                 <td>{{ $item->part_no }}</td>
