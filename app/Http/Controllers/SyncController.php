@@ -243,7 +243,7 @@ class SyncController extends Controller
                     ->where('invoiceAop', $invoiceAop)
                     ->get();
 
-                dd($invoiceAop);
+                dd($invoice_aop_details);
 
                 // Mengambil data nm_part dari database 'kcpinformation'
                 $partNumbers = $invoice_aop_details->pluck('materialNumber'); // Ambil semua materialNumber
