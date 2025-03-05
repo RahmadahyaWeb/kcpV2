@@ -63,9 +63,11 @@ class DetailIntransit extends Component
                         ->where('mst_gudang.kd_gudang_aop', $item->kd_gudang_aop)
                         ->where('stock_part.part_no', $item->part_no)
                         ->where('stock_part.status', 'A')
-                        ->get();
+                        ->first();
 
-                    if ($data_stock_part->count() == 0) {
+                    dd($data_stock_part);
+
+                    if (!$data_stock_part) {
                         $kcpinformation->table('stock_part')
                             ->insert([
                                 'kd_gudang' => $kd_gudang,
@@ -76,20 +78,72 @@ class DetailIntransit extends Component
                                 'crea_date' => now(),
                                 'crea_by' => $user
                             ]);
+                    } else {
+                        $stock_update = $data_stock_part->stock + $item->qty;
 
-                        $id_stock_part = $kcpinformation->table('stock_part')
+                        $kcpinformation->table('stock_part')
                             ->where('part_no', $item->part_no)
                             ->where('kd_gudang', $kd_gudang)
-                            ->get();
-
-                        dd($id_stock_part);
+                            ->update(['stock' => $stock_update]);
                     }
+
+                    $id_stock_part = $kcpinformation->table('stock_part')
+                        ->where('part_no', $item->part_no)
+                        ->where('kd_gudang', $kd_gudang)
+                        ->first();
+
+                    // HANDLE RAK
+                    $this->handleStockRak($kcpinformation, $id_stock_part->id, $item, $kd_gudang, $user);
                 }
             }
+
+            // $kcpinformation->commit();
         } catch (\Exception $e) {
             $kcpinformation->rollBack();
             session()->flash('error', $e->getMessage());
         }
+    }
+
+    private function handleStockRak($kcpinformation, $id_stock_part, $item, $kd_gudang, $user)
+    {
+        $data_rak = $kcpinformation->table('stock_part_rak')
+            ->where('id_stock_part', $id_stock_part)
+            ->where('kd_rak', $item->kd_rak)
+            ->first();
+
+        if (!$data_rak) {
+            $kcpinformation->table('stock_part_rak')
+                ->insert([
+                    'id_stock_part' => $id_stock_part,
+                    'kd_rak' => $item->kd_rak,
+                    'qty' => $item->qty,
+                    'status' => 'Y',
+                    'crea_date' => now(),
+                    'crea_by' => $user
+                ]);
+        } else {
+            $id_rak = $data_rak->id;
+            $qty_rak = $data_rak->qty + $item->qty;
+            $kcpinformation->table('stock_part_rak')
+                ->where('id', $id_rak)
+                ->update(['qty' => $qty_rak]);
+        }
+
+        // LOG STOCK RAK
+        $kcpinformation->table('trns_log_stock_rak')
+            ->insert([
+                'status' => 'PENERIMAAN',
+                'keterangan' => "PENERIMAAN " . $item->no_sp_aop . " dengan P/S " . $item->no_packingsheet,
+                'kd_gudang' => $kd_gudang,
+                'kd_rak' => $item->kd_rak,
+                'part_no' => $item->part_no,
+                'qty' => $item->qty,
+                'debet' => $item->qty,
+                'kredit' => 0,
+                'stock_rak' => isset($qty_rak) ? $qty_rak : $item->qty,
+                'crea_date' => now(),
+                'crea_by' => $user
+            ]);
     }
 
     public function render()
