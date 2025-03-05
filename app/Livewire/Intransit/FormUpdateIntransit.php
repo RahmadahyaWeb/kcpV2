@@ -11,6 +11,7 @@ class FormUpdateIntransit extends Component
 
     public $id;
 
+    public $delivery_note;
     public $qty;
     public $qty_terima;
     public $kd_rak;
@@ -26,6 +27,27 @@ class FormUpdateIntransit extends Component
         $this->reset('kd_rak');
     }
 
+    public function save()
+    {
+        $this->validate([
+            'qty_terima' => ['required'],
+            'kd_rak' => ['required']
+        ]);
+
+        $kcpinformation = DB::connection('kcpinformation');
+
+        $kcpinformation->table('intransit_details')
+            ->where('id', $this->id)
+            ->update([
+                'qty_terima' => $this->qty_terima,
+                'kd_rak' => $this->kd_rak,
+            ]);
+
+        session()->flash('success', "Berhasil update part number");
+
+        $this->redirectRoute('intransit.details', $this->delivery_note);
+    }
+
     public function render()
     {
         $kcpinformation = DB::connection('kcpinformation');
@@ -37,6 +59,7 @@ class FormUpdateIntransit extends Component
         $this->qty = $item->qty;
         $this->qty_terima = $item->qty_terima;
         $this->kd_rak = $item->kd_rak;
+        $this->delivery_note = $item->no_sp_aop;
 
         $kd_gudang = ($item->kd_gudang_aop == 'KCP01001') ? 'GD1' : 'GD2';
 
