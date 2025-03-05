@@ -328,9 +328,6 @@
                                     <th>Material Name</th>
                                     <th>Qty</th>
                                     <th>Price</th>
-                                    <th>Extra Disc</th>
-                                    <th>Add Discount</th>
-                                    <th>Amount (Rp)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -340,9 +337,6 @@
                                         <td>{{ $item->nm_part }}</td>
                                         <td>{{ $item->qty }}</td>
                                         <td>{{ number_format($item->price, 0, ',', '.') }}</td>
-                                        <td>{{ number_format($item->extraPlafonDiscount, 0, ',', '.') }}</td>
-                                        <td>{{ number_format($item->addDiscount, 0, ',', '.') }}</td>
-                                        <td>{{ number_format($item->amount, 0, ',', '.') }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
