@@ -108,8 +108,6 @@ class SyncController extends Controller
                     ->where('invoiceAop', '4009708980')
                     ->get();
 
-                dd($invoice_aop_details);
-
                 // INTRANSIT HEADER
                 $kcpinformation->table('intransit_header')
                     ->insert([
