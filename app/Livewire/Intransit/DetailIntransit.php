@@ -20,7 +20,7 @@ class DetailIntransit extends Component
     {
         $kcpinformation = DB::connection('kcpinformation');
 
-        $items = $kcpinformation->table('intransit_header')
+        $items = $kcpinformation->table('intransit_details')
             ->where('delivery_note', $this->delivery_note)
             ->get();
 
