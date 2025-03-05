@@ -69,6 +69,7 @@ class SyncController extends Controller
         $invoice_aop = $kcpapplication->table('invoice_aop_header')
             ->orderBy('created_at', 'desc')
             ->select('SPB', 'invoiceAop', 'customerTo')
+            ->groupBy('SPB')
             ->get();
 
         // Ambil data dari tabel intransit_header
