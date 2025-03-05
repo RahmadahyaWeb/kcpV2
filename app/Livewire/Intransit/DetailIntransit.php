@@ -21,7 +21,7 @@ class DetailIntransit extends Component
         $kcpinformation = DB::connection('kcpinformation');
 
         $items = $kcpinformation->table('intransit_details')
-            ->where('delivery_note', $this->delivery_note)
+            ->where('no_sp_aop', $this->delivery_note)
             ->get();
 
         return view('livewire.intransit.detail-intransit', compact('items'));
