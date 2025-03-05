@@ -319,7 +319,7 @@ class SyncController extends Controller
                     $isInserted = true;
                 }
 
-                // $kcpinformation->commit();
+                $kcpinformation->commit();
                 if ($isInserted) {
                     $result['success_count']++;
                     $result['success_invoices'][] = [
