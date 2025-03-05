@@ -185,10 +185,16 @@ class DetailIntransit extends Component
             ->where('status', 'I')
             ->get();
 
-        // if ($items->count() <= 0) {
-        //     $intransit_header = $kcpinformation->table('intransit_header')
-        //         ->where('')
-        // }
+        if ($items->count() <= 0) {
+            $intransit_header = $kcpinformation->table('intransit_header')
+                ->where('delivery_note', $this->delivery_note)
+                ->update([
+                    'status' => "T",
+                    'ket_status' => 'TERIMA',
+                    'modi_date' => now(),
+                    'modi_by' => Auth::user()->username,
+                ]);
+        }
 
         return view('livewire.intransit.detail-intransit', compact('items'));
     }
