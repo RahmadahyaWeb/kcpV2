@@ -333,7 +333,7 @@ class SyncController extends Controller
                     $result['skipped_count']++;
                     $result['skipped_invoices'][] = [
                         'invoice' => $no_sp_aop,
-                        'reason' => 'Semua data sudah ada di intransit_details',
+                        'reason' => 'Semua data sudah ada di intransit',
                     ];
                 }
             } catch (\Exception $e) {
