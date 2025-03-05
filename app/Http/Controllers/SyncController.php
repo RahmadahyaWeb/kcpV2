@@ -206,9 +206,12 @@ class SyncController extends Controller
         // Ambil data dari tabel invoice_aop_header
         $invoice_aop = $kcpapplication->table('invoice_aop_header')
             ->whereDate('billingDocumentDate', '>=', '2025-02-28')
+            ->whereIn('invoiceAop', ['4009708981', '4009708980'])
             ->select('SPB', 'customerTo', 'invoiceAop')
             ->orderBy('created_at', 'desc')
             ->get();
+
+        dd($invoice_aop);
 
         // Ambil data dari tabel intransit_header
         // $intransit_aop = $kcpinformation->table('intransit_header')
@@ -243,8 +246,6 @@ class SyncController extends Controller
                     ->where('invoiceAop', $invoiceAop)
                     ->get();
 
-                dd($invoice_aop_details);
-
                 // Mengambil data nm_part dari database 'kcpinformation'
                 $partNumbers = $invoice_aop_details->pluck('materialNumber'); // Ambil semua materialNumber
                 $partData = $kcpinformation
@@ -275,7 +276,8 @@ class SyncController extends Controller
                 // INTRANSIT HEADER
                 $kcpinformation->table('intransit_header')
                     ->insert([
-                        'no_sp_aop' => $no_sp_aop,
+                        'no_sp_aop' => $invoiceAop,
+                        'delivery_note' => $spb,
                         'kd_gudang_aop' => $kd_gudang_aop,
                         'tgl_packingsheet' => now(),
                         'status' => 'I',
@@ -288,7 +290,8 @@ class SyncController extends Controller
                     // INTRANSIT DETAILS
                     $kcpinformation->table('intransit_details')
                         ->insert([
-                            'no_sp_aop' => $no_sp_aop,
+                            'no_sp_aop' => $invoiceAop,
+                            'delivery_note' => $spb,
                             'kd_gudang_aop' => $kd_gudang_aop,
                             'part_no' => $item->materialNumber,
                             'qty' => $item->qty,
