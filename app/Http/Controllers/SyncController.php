@@ -68,12 +68,11 @@ class SyncController extends Controller
         // Ambil data dari tabel invoice_aop_header
         $invoice_aop = $kcpapplication->table('invoice_aop_header')
             ->orderBy('created_at', 'desc')
-            ->select('invoiceAop', 'customerTo', 'SPB')
+            ->select('SPB', 'invoiceAop', 'customerTo')
             ->get();
 
         // Ambil data dari tabel intransit_header
         $intransit_aop = $kcpinformation->table('intransit_header')
-            ->whereColumn('no_sp_aop', '!=', 'delivery_note')
             ->orderBy('crea_date', 'desc')
             ->pluck('no_sp_aop');
 
@@ -88,11 +87,6 @@ class SyncController extends Controller
 
             return !$intransit_aop->contains($no_sp_aop); // Cocokkan dengan no_sp_aop yang ada di intransit
         });
-
-        dd($not_intransit);
-
-        // JIKA TERDAPAT DI NOT INTRANSIT MAKA UPDATE
-        // JIKA TIDAK TERDAPAT DI NOT INTRANSIT MAKA CREATE
 
         dd($not_intransit);
 
@@ -194,6 +188,8 @@ class SyncController extends Controller
                 continue;
             }
         }
+
+        dd($result);
 
         // Return hasil dalam bentuk array
         return $result;
