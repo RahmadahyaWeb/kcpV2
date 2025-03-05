@@ -20,7 +20,7 @@
                     </thead>
                     <tbody>
                         @php
-                            $no = 0;
+                            $no = 1;
                         @endphp
 
                         @forelse ($items as $item)
