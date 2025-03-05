@@ -347,8 +347,6 @@ class SyncController extends Controller
             }
         }
 
-        dd($result);
-
         // Return hasil dalam bentuk array
         return $result;
     }
