@@ -78,7 +78,7 @@ class SyncController extends Controller
             ->orderBy('crea_date', 'desc')
             ->pluck('no_sp_aop');
 
-        dd($intransit_aop);
+        dd($invoice_aop);
 
         // Filter invoice yang belum masuk ke intransit
         $not_intransit = $invoice_aop->filter(function ($invoice) use ($intransit_aop) {
@@ -91,6 +91,9 @@ class SyncController extends Controller
 
             return !$intransit_aop->contains($no_sp_aop); // Cocokkan dengan no_sp_aop yang ada di intransit
         });
+
+        // JIKA TERDAPAT DI NOT INTRANSIT MAKA UPDATE
+        // JIKA TIDAK TERDAPAT DI NOT INTRANSIT MAKA CREATE
 
         dd($not_intransit);
 
