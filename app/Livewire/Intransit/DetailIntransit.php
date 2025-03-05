@@ -10,10 +10,21 @@ class DetailIntransit extends Component
     public $target = '';
 
     public $delivery_note;
+    public $selectedItems = [];
 
     public function mount($delivery_note)
     {
         $this->delivery_note = $delivery_note;
+    }
+
+    public function updatedSelectedItems($value)
+    {
+        $selectedItems[] = $value;
+    }
+
+    public function save()
+    {
+        dd($this->selectedItems);
     }
 
     public function render()

@@ -30,7 +30,7 @@
                                 <td>{{ $item->kd_gudang_aop }}</td>
                                 <td>
                                     <a href="{{ route('intransit.detail', $item->delivery_note) }}"
-                                        class="btn btn-primary">Detail</a>
+                                        class="btn btn-sm btn-primary">Detail</a>
                                 </td>
                             </tr>
                         @empty
