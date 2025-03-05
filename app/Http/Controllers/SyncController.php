@@ -211,8 +211,6 @@ class SyncController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        dd($invoice_aop);
-
         // Ambil data dari tabel intransit_header
         // $intransit_aop = $kcpinformation->table('intransit_header')
         //     ->orderBy('crea_date', 'desc')
@@ -320,8 +318,6 @@ class SyncController extends Controller
                 continue;
             }
         }
-
-        dd($result);
 
         // Return hasil dalam bentuk array
         return $result;
