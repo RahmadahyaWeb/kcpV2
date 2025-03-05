@@ -68,14 +68,16 @@ class SyncController extends Controller
         // Ambil data dari tabel invoice_aop_header
         $invoice_aop = $kcpapplication->table('invoice_aop_header')
             ->orderBy('created_at', 'desc')
-            ->select('invoiceAop', 'customerTo')
-            ->groupBy('invoiceAop', 'customerTo')
+            ->select('invoiceAop', 'customerTo', 'SPB')
             ->get();
 
         // Ambil data dari tabel intransit_header
         $intransit_aop = $kcpinformation->table('intransit_header')
+            ->whereColumn('no_sp_aop', '!=', 'delivery_note')
             ->orderBy('crea_date', 'desc')
             ->pluck('no_sp_aop');
+
+        dd($intransit_aop);
 
         // Filter invoice yang belum masuk ke intransit
         $not_intransit = $invoice_aop->filter(function ($invoice) use ($intransit_aop) {
