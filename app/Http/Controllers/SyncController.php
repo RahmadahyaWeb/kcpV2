@@ -70,7 +70,7 @@ class SyncController extends Controller
             ->whereDate('billingDocumentDate', '>=', '2025-02-28')
             ->select('SPB', 'customerTo')
             ->orderBy('created_at', 'desc')
-            ->groupBy('SPB', 'customerTo')
+            // ->groupBy('SPB', 'customerTo')
             ->get();
 
         dd($invoice_aop);
