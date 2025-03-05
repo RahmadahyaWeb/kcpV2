@@ -134,7 +134,7 @@ class SyncController extends Controller
                         ]);
                 }
 
-                // $kcpinformation->commit();
+                $kcpinformation->commit();
 
                 Log::info("Berhasil convert invoice $no_sp_aop");
             } catch (\Exception $e) {
