@@ -58,7 +58,7 @@
     <!-- Floating Button -->
     <div style="position: fixed; bottom: 40px; right: 40px; z-index: 1000;">
         <button class="btn btn-warning" wire:loading.attr="disabled" wire:target="save, selectedItems"
-            wire:click="save" @disabled(count($selectedItems) < 1) wire:confirm="Yakin ingin kirim data ke Bosnet?">
+            wire:click="save" @disabled(count($selectedItems) < 1) wire:confirm="Yakin ingin simpan?">
             <span wire:loading.remove wire:target="save, selectedItems">Simpan</span>
             <span wire:loading wire:target="save, selectedItems">Loading...</span>
         </button>
