@@ -100,8 +100,12 @@
                             <ul>
                                 @foreach ($result['skipped_invoices'] as $invoice)
                                     <li>
-                                        {{ $invoice['invoice'] }} - Tidak valid:
-                                        {{ implode(', ', $invoice['invalid_items']) }}
+                                        {{ $invoice['invoice'] }}
+                                        @if (!empty($invoice['invalid_items']))
+                                            - Tidak valid: {{ implode(', ', $invoice['invalid_items']) }}
+                                        @else
+                                            - Data sudah ada atau tidak perlu di-sync.
+                                        @endif
                                     </li>
                                 @endforeach
                             </ul>
