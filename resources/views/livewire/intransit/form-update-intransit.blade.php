@@ -29,6 +29,9 @@
                             </div>
                             <div class="col-12 mb-3">
                                 <label for="kd_rak" class="form-label">Kode Rak</label>
+
+                                <input type="search" class="form-control" wire:model.live="search_rak">
+
                                 <select name="kd_rak" id="kd_rak"
                                     class="form-select @error('kd_rak') is-invalid @enderror" wire:model="kd_rak">
                                     <option value="">Pilih Kode Rak</option>

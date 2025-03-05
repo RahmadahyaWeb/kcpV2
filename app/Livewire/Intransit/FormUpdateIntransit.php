@@ -8,14 +8,22 @@ use Livewire\Component;
 class FormUpdateIntransit extends Component
 {
     public $target = '';
+
     public $id;
+
     public $qty;
     public $qty_terima;
     public $kd_rak;
+    public $search_rak;
 
     public function mount($id)
     {
         $this->id = $id;
+    }
+
+    public function updatedSearchRak()
+    {
+        $this->reset('kd_rak');
     }
 
     public function render()
@@ -37,6 +45,7 @@ class FormUpdateIntransit extends Component
                 'kd_rak'
             ])
             ->where('kd_gudang', $kd_gudang)
+            ->where('kd_rak', 'like', '%' . $this->search_rak . '%')
             ->orderBy('kd_rak')
             ->get();
 
