@@ -65,8 +65,6 @@ class DetailIntransit extends Component
                         ->where('stock_part.status', 'A')
                         ->first();
 
-                    dd($data_stock_part);
-
                     if (!$data_stock_part) {
                         $kcpinformation->table('stock_part')
                             ->insert([
@@ -106,18 +104,24 @@ class DetailIntransit extends Component
 
                     // LOG STOCK
                     $cek_stock = $kcpinformation->table('stock_part')
-                        ->where('kd_gudang', $item->kd_gudang_aop);
+                        ->where('kd_gudang', $kd_gudang)
+                        ->where('part_no', $item->part_no)
+                        ->first();
+
+                    dd($cek_stock);
 
                     $kcpinformation->table('trns_log_stock')
                         ->insert([
                             'status' => 'PENERIMAAN',
-                            'keteranagn' => "PENERIMAAN " . $item->no_sp_aop . " dengan P/S " . $item->no_packingsheet,
+                            'keterangan' => "PENERIMAAN " . $item->no_sp_aop . " dengan P/S " . $item->no_packingsheet,
                             'kd_gudang' => $kd_gudang,
                             'part_no' => $item->part_no,
                             'qty' => $item->qty,
                             'debet' => $item->qty,
                             'kredit' => 0,
-                            'stock' => 0
+                            'stock' => $cek_stock->stock,
+                            'crea_date' => now(),
+                            'crea_by' => $user
                         ]);
                 }
             }
