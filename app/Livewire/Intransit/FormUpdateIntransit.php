@@ -9,6 +9,9 @@ class FormUpdateIntransit extends Component
 {
     public $target = '';
     public $id;
+    public $qty;
+    public $qty_terima;
+    public $kd_rak;
 
     public function mount($id)
     {
@@ -22,6 +25,10 @@ class FormUpdateIntransit extends Component
         $item = $kcpinformation->table('intransit_details')
             ->where('id', $this->id)
             ->first();
+
+        $this->qty = $item->qty;
+        $this->qty_terima = $item->qty_terima;
+        $this->kd_rak = $item->kd_rak;
 
         $list_rak = $kcpinformation->table('mst_rakgudang')
             ->select([

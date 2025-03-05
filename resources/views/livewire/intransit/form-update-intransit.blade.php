@@ -12,6 +12,11 @@
                     <form wire:submit.prevent="save">
                         <div class="row">
                             <div class="col-12 mb-3">
+                                <label for="qty" class="form-label">Qty Intransit</label>
+                                <input type="number" class="form-control @error('qty') is-invalid @enderror"
+                                    wire:model="qty" disabled>
+                            </div>
+                            <div class="col-12 mb-3">
                                 <label for="qty_terima" class="form-label">Qty diterima</label>
                                 <input type="number" class="form-control @error('qty_terima') is-invalid @enderror"
                                     wire:model="qty_terima">
