@@ -12,8 +12,8 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th></th>
                             <th>No</th>
+                            <th></th>
                             <th>Part Number</th>
                             <th>QTY</th>
                             <th>QTY Terima</th>
@@ -29,10 +29,10 @@
 
                         @forelse ($items as $item)
                             <tr>
+                                <td>{{ $no++ }}</td>
                                 <td>
                                     <input type="checkbox" wire:model.change="selectedItems" value="{{ $item->id }}">
                                 </td>
-                                <td>{{ $no++ }}</td>
                                 <td>{{ $item->part_no }}</td>
                                 <td>{{ $item->qty }}</td>
                                 <td>{{ $item->qty_terima }}</td>
