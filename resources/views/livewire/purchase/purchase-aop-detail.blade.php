@@ -202,10 +202,12 @@
                     @if ($header->flag_final == 'N' && $isAvailable)
                         <div class="row">
                             <div class="col-6 d-grid">
-                                <button type="button" wire:click="calculate('round')" class="btn btn-success">Pembulatan ke atas</button>
+                                <button type="button" wire:click="calculate('round')"
+                                    class="btn btn-success">Pembulatan ke atas</button>
                             </div>
                             <div class="col-6 d-grid">
-                                <button type="button" wire:click="calculate('floor')" class="btn btn-danger">Pembulatan ke bawah</button>
+                                <button type="button" wire:click="calculate('floor')" class="btn btn-danger">Pembulatan
+                                    ke bawah</button>
                             </div>
                             <form wire:submit="updateFlag({{ $header->invoiceAop }})"
                                 wire:confirm="Yakin ingin update flag?">
@@ -324,6 +326,7 @@
                         <table class="table">
                             <thead>
                                 <tr>
+                                    <th>No</th>
                                     <th>Material Number</th>
                                     <th>Material Name</th>
                                     <th>Qty</th>
@@ -331,8 +334,13 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $no = 1;
+                                @endphp
+
                                 @foreach ($details as $item)
                                     <tr>
+                                        <td>{{ $no++ }}</td>
                                         <td>{{ $item->materialNumber }}</td>
                                         <td>{{ $item->nm_part }}</td>
                                         <td>{{ $item->qty }}</td>
