@@ -23,6 +23,7 @@
                             <th>No</th>
                             <th>Delivery Note</th>
                             <th>Kode Gudang</th>
+                            <th>Tanggal</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -36,6 +37,7 @@
                                 <td>{{ $no++ }}</td>
                                 <td class="text-nowrap">{{ $item->delivery_note }}</td>
                                 <td>{{ $item->kd_gudang_aop }}</td>
+                                <td>{{ date('Y-m-d', strtotime($item->tgl_packingsheet)) }}</td>
                                 <td>
                                     <a href="{{ route('intransit.detail', $item->delivery_note) }}"
                                         class="btn btn-sm btn-primary" wire:navigate>Detail</a>
