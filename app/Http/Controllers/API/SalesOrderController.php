@@ -176,10 +176,6 @@ class SalesOrderController extends Controller
 
         $kd_outlet = $this->removeLeadingZero($value->kd_outlet);
 
-        if ($value->part_no == 'H2-51490-KC5-1700') {
-            dd($value->kd_outlet);
-        }
-
         return [
             'szOrderItemTypeId' => "JUAL",
             'szProductId' => $value->part_no,
@@ -259,8 +255,6 @@ class SalesOrderController extends Controller
      */
     private function sendDataToBosnet($data)
     {
-        dd($data);
-
         $credential = TokenBosnetController::signInForSecretKey();
 
         if (isset($credential['status'])) {
@@ -310,27 +304,14 @@ class SalesOrderController extends Controller
             ->get();
     }
 
-    // private function removeLeadingZero($str)
-    // {
-    //     // Cek apakah string dimulai dengan angka 0
-    //     if (preg_match('/^0\d/', $str)) {
-    //         // Mengubah menjadi integer, lalu kembali ke string
-    //         return (string)(int)$str;
-    //     }
-    //     // Jika tidak ada leading zero, kembalikan string aslinya
-    //     return $str;
-    // }
-
     private function removeLeadingZero($str)
     {
-        $str = trim($str); // Hilangkan spasi di awal & akhir
-
-        // Jika string hanya terdiri dari angka, hapus leading zero
-        if (ctype_digit($str)) {
+        // Cek apakah string dimulai dengan angka 0
+        if (preg_match('/^0\d/', $str)) {
+            // Mengubah menjadi integer, lalu kembali ke string
             return (string)(int)$str;
         }
-
-        // Jika string berisi campuran huruf dan angka, kembalikan apa adanya
+        // Jika tidak ada leading zero, kembalikan string aslinya
         return $str;
     }
 }
