@@ -31,8 +31,6 @@ class DetailIntransit extends Component
             ->whereIn('id', $this->selectedItems)
             ->get();
 
-        dd($items);
-
         try {
             $kcpinformation->beginTransaction();
 
