@@ -306,14 +306,27 @@ class SalesOrderController extends Controller
             ->get();
     }
 
+    // private function removeLeadingZero($str)
+    // {
+    //     // Cek apakah string dimulai dengan angka 0
+    //     if (preg_match('/^0\d/', $str)) {
+    //         // Mengubah menjadi integer, lalu kembali ke string
+    //         return (string)(int)$str;
+    //     }
+    //     // Jika tidak ada leading zero, kembalikan string aslinya
+    //     return $str;
+    // }
+
     private function removeLeadingZero($str)
     {
-        // Cek apakah string dimulai dengan angka 0
-        if (preg_match('/^0\d/', $str)) {
-            // Mengubah menjadi integer, lalu kembali ke string
+        $str = trim($str); // Hilangkan spasi di awal & akhir
+
+        // Jika string hanya terdiri dari angka, hapus leading zero
+        if (ctype_digit($str)) {
             return (string)(int)$str;
         }
-        // Jika tidak ada leading zero, kembalikan string aslinya
+
+        // Jika string berisi campuran huruf dan angka, kembalikan apa adanya
         return $str;
     }
 }
