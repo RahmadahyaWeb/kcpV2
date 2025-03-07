@@ -90,11 +90,6 @@ Route::middleware('auth')->group(function () {
 
         // SYNC INTRANSI
         // Route::get('/sync/intransit', [SyncController::class, 'sync_intransit'])->name('sync.intransit');
-
-        // INTRANSIT
-        Route::get('/intransit', IndexIntransit::class)->name('intransit.index');
-        Route::get('/intransit/detail/{delivery_note}', DetailIntransit::class)->name('intransit.detail');
-        Route::get('/intransit/update/{id}', FormUpdateIntransit::class)->name('intransit.update');
     });
 
     /**
@@ -170,6 +165,11 @@ Route::middleware('auth')->group(function () {
 
         // STOCK PART RAK
         Route::get('/part-rak', IndexStockPartRak::class)->name('part-rak.index');
+
+        // INTRANSIT
+        Route::get('/intransit', IndexIntransit::class)->name('intransit.index');
+        Route::get('/intransit/detail/{delivery_note}', DetailIntransit::class)->name('intransit.detail');
+        Route::get('/intransit/update/{id}', FormUpdateIntransit::class)->name('intransit.update');
     });
 
     /**
