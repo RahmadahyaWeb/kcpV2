@@ -176,6 +176,10 @@ class SalesOrderController extends Controller
 
         $kd_outlet = $this->removeLeadingZero($value->kd_outlet);
 
+        if ($value->part_no == 'H2-51490-KC5-1700') {
+            dd($value->kd_outlet);
+        }
+
         return [
             'szOrderItemTypeId' => "JUAL",
             'szProductId' => $value->part_no,
