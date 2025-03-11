@@ -200,7 +200,7 @@
                         </div>
                     </div>
                     @if ($header->flag_final == 'N' && $isAvailable)
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-6 d-grid">
                                 <button type="button" wire:click="calculate('round')"
                                     class="btn btn-success">Pembulatan ke atas</button>
@@ -218,7 +218,7 @@
                                     </button>
                                 </div>
                             </form>
-                        </div>
+                        </div> --}}
                     @elseif($header->flag_final == 'Y' && $header->flag_po == 'N')
                         <div class="row gap-2">
                             <div class="col">
