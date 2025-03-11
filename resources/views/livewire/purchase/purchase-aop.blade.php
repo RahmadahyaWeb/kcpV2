@@ -147,6 +147,7 @@
                         <div class="col-md-3 mb-3">
                             <label class="form-label">Customer To</label>
                             <select class="form-select" wire:model.change="flag_po">
+                                <option value="">ALL</option>
                                 <option value="KCP01001">KALSEL</option>
                                 <option value="KCP02001">KALTENG</option>
                             </select>
