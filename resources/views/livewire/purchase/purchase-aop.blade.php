@@ -145,6 +145,13 @@
                             <input type="date" class="form-control" wire:model.change="tanggalJatuhTempo">
                         </div>
                         <div class="col-md-3 mb-3">
+                            <label class="form-label">Customer To</label>
+                            <select class="form-select" wire:model.change="flag_po">
+                                <option value="KCP01001">KALSEL</option>
+                                <option value="KCP02001">KALTENG</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
                             <label class="form-label">Status</label>
                             <select class="form-select" wire:model.change="flag_po">
                                 <option value="Y">BOSNET</option>
