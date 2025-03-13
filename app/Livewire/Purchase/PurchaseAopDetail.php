@@ -62,7 +62,7 @@ class PurchaseAopDetail extends Component
 
     public function openModalFakturPajak()
     {
-        $invoice = DB::table('invoice_aop_header_new')
+        $invoice = DB::table('invoice_aop_header')
             ->select(['*'])
             ->where('invoiceAop', $this->invoiceAop)
             ->first();
@@ -115,7 +115,7 @@ class PurchaseAopDetail extends Component
 
     public function saveFakturPajak()
     {
-        DB::table('invoice_aop_header_new')
+        DB::table('invoice_aop_header')
             ->where('invoiceAop', $this->invoiceAop)
             ->update([
                 'fakturPajak' => $this->fakturPajak
@@ -126,7 +126,7 @@ class PurchaseAopDetail extends Component
 
     public function updateFlag($invoiceAop)
     {
-        $flag_final = DB::table('invoice_aop_header_new')
+        $flag_final = DB::table('invoice_aop_header')
             ->where('invoiceAop', $invoiceAop)
             ->value('flag_final');
 
@@ -137,7 +137,7 @@ class PurchaseAopDetail extends Component
         }
 
         try {
-            DB::table('invoice_aop_header_new')
+            DB::table('invoice_aop_header')
                 ->where('invoiceAop', $invoiceAop)
                 ->update([
                     'flag_final'  => $flag_final,
@@ -152,7 +152,7 @@ class PurchaseAopDetail extends Component
 
     public function calculate($type)
     {
-        $sum_amount = DB::table('invoice_aop_detail_new')
+        $sum_amount = DB::table('invoice_aop_detail')
             ->where('invoiceAop', $this->invoiceAop)
             ->sum('amount');
 
@@ -164,7 +164,7 @@ class PurchaseAopDetail extends Component
 
         $grand_total = $tax + $sum_amount;
 
-        DB::table('invoice_aop_header_new')
+        DB::table('invoice_aop_header')
             ->where('invoiceAop', $this->invoiceAop)
             ->update([
                 'tax' => $tax,
@@ -174,13 +174,13 @@ class PurchaseAopDetail extends Component
 
     public function render()
     {
-        $header = DB::table('invoice_aop_header_new')
+        $header = DB::table('invoice_aop_header')
             ->select(['*'])
             ->where('invoiceAop', $this->invoiceAop)
             ->first();
 
-        // Mengambil data invoice_aop_detail_new dari database default
-        $details = DB::table('invoice_aop_detail_new')
+        // Mengambil data invoice_aop_detail dari database default
+        $details = DB::table('invoice_aop_detail')
             ->select('*')
             ->where('invoiceAop', $this->invoiceAop)
             ->get();
@@ -205,23 +205,23 @@ class PurchaseAopDetail extends Component
             return $item;
         });
 
-        $totalAmount = DB::table('invoice_aop_detail_new')
+        $totalAmount = DB::table('invoice_aop_detail')
             ->where('invoiceAop', $this->invoiceAop)
             ->sum('amount');
 
-        $totalQty = DB::table('invoice_aop_detail_new')
+        $totalQty = DB::table('invoice_aop_detail')
             ->where('invoiceAop', $this->invoiceAop)
             ->sum('qty');
 
-        $price = DB::table('invoice_aop_detail_new')
+        $price = DB::table('invoice_aop_detail')
             ->where('invoiceAop', $this->invoiceAop)
             ->sum('price');
 
-        $addDiscount = DB::table('invoice_aop_detail_new')
+        $addDiscount = DB::table('invoice_aop_detail')
             ->where('invoiceAop', $this->invoiceAop)
             ->sum('addDiscount');
 
-        $extraPlafonDiscount = DB::table('invoice_aop_detail_new')
+        $extraPlafonDiscount = DB::table('invoice_aop_detail')
             ->where('invoiceAop', $this->invoiceAop)
             ->sum('extraPlafonDiscount');
 
