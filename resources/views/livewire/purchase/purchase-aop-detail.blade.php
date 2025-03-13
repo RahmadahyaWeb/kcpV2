@@ -128,7 +128,7 @@
                                     :
                                 </div>
                                 <div class="col col-auto">
-                                    <div>Rp {{ number_format($header->price, 0, ',', '.') }}</div>
+                                    <div>Rp {{ number_format($totalAmount, 0, ',', '.') }}</div>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -139,7 +139,7 @@
                                     :
                                 </div>
                                 <div class="col col-auto">
-                                    <div>Rp {{ number_format($header->addDiscount, 0, ',', '.') }}</div>
+                                    <div>Rp {{ number_format($addDiscount, 0, ',', '.') }}</div>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -150,7 +150,7 @@
                                     :
                                 </div>
                                 <div class="col col-auto">
-                                    <div>Rp {{ number_format($header->extraPlafonDiscount, 0, ',', '.') }}</div>
+                                    <div>Rp {{ number_format($extraPlafonDiscount, 0, ',', '.') }}</div>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -161,7 +161,7 @@
                                     :
                                 </div>
                                 <div class="col col-auto">
-                                    <div>Rp {{ number_format($header->cashDiscount, 0, ',', '.') }}</div>
+                                    <div>Rp {{ number_format($cashDiscount, 0, ',', '.') }}</div>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -172,7 +172,7 @@
                                     :
                                 </div>
                                 <div class="col col-auto">
-                                    <div>Rp {{ number_format($header->netSales, 0, ',', '.') }}</div>
+                                    <div>Rp {{ number_format($netSales, 0, ',', '.') }}</div>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -183,7 +183,7 @@
                                     :
                                 </div>
                                 <div class="col col-auto">
-                                    <div>Rp {{ number_format($header->tax, 0, ',', '.') }}</div>
+                                    <div>Rp {{ number_format($tax, 0, ',', '.') }}</div>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -194,7 +194,7 @@
                                     :
                                 </div>
                                 <div class="col col-auto">
-                                    <div>Rp {{ number_format($header->grandTotal, 0, ',', '.') }}</div>
+                                    <div>Rp {{ number_format($grandTotal, 0, ',', '.') }}</div>
                                 </div>
                             </div>
                         </div>
@@ -327,6 +327,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>SPB</th>
                                     <th>Material Number</th>
                                     <th>Material Name</th>
                                     <th>Qty</th>
@@ -341,10 +342,11 @@
                                 @foreach ($details as $item)
                                     <tr>
                                         <td>{{ $no++ }}</td>
+                                        <td>{{ $item->SPB }}</td>
                                         <td>{{ $item->materialNumber }}</td>
                                         <td>{{ $item->nm_part }}</td>
                                         <td>{{ $item->qty }}</td>
-                                        <td>{{ number_format($item->price, 0, ',', '.') }}</td>
+                                        <td>{{ number_format($item->amount, 0, ',', '.') }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

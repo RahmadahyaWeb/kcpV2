@@ -25,6 +25,14 @@ class PurchaseAopDetail extends Component
     public $totalAmount;
     public $totalQty;
 
+    public $price;
+    public $addDiscount;
+    public $extraPlafonDiscount;
+    public $cashDiscount;
+    public $netSales;
+    public $tax;
+    public $grandTotal;
+
     #[Validate('required')]
     public $potonganProgram = '';
 
@@ -54,7 +62,7 @@ class PurchaseAopDetail extends Component
 
     public function openModalFakturPajak()
     {
-        $invoice = DB::table('invoice_aop_header')
+        $invoice = DB::table('invoice_aop_header_new')
             ->select(['*'])
             ->where('invoiceAop', $this->invoiceAop)
             ->first();
@@ -107,7 +115,7 @@ class PurchaseAopDetail extends Component
 
     public function saveFakturPajak()
     {
-        DB::table('invoice_aop_header')
+        DB::table('invoice_aop_header_new')
             ->where('invoiceAop', $this->invoiceAop)
             ->update([
                 'fakturPajak' => $this->fakturPajak
@@ -118,7 +126,7 @@ class PurchaseAopDetail extends Component
 
     public function updateFlag($invoiceAop)
     {
-        $flag_final = DB::table('invoice_aop_header')
+        $flag_final = DB::table('invoice_aop_header_new')
             ->where('invoiceAop', $invoiceAop)
             ->value('flag_final');
 
@@ -129,7 +137,7 @@ class PurchaseAopDetail extends Component
         }
 
         try {
-            DB::table('invoice_aop_header')
+            DB::table('invoice_aop_header_new')
                 ->where('invoiceAop', $invoiceAop)
                 ->update([
                     'flag_final'  => $flag_final,
@@ -144,7 +152,7 @@ class PurchaseAopDetail extends Component
 
     public function calculate($type)
     {
-        $sum_amount = DB::table('invoice_aop_detail')
+        $sum_amount = DB::table('invoice_aop_detail_new')
             ->where('invoiceAop', $this->invoiceAop)
             ->sum('amount');
 
@@ -156,7 +164,7 @@ class PurchaseAopDetail extends Component
 
         $grand_total = $tax + $sum_amount;
 
-        DB::table('invoice_aop_header')
+        DB::table('invoice_aop_header_new')
             ->where('invoiceAop', $this->invoiceAop)
             ->update([
                 'tax' => $tax,
@@ -166,13 +174,13 @@ class PurchaseAopDetail extends Component
 
     public function render()
     {
-        $header = DB::table('invoice_aop_header')
+        $header = DB::table('invoice_aop_header_new')
             ->select(['*'])
             ->where('invoiceAop', $this->invoiceAop)
             ->first();
 
-        // Mengambil data invoice_aop_detail dari database default
-        $details = DB::table('invoice_aop_detail')
+        // Mengambil data invoice_aop_detail_new dari database default
+        $details = DB::table('invoice_aop_detail_new')
             ->select('*')
             ->where('invoiceAop', $this->invoiceAop)
             ->get();
@@ -197,13 +205,32 @@ class PurchaseAopDetail extends Component
             return $item;
         });
 
-        $totalAmount = DB::table('invoice_aop_detail')
+        $totalAmount = DB::table('invoice_aop_detail_new')
             ->where('invoiceAop', $this->invoiceAop)
             ->sum('amount');
 
-        $totalQty = DB::table('invoice_aop_detail')
+        $totalQty = DB::table('invoice_aop_detail_new')
             ->where('invoiceAop', $this->invoiceAop)
             ->sum('qty');
+
+        $price = DB::table('invoice_aop_detail_new')
+            ->where('invoiceAop', $this->invoiceAop)
+            ->sum('price');
+
+        $addDiscount = DB::table('invoice_aop_detail_new')
+            ->where('invoiceAop', $this->invoiceAop)
+            ->sum('addDiscount');
+
+        $extraPlafonDiscount = DB::table('invoice_aop_detail_new')
+            ->where('invoiceAop', $this->invoiceAop)
+            ->sum('extraPlafonDiscount');
+
+        $this->price = $price;
+        $this->addDiscount = $addDiscount;
+        $this->extraPlafonDiscount = $extraPlafonDiscount;
+        $this->netSales = $totalAmount - $extraPlafonDiscount;
+        $this->tax = intval($this->netSales * config('tax.ppn_percentage'));
+        $this->grandTotal = $this->netSales + $this->tax;
 
         $this->totalAmount = $totalAmount;
         $this->totalQty = $totalQty;

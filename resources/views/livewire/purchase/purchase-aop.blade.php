@@ -174,14 +174,6 @@
                                     <th>Customer To</th>
                                     <th>Billing Document Date</th>
                                     <th>Tgl. Jatuh Tempo</th>
-                                    <th>Harga (Rp)</th>
-                                    <th>Add Discount (Rp)</th>
-                                    <th>Amount (Rp)</th>
-                                    <th>Cash Discount (Rp)</th>
-                                    <th>Extra Plafon Discount (Rp)</th>
-                                    <th>Net Sales (Rp)</th>
-                                    <th>Tax (Rp)</th>
-                                    <th>Grand Total (Rp)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -200,19 +192,10 @@
                                         </td>
                                         <td style="white-space: nowrap">
                                             {{ date('d-m-Y', strtotime($item->tanggalJatuhTempo)) }}</td>
-                                        <td>{{ number_format($item->price, 0, ',', '.') }}</td>
-                                        <td>{{ number_format($item->addDiscount, 0, ',', '.') }}</td>
-                                        <td>{{ number_format($item->amount, 0, ',', '.') }}</td>
-                                        <td>{{ number_format($item->cashDiscount, 0, ',', '.') }}</td>
-                                        <td>{{ number_format($item->extraPlafonDiscount, 0, ',', '.') }}
-                                        </td>
-                                        <td>{{ number_format($item->netSales, 0, ',', '.') }}</td>
-                                        <td>{{ number_format($item->tax, 0, ',', '.') }}</td>
-                                        <td>{{ number_format($item->grandTotal, 0, ',', '.') }}</td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="12" class="text-center">No Data</td>
+                                        <td colspan="5" class="text-center">No Data</td>
                                     </tr>
                                 @endforelse
                             </tbody>

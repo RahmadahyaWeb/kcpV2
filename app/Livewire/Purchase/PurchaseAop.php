@@ -121,38 +121,69 @@ class PurchaseAop extends Component
 
     public function combinedRawData($suratTagihanArray, $rekapTagihanArray)
     {
-        // PROSES PENGGABUNGAN DATA MENTAH SURAT TAGIHAN DAN REKAP TAGIHAN
+        // Ambil semua billing number unik dari surat tagihan
+        $billingNumbers = array_unique(array_column($suratTagihanArray, 2));
+
+        // Filter rekap tagihan hanya untuk billing number yang ada di surat tagihan
+        $filteredRekapTagihan = array_values(array_filter($rekapTagihanArray, function ($item) use ($billingNumbers) {
+            return isset($item[2]) && in_array($item[2], $billingNumbers);
+        }));
+
         $combinedArray = [];
 
-        foreach ($suratTagihanArray as $index => $suratData) {
-            if (isset($rekapTagihanArray[$index])) {
-                $rekapData = $rekapTagihanArray[$index];
+        foreach ($suratTagihanArray as $suratData) {
+            $billingNumber = $suratData[2]; // Ambil billing number dari surat tagihan
+            $billingAmount = intval($suratData[6]);
 
+            // Filter rekap tagihan yang memiliki billing number yang sama
+            $matchingRekap = array_values(array_filter($filteredRekapTagihan, function ($item) use ($billingNumber) {
+                return isset($item[2]) && $item[2] == $billingNumber;
+            }));
+
+            // Cari nilai terdekat di rekapTagihanArray
+            $closestRekap = null;
+            $closestDiff = PHP_INT_MAX;
+
+            foreach ($matchingRekap as $rekapData) {
+                $rekapAmountPPN = intval($rekapData[5]); // Ambil nilai BILLING_AMOUNT_PPN
+                $estimatedAmount = $rekapAmountPPN / 1.11; // Perhitungan yang benar
+
+                // Hitung selisih antara billing amount dengan estimated amount
+                $diff = abs($billingAmount - $estimatedAmount);
+
+                if ($diff < $closestDiff) {
+                    $closestDiff = $diff;
+                    $closestRekap = $rekapData;
+                }
+            }
+
+            if ($closestRekap !== null) {
                 $combinedArray[] = [
                     'CUSTOMER_NUMBER'       => $suratData[0],
                     'CUSTOMER_NAME'         => $suratData[1],
-                    'BILLING_NUMBER'        => $suratData[2],
+                    'BILLING_NUMBER'        => $billingNumber,
                     'BILLING_DOCUMENT_DATE' => $suratData[3],
                     'MATERIAL_NUMBER'       => $suratData[4],
                     'BILLING_QTY'           => intval($suratData[5]),
-                    'BILLING_AMOUNT'        => intval($suratData[6]),
+                    'BILLING_AMOUNT'        => $billingAmount,
                     'SPB_NO'                => $suratData[7],
                     'TANGGAL_CETAK_FAKTUR'  => $suratData[8],
                     'TANGGAL_JATUH_TEMPO'   => $suratData[9],
-                    'BILLING_AMOUNT_PPN'    => intval($rekapData[5]),
-                    'ADD_DISCOUNT'          => isset($rekapData[6]) ? intval($rekapData[6]) : 0,
-                    'CASH_DISCOUNT'         => isset($rekapData[7]) ? intval($rekapData[7]) : 0,
-                    'EXTRA_DISCOUNT'        => isset($rekapData[8]) ? intval($rekapData[8]) : 0,
+                    'BILLING_AMOUNT_PPN'    => intval($closestRekap[5]),
+                    'ADD_DISCOUNT'          => isset($closestRekap[6]) ? intval($closestRekap[6]) : 0,
+                    'CASH_DISCOUNT'         => isset($closestRekap[7]) ? intval($closestRekap[7]) : 0,
+                    'EXTRA_DISCOUNT'        => isset($closestRekap[8]) ? intval($closestRekap[8]) : 0,
                 ];
             } else {
+                // Jika tidak ada nilai yang mendekati, set default 0
                 $combinedArray[] = [
                     'CUSTOMER_NUMBER'       => $suratData[0],
                     'CUSTOMER_NAME'         => $suratData[1],
-                    'BILLING_NUMBER'        => $suratData[2],
+                    'BILLING_NUMBER'        => $billingNumber,
                     'BILLING_DOCUMENT_DATE' => $suratData[3],
                     'MATERIAL_NUMBER'       => $suratData[4],
                     'BILLING_QTY'           => intval($suratData[5]),
-                    'BILLING_AMOUNT'        => intval($suratData[6]),
+                    'BILLING_AMOUNT'        => $billingAmount,
                     'SPB_NO'                => $suratData[7],
                     'TANGGAL_CETAK_FAKTUR'  => $suratData[8],
                     'TANGGAL_JATUH_TEMPO'   => $suratData[9],
@@ -169,12 +200,12 @@ class PurchaseAop extends Component
 
     public function groupedCombinedArray($combinedArray)
     {
-        // Group by BILLING_NUMBER and MATERIAL_NUMBER
+        // Group by BILLING_NUMBER, SPB_NO, and MATERIAL_NUMBER
         $groupedArray = [];
         $groupedData = [];
 
         foreach ($combinedArray as $item) {
-            $key = $item['BILLING_NUMBER'] . '|' . $item['MATERIAL_NUMBER'];
+            $key = $item['BILLING_NUMBER'] . '|' . $item['SPB_NO'] . '|' . $item['MATERIAL_NUMBER'];
 
             if (!isset($groupedArray[$key])) {
                 $groupedArray[$key] = [
@@ -182,10 +213,10 @@ class PurchaseAop extends Component
                     'CUSTOMER_NAME'             => $item['CUSTOMER_NAME'],
                     'BILLING_NUMBER'            => $item['BILLING_NUMBER'],
                     'BILLING_DOCUMENT_DATE'     => $item['BILLING_DOCUMENT_DATE'],
+                    'SPB_NO'                    => $item['SPB_NO'],
                     'MATERIAL_NUMBER'           => $item['MATERIAL_NUMBER'],
                     'BILLING_QTY'               => 0,
                     'BILLING_AMOUNT'            => 0,
-                    'SPB_NO'                    => $item['SPB_NO'],
                     'TANGGAL_CETAK_FAKTUR'      => $item['TANGGAL_CETAK_FAKTUR'],
                     'TANGGAL_JATUH_TEMPO'       => $item['TANGGAL_JATUH_TEMPO'],
                     'BILLING_AMOUNT_PPN'        => 0,
@@ -197,15 +228,24 @@ class PurchaseAop extends Component
 
             $groupedArray[$key]['BILLING_QTY'] += $item['BILLING_QTY'];
             $groupedArray[$key]['BILLING_AMOUNT'] += $item['BILLING_AMOUNT'];
-            $groupedArray[$key]['EXTRA_DISCOUNT'] += $item['EXTRA_DISCOUNT'];
-            $groupedArray[$key]['CASH_DISCOUNT'] += $item['CASH_DISCOUNT'];
-            $groupedArray[$key]['CASH_DISCOUNT'] += $item['CASH_DISCOUNT'];
             $groupedArray[$key]['BILLING_AMOUNT_PPN'] += $item['BILLING_AMOUNT_PPN'];
             $groupedArray[$key]['ADD_DISCOUNT'] += $item['ADD_DISCOUNT'];
+            $groupedArray[$key]['CASH_DISCOUNT'] += $item['CASH_DISCOUNT'];
+            $groupedArray[$key]['EXTRA_DISCOUNT'] += $item['EXTRA_DISCOUNT'];
         }
 
+        // Ubah dari associative array ke indexed array
         $groupedArray = array_values($groupedArray);
 
+        // Tambahkan filter sementara untuk hanya menampilkan data dengan BILLING_NUMBER 4009709627
+        $filteredGroupedArray = array_filter($groupedArray, function ($item) {
+            return $item['BILLING_NUMBER'] == '4009709627';
+        });
+
+        // Konversi ke array numerik kembali setelah filter
+        $filteredGroupedArray = array_values($filteredGroupedArray);
+
+        // Group data berdasarkan BILLING_NUMBER
         foreach ($groupedArray as $item) {
             $billingNumber = $item['BILLING_NUMBER'];
             if (!isset($groupedData[$billingNumber])) {
@@ -236,95 +276,104 @@ class PurchaseAop extends Component
 
     public function createInvoiceHeader($groupedData)
     {
-        foreach ($groupedData as $billingNumber => $data) {
-            $qty = 0;
-            $addDiscount = 0;
-            $amount = 0;
-            $price = 0;
-            $extraPlafonDiscount = 0;
-            $netSales = 0;
-            $tax = 0;
-            $grandTotal = 0;
-            $cashDiscount = 0;
+        $dataToInsert = []; // Array untuk menyimpan semua data sebelum insert
 
-            foreach ($data as $key => $value) {
-                $qty += $value['BILLING_QTY'];
-                $amount += $value['BILLING_AMOUNT'] + $value['EXTRA_DISCOUNT'];
-                $addDiscount += $value['ADD_DISCOUNT'];
-                $extraPlafonDiscount += $value['EXTRA_DISCOUNT'];
-                $cashDiscount += $value['CASH_DISCOUNT'];
+        foreach ($groupedData as $billingNumber => $data) {
+            // Kumpulkan semua SPB_NO unik
+            $spbNos = [];
+            $billingQty = 0;
+
+            foreach ($data as $value) {
+                if (!in_array($value['SPB_NO'], $spbNos)) {
+                    $spbNos[] = $value['SPB_NO'];
+                }
+
+                // Hitung total billingQty
+                $billingQty += $value['BILLING_QTY'];
             }
 
-            $price = $amount + $addDiscount;
-            $netSales = $amount - $extraPlafonDiscount;
-            $tax = floor($netSales * config('tax.ppn_percentage'));
-            $grandTotal = intval($netSales + $tax);
+            $spbNoString = implode(',', $spbNos);
 
             // CEK APAKAH DATA SUDAH ADA SEBELUMNYA
-            $exists = DB::table('invoice_aop_header')
-                ->where('invoiceAop', $data[0]['BILLING_NUMBER'])
+            $exists = DB::table('invoice_aop_header_new')
+                ->where('invoiceAop', $billingNumber)
                 ->exists();
 
-            // PROSES PENYIMPANAN KE DALAM TABLE INVOICE_AOP_HEADER
             if (!$exists) {
-                DB::table('invoice_aop_header')->insert([
-                    'invoiceAop'            => $data[0]['BILLING_NUMBER'],
-                    'SPB'                   => $data[0]['SPB_NO'],
+                $dataToInsert[] = [
+                    'invoiceAop'            => $billingNumber,
+                    'SPB'                   => $spbNoString,
                     'customerTo'            => $data[0]['CUSTOMER_NUMBER'],
                     'customerName'          => $data[0]['CUSTOMER_NAME'],
                     'kdGudang'              => $data[0]['CUSTOMER_NUMBER'] == 'KCP01001' ? 'GD1' : 'GD2',
                     'billingDocumentDate'   => date('Y-m-d', strtotime($data[0]['BILLING_DOCUMENT_DATE'])),
                     'tanggalCetakFaktur'    => $data[0]['TANGGAL_CETAK_FAKTUR'] == '00.00.0000' ? NULL : date('Y-m-d', strtotime($data[0]['TANGGAL_CETAK_FAKTUR'])),
                     'tanggalJatuhTempo'     => date('Y-m-d', strtotime($data[0]['TANGGAL_JATUH_TEMPO'])),
-                    'qty'                   => $qty,
-                    'price'                 => $price,
-                    'addDiscount'           => $addDiscount,
-                    'amount'                => $amount,
-                    'cashDiscount'          => $cashDiscount,
-                    'netSales'              => $netSales,
-                    'tax'                   => $tax,
-                    'grandTotal'            => $grandTotal,
-                    'extraPlafonDiscount'   => $extraPlafonDiscount,
+                    'qty'                   => $billingQty,
+                    'price'                 => 0,
+                    'addDiscount'           => 0,
+                    'extraPlafonDiscount'   => 0,
+                    'cashDiscount'          => 0,
+                    'netSales'              => 0,
+                    'tax'                   => 0,
+                    'amount'                => 0,
+                    'grandTotal'            => 0,
                     'uploaded_by'           => Auth::user()->username,
                     'created_at'            => now(),
                     'updated_at'            => now(),
-                ]);
+                ];
             }
+        }
+
+        // Debugging untuk melihat semua data yang akan disimpan
+        // dd($dataToInsert);
+
+        // Jika data tidak kosong, lakukan insert
+        if (!empty($dataToInsert)) {
+            DB::table('invoice_aop_header_new')->insert($dataToInsert);
         }
     }
 
     public function createInvoiceDetail($groupedArray)
     {
-        foreach ($groupedArray as $billingNumber => $data) {
+        $dataToInsert = []; // Array untuk menyimpan semua data sebelum insert
+
+        foreach ($groupedArray as $data) {
             // CEK APAKAH DATA SUDAH ADA SEBELUMNYA
-            $exists = DB::table('invoice_aop_detail')
+            $exists = DB::table('invoice_aop_detail_new')
                 ->where('invoiceAop', $data['BILLING_NUMBER'])
                 ->where('materialNumber', $data['MATERIAL_NUMBER'])
+                ->where('SPB', $data['SPB_NO'])
                 ->exists();
 
             if (!$exists) {
-                DB::table('invoice_aop_detail')
-                    ->insert([
-                        'invoiceAop'            => $data['BILLING_NUMBER'],
-                        'SPB'                   => $data['SPB_NO'],
-                        'customerTo'            => $data['CUSTOMER_NUMBER'],
-                        'materialNumber'        => $data['MATERIAL_NUMBER'],
-                        'qty'                   => $data['BILLING_QTY'],
-                        'price'                 => $data['BILLING_AMOUNT'],
-                        'extraPlafonDiscount'   => $data['EXTRA_DISCOUNT'],
-                        'amount'                => $data['BILLING_AMOUNT'] + $data['EXTRA_DISCOUNT'],
-                        'addDiscount'           => $data['ADD_DISCOUNT'],
-                        'uploaded_by'           => Auth::user()->username,
-                        'created_at'            => now(),
-                        'updated_at'            => now()
-                    ]);
+                $dataToInsert[] = [
+                    'invoiceAop'            => $data['BILLING_NUMBER'],
+                    'SPB'                   => $data['SPB_NO'],
+                    'customerTo'            => $data['CUSTOMER_NUMBER'],
+                    'materialNumber'        => $data['MATERIAL_NUMBER'],
+                    'qty'                   => $data['BILLING_QTY'],
+                    'price'                 => $data['BILLING_AMOUNT'],
+                    'extraPlafonDiscount'   => $data['EXTRA_DISCOUNT'],
+                    'amount'                => $data['BILLING_AMOUNT'] + $data['EXTRA_DISCOUNT'],
+                    'addDiscount'           => $data['ADD_DISCOUNT'],
+                    'uploaded_by'           => Auth::user()->username,
+                    'created_at'            => now(),
+                    'updated_at'            => now()
+                ];
             }
+        }
+
+        // Jika ada data yang akan dimasukkan, lakukan insert sekaligus (bulk insert)
+        if (!empty($dataToInsert)) {
+            DB::table('invoice_aop_detail_new')->insert($dataToInsert);
         }
     }
 
+
     public function render()
     {
-        $items = DB::table('invoice_aop_header')
+        $items = DB::table('invoice_aop_header_new')
             ->select(['*'])
             ->where('invoiceAop', 'like', '%' . $this->invoiceAop . '%')
             ->where('SPB', 'like', '%' . $this->dn . '%')
