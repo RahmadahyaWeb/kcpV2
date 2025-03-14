@@ -27,11 +27,15 @@ class PurchaseAopDetail extends Component
 
     public $price;
     public $addDiscount;
-    public $extraPlafonDiscount;
+    public $extraPlafonDiscount_upload;
+    public $extraPlafonDiscount_input;
     public $cashDiscount;
-    public $netSales;
-    public $tax;
-    public $grandTotal;
+    public $netSales_input;
+    public $netSales_upload;
+    public $tax_input;
+    public $tax_upload;
+    public $grandTotal_input;
+    public $grandTotal_upload;
 
     #[Validate('required')]
     public $potonganProgram = '';
@@ -172,6 +176,31 @@ class PurchaseAopDetail extends Component
             ]);
     }
 
+    public function saveChanges($materialNumber)
+    {
+        $total_amount_input = $this->details[$materialNumber]['amount']; // 500.000
+        $total_qty = $this->details[$materialNumber]['qty']; // 11
+
+        // Find the correct detail item by $id
+        $items = DB::table('invoice_aop_detail')
+            ->where('invoiceAop', $this->invoiceAop)
+            ->where('materialNumber', $materialNumber);
+
+        $price_per_pcs = $total_amount_input / $total_qty; // 45454
+
+        foreach ($items->get() as $value) {
+            DB::table('invoice_aop_detail')
+                ->where('invoiceAop', $this->invoiceAop)
+                ->where('materialNumber', $materialNumber)
+                ->where('id', $value->id)
+                ->update([
+                    'amount' => $price_per_pcs * $value->qty
+                ]);
+        }
+    }
+
+    public $details = [];
+
     public function render()
     {
         $header = DB::table('invoice_aop_header')
@@ -183,6 +212,7 @@ class PurchaseAopDetail extends Component
         $details = DB::table('invoice_aop_detail')
             ->select('*')
             ->where('invoiceAop', $this->invoiceAop)
+            ->orderBy('materialNumber', 'asc')
             ->get();
 
         // Mengambil data nm_part dari database 'kcpinformation'
@@ -205,32 +235,55 @@ class PurchaseAopDetail extends Component
             return $item;
         });
 
-        $totalAmount = DB::table('invoice_aop_detail')
-            ->where('invoiceAop', $this->invoiceAop)
-            ->sum('amount');
+        // Group the details by materialNumber and sum qty and amount
+        $detailsGrouped = $details->groupBy('materialNumber')->map(function ($group) {
+            return [
+                'materialNumber' => $group->first()->materialNumber,
+                'nm_part' => $group->first()->nm_part,
+                'qty' => $group->sum('qty'),
+                'amount' => $group->sum('amount'),
+            ];
+        });
 
-        $totalQty = DB::table('invoice_aop_detail')
-            ->where('invoiceAop', $this->invoiceAop)
-            ->sum('qty');
+        // Update the details property to the grouped data
+        $this->details = $detailsGrouped;
 
+        // Kalkulasi totalAmount, totalQty, price, addDiscount, extraPlafonDiscount, dll.
+        $totalAmount = $detailsGrouped->sum('amount');
+        $totalQty = $detailsGrouped->sum('qty');
+
+        // Additional calculations for price, discounts, etc.
         $price = DB::table('invoice_aop_detail')
             ->where('invoiceAop', $this->invoiceAop)
             ->sum('price');
-
         $addDiscount = DB::table('invoice_aop_detail')
             ->where('invoiceAop', $this->invoiceAop)
             ->sum('addDiscount');
-
-        $extraPlafonDiscount = DB::table('invoice_aop_detail')
+        $extraPlafonDiscount_upload = DB::table('invoice_aop_detail')
             ->where('invoiceAop', $this->invoiceAop)
             ->sum('extraPlafonDiscount');
 
+        $dataProgramAop = DB::table('program_aop')
+            ->select(['*'])
+            ->where('invoiceAop', $this->invoiceAop);
+
+        $programAop = $dataProgramAop->get();
+
+        $extraPlafonDiscount_input = $dataProgramAop->sum('potonganProgram');
+
+        $this->extraPlafonDiscount_input = $extraPlafonDiscount_input;
         $this->price = $price;
         $this->addDiscount = $addDiscount;
-        $this->extraPlafonDiscount = $extraPlafonDiscount;
-        $this->netSales = $totalAmount - $extraPlafonDiscount;
-        $this->tax = intval($this->netSales * config('tax.ppn_percentage'));
-        $this->grandTotal = $this->netSales + $this->tax;
+        $this->extraPlafonDiscount_upload = $extraPlafonDiscount_upload;
+
+        $this->netSales_input = $totalAmount - $extraPlafonDiscount_input;
+        $this->netSales_upload = $totalAmount - $extraPlafonDiscount_upload;
+
+        $this->tax_input = intval($this->netSales_input * config('tax.ppn_percentage'));
+        $this->tax_upload = intval($this->netSales_upload * config('tax.ppn_percentage'));
+
+        $this->grandTotal_input = $this->netSales_input + $this->tax_input;
+        $this->grandTotal_upload = $this->netSales_upload + $this->tax_upload;
 
         $this->totalAmount = $totalAmount;
         $this->totalQty = $totalQty;
@@ -239,15 +292,6 @@ class PurchaseAopDetail extends Component
         $this->tanggalInvoice = $header->billingDocumentDate;
         $this->customerTo = $header->customerTo;
 
-        $programAop = DB::table('program_aop')
-            ->select(['*'])
-            ->where('invoiceAop', $this->invoiceAop)
-            ->get();
-
-        return view('livewire.purchase.purchase-aop-detail', compact(
-            'header',
-            'details',
-            'programAop'
-        ));
+        return view('livewire.purchase.purchase-aop-detail', compact('header', 'programAop'));
     }
 }

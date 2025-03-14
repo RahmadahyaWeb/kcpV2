@@ -16,209 +16,145 @@
                     Detail Invoice Astra Otoparts (AOP): <b>{{ $header->invoiceAop }}</b>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="row mb-3">
-                                <div class="col col-4 col-md-4">
-                                    <div>Invoice AOP</div>
-                                </div>
-                                <div class="col col-auto">
-                                    :
-                                </div>
-                                <div class="col col-auto">
-                                    <div>{{ $header->invoiceAop }}</div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col col-4 col-md-4">
-                                    <div>Customer To</div>
-                                </div>
-                                <div class="col col-auto">
-                                    :
-                                </div>
-                                <div class="col col-auto">
-                                    <div>{{ $header->customerTo }}</div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col col-4 col-md-4">
-                                    <div>No. SPB</div>
-                                </div>
-                                <div class="col col-auto">
-                                    :
-                                </div>
-                                <div class="col col-auto">
-                                    <div>{{ $header->SPB }}</div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col col-4 col-md-4">
-                                    <div>Billing Document Date</div>
-                                </div>
-                                <div class="col col-auto">
-                                    :
-                                </div>
-                                <div class="col col-auto">
-                                    <div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Invoice AOP</td>
+                                    <td>{{ $header->invoiceAop }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Customer To</td>
+                                    <td>{{ $header->customerTo }}</td>
+                                </tr>
+                                <tr>
+                                    <td>No. SPB</td>
+                                    <td>{{ $header->SPB }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Billing Document Date</td>
+                                    <td>
                                         @if ($header->billingDocumentDate != null)
                                             {{ date('d-m-Y', strtotime($header->billingDocumentDate)) }}
                                         @else
                                             -
                                         @endif
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col col-4 col-md-4">
-                                    <div>Tgl. Cetak Faktur</div>
-                                </div>
-                                <div class="col col-auto">
-                                    :
-                                </div>
-                                <div class="col col-auto">
-                                    <div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Tgl. Cetak Faktur</td>
+                                    <td>
                                         @if ($header->tanggalCetakFaktur != null)
                                             {{ date('d-m-Y', strtotime($header->tanggalCetakFaktur)) }}
                                         @else
                                             -
                                         @endif
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col col-4 col-md-4">
-                                    <div>Tgl. Jatuh Tempo</div>
-                                </div>
-                                <div class="col col-auto">
-                                    :
-                                </div>
-                                <div class="col col-auto">
-                                    <div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Tgl. Jatuh Tempo</td>
+                                    <td>
                                         @if ($header->tanggalJatuhTempo != null)
                                             {{ date('d-m-Y', strtotime($header->tanggalJatuhTempo)) }}
                                         @else
                                             -
                                         @endif
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col col-4 col-md-4">
-                                    <div>Faktur Pajak</div>
-                                </div>
-                                <div class="col col-auto">
-                                    :
-                                </div>
-                                <div class="col col-auto">
-                                    <div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Faktur Pajak</td>
+                                    <td>
                                         <div class="d-inline text-primary" style="cursor: pointer"
                                             wire:click="openModalFakturPajak">
                                             {{ empty($header->fakturPajak) ? 'Belum ada' : $header->fakturPajak }}
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="row mb-3">
-                                <div class="col col-4 col-md-4">
-                                    <div>Harga</div>
-                                </div>
-                                <div class="col col-auto">
-                                    :
-                                </div>
-                                <div class="col col-auto">
-                                    <div>Rp {{ number_format($totalAmount, 0, ',', '.') }}</div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col col-4 col-md-4">
-                                    <div>Additional Discount</div>
-                                </div>
-                                <div class="col col-auto">
-                                    :
-                                </div>
-                                <div class="col col-auto">
-                                    <div>Rp {{ number_format($addDiscount, 0, ',', '.') }}</div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col col-4 col-md-4">
-                                    <div>Extra Plafon Discount</div>
-                                </div>
-                                <div class="col col-auto">
-                                    :
-                                </div>
-                                <div class="col col-auto">
-                                    <div>Rp {{ number_format($extraPlafonDiscount, 0, ',', '.') }}</div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col col-4 col-md-4">
-                                    <div>Cash Discount</div>
-                                </div>
-                                <div class="col col-auto">
-                                    :
-                                </div>
-                                <div class="col col-auto">
-                                    <div>Rp {{ number_format($cashDiscount, 0, ',', '.') }}</div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col col-4 col-md-4">
-                                    <div>Net Sales</div>
-                                </div>
-                                <div class="col col-auto">
-                                    :
-                                </div>
-                                <div class="col col-auto">
-                                    <div>Rp {{ number_format($netSales, 0, ',', '.') }}</div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col col-4 col-md-4">
-                                    <div>Tax</div>
-                                </div>
-                                <div class="col col-auto">
-                                    :
-                                </div>
-                                <div class="col col-auto">
-                                    <div>Rp {{ number_format($tax, 0, ',', '.') }}</div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col col-4 col-md-4">
-                                    <div>Grand Total</div>
-                                </div>
-                                <div class="col col-auto">
-                                    :
-                                </div>
-                                <div class="col col-auto">
-                                    <div>Rp {{ number_format($grandTotal, 0, ',', '.') }}</div>
-                                </div>
-                            </div>
-                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Upload</th>
+                                    <th>Input</th>
+                                    <th>Keterangan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Harga</td>
+                                    <td>Rp {{ number_format($totalAmount, 0, ',', '.') }}</td>
+                                    <td>Rp {{ number_format($totalAmount, 0, ',', '.') }}</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td>Additional Discount</td>
+                                    <td>Rp {{ number_format($addDiscount, 0, ',', '.') }}</td>
+                                    <td>Rp {{ number_format($addDiscount, 0, ',', '.') }}</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr
+                                    class="{{ $extraPlafonDiscount_input != $extraPlafonDiscount_upload ? 'table-danger' : '' }}">
+                                    <td>Extra Plafon Discount</td>
+                                    <td>Rp {{ number_format($extraPlafonDiscount_upload, 0, ',', '.') }}</td>
+                                    <td>Rp {{ number_format($extraPlafonDiscount_input, 0, ',', '.') }}</td>
+                                    <td>{{ $extraPlafonDiscount_input != $extraPlafonDiscount_upload ? 'Nominal tidak sama' : '-' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Cash Discount</td>
+                                    <td>Rp {{ number_format($cashDiscount, 0, ',', '.') }}</td>
+                                    <td>Rp {{ number_format($cashDiscount, 0, ',', '.') }}</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr class="{{ $netSales_input != $netSales_upload ? 'table-danger' : '' }}">
+                                    <td>Net Sales</td>
+                                    <td>Rp {{ number_format($netSales_upload, 0, ',', '.') }}</td>
+                                    <td>Rp {{ number_format($netSales_input, 0, ',', '.') }}</td>
+                                    <td>{{ $netSales_input != $netSales_upload ? 'Nominal tidak sama' : '-' }}</td>
+                                </tr>
+                                <tr class="{{ $tax_input != $tax_upload ? 'table-danger' : '' }}">
+                                    <td>Tax</td>
+                                    <td>Rp {{ number_format($tax_upload, 0, ',', '.') }}</td>
+                                    <td>Rp {{ number_format($tax_input, 0, ',', '.') }}</td>
+                                    <td>{{ $tax_input != $tax_upload ? 'Nominal tidak sama' : '-' }}</td>
+                                </tr>
+                                <tr class="{{ $grandTotal_input != $grandTotal_upload ? 'table-danger' : '' }}">
+                                    <td>Grand Total</td>
+                                    <td>Rp {{ number_format($grandTotal_upload, 0, ',', '.') }}</td>
+                                    <td>Rp {{ number_format($grandTotal_input, 0, ',', '.') }}</td>
+                                    <td>{{ $grandTotal_input != $grandTotal_upload ? 'Nominal tidak sama' : '-' }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
                     @if ($header->flag_final == 'N' && $isAvailable)
-                        {{-- <div class="row">
-                            <div class="col-6 d-grid">
-                                <button type="button" wire:click="calculate('round')"
-                                    class="btn btn-success">Pembulatan ke atas</button>
-                            </div>
-                            <div class="col-6 d-grid">
-                                <button type="button" wire:click="calculate('floor')" class="btn btn-danger">Pembulatan
-                                    ke bawah</button>
-                            </div>
+                        <div class="row">
                             <form wire:submit="updateFlag({{ $header->invoiceAop }})"
                                 wire:confirm="Yakin ingin update flag?">
                                 <div class="col d-grid">
                                     <hr>
-                                    <button type="submit" class="btn btn-success">
-                                        Selesai
-                                    </button>
+                                    <button type="submit" class="btn btn-success">Selesai</button>
                                 </div>
                             </form>
-                        </div> --}}
+                        </div>
                     @elseif($header->flag_final == 'Y' && $header->flag_po == 'N')
                         <div class="row gap-2">
                             <div class="col">
@@ -313,10 +249,7 @@
                             <tbody>
                                 <tr>
                                     <td><b>{{ $totalQty }}</b></td>
-
-                                    <td>
-                                        <b>Rp {{ number_format($totalAmount, 0, ',', '.') }}</b>
-                                    </td>
+                                    <td><b>Rp {{ number_format($totalAmount, 0, ',', '.') }}</b></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -327,13 +260,12 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>SPB</th>
                                     <th>Material Number</th>
                                     <th>Material Name</th>
                                     <th>Qty</th>
-                                    <th>Add Discount</th>
-                                    <th>Extra Plafon Discount</th>
                                     <th>Amount</th>
+                                    <th>Edit Amount</th>
+                                    <th>Edit</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -344,13 +276,21 @@
                                 @foreach ($details as $item)
                                     <tr>
                                         <td>{{ $no++ }}</td>
-                                        <td>{{ $item->SPB }}</td>
-                                        <td>{{ $item->materialNumber }}</td>
-                                        <td>{{ $item->nm_part }}</td>
-                                        <td>{{ $item->qty }}</td>
-                                        <td>{{ number_format($item->addDiscount, 0, ',', '.') }}</td>
-                                        <td>{{ number_format($item->extraPlafonDiscount, 0, ',', '.') }}</td>
-                                        <td>{{ number_format($item->amount, 0, ',', '.') }}</td>
+                                        <td>{{ $item['materialNumber'] }}</td>
+                                        <td>{{ $item['nm_part'] }}</td>
+                                        <td>{{ $item['qty'] }}</td>
+                                        <td>Rp {{ number_format($item['amount'], 0, ',', '.') }}</td>
+                                        <td>
+                                            <input type="number" wire:model="details.{{ $item['materialNumber'] }}.amount"
+                                                   class="form-control" min="0">
+                                        </td>
+                                        <td>
+                                            <!-- Action button to save changes or other functionality -->
+                                            <button wire:click="saveChanges('{{ $item['materialNumber'] }}')"
+                                                class="btn btn-primary btn-sm">
+                                                Save
+                                            </button>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
