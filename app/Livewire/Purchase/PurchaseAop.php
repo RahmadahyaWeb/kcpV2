@@ -472,13 +472,22 @@ class PurchaseAop extends Component
             $kcpapplication = DB::connection('mysql');
             $kcpapplication->beginTransaction();
 
-            $kcpapplication->table('invoice_aop_header')
+            // Mengambil invoiceAop berdasarkan SPB
+            $invoiceAops = $kcpapplication->table('invoice_aop_header')
                 ->whereIn('SPB', $spb_lists)
-                ->delete();
+                ->pluck('invoiceAop'); // Ambil invoiceAop yang berkaitan dengan SPB
 
-            $kcpapplication->table('invoice_aop_detail')
-                ->whereIn('SPB', $spb_lists)
-                ->delete();
+            if ($invoiceAops->isNotEmpty()) {
+                // Hapus data di invoice_aop_detail berdasarkan invoiceAop yang ditemukan
+                $kcpapplication->table('invoice_aop_detail')
+                    ->whereIn('invoiceAop', $invoiceAops)
+                    ->delete();
+
+                // Hapus data di invoice_aop_header berdasarkan invoiceAop yang ditemukan
+                $kcpapplication->table('invoice_aop_header')
+                    ->whereIn('invoiceAop', $invoiceAops)
+                    ->delete();
+            }
 
             $kcpapplication->commit();
         } catch (\Exception $e) {
