@@ -117,13 +117,13 @@ class PurchaseAop extends Component
         }
 
         // Filter data for "4009709630" at index 2 in both arrays
-        // $filteredSuratTagihanArray = array_filter($suratTagihanArray, function ($item) {
-        //     return isset($item[2]) && $item[2] == '4009709630'; // Check if value at index 2 is '4009709630'
-        // });
+        $filteredSuratTagihanArray = array_filter($suratTagihanArray, function ($item) {
+            return isset($item[2]) && $item[2] == '4009709630'; // Check if value at index 2 is '4009709630'
+        });
 
-        // $filteredRekapTagihanArray = array_filter($rekapTagihanArray, function ($item) {
-        //     return isset($item[2]) && $item[2] == '4009709630'; // Check if value at index 2 is '4009709630'
-        // });
+        $filteredRekapTagihanArray = array_filter($rekapTagihanArray, function ($item) {
+            return isset($item[2]) && $item[2] == '4009709630'; // Check if value at index 2 is '4009709630'
+        });
 
         // Combine the filtered arrays
         $this->combinedRawData($suratTagihanArray, $rekapTagihanArray);
