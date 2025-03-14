@@ -276,10 +276,10 @@
                                 @foreach ($details as $item)
                                     <tr>
                                         <td>{{ $no++ }}</td>
-                                        <td>{{ $item['materialNumber'] }}</td>
+                                        <td class="text-nowrap">{{ $item['materialNumber'] }}</td>
                                         <td>{{ $item['nm_part'] }}</td>
                                         <td>{{ $item['qty'] }}</td>
-                                        <td>Rp {{ number_format($item['amount'], 0, ',', '.') }}</td>
+                                        <td class="text-nowrap">Rp {{ number_format($item['amount'], 0, ',', '.') }}</td>
                                         <td>
                                             <input type="number" wire:model="details.{{ $item['materialNumber'] }}.amount"
                                                    class="form-control" min="0">

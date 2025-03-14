@@ -54,14 +54,16 @@ class PurchaseAopDetail extends Component
 
     public function sendToBosnet()
     {
-        try {
-            $controller = new PurchaseOrderAOPController();
-            $controller->sendToBosnet(new Request(['invoiceAop' => $this->invoiceAop]));
+        session()->flash('error', 'fitur ditutup sementara');
 
-            session()->flash('success', "Data PO berhasil dikirim!");
-        } catch (\Exception $e) {
-            session()->flash('error', $e->getMessage());
-        }
+        // try {
+        //     $controller = new PurchaseOrderAOPController();
+        //     $controller->sendToBosnet(new Request(['invoiceAop' => $this->invoiceAop]));
+
+        //     session()->flash('success', "Data PO berhasil dikirim!");
+        // } catch (\Exception $e) {
+        //     session()->flash('error', $e->getMessage());
+        // }
     }
 
     public function openModalFakturPajak()
