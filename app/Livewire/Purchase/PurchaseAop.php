@@ -116,6 +116,16 @@ class PurchaseAop extends Component
             $rekapTagihanArray[] = $data;
         }
 
+        // // Filter data for "4009709627" at index 2 in both arrays
+        // $filteredSuratTagihanArray = array_filter($suratTagihanArray, function($item) {
+        //     return isset($item[2]) && $item[2] == '4009709627'; // Check if value at index 2 is '4009709627'
+        // });
+
+        // $filteredRekapTagihanArray = array_filter($rekapTagihanArray, function($item) {
+        //     return isset($item[2]) && $item[2] == '4009709627'; // Check if value at index 2 is '4009709627'
+        // });
+
+        // Combine the filtered arrays
         $this->combinedRawData($suratTagihanArray, $rekapTagihanArray);
     }
 
@@ -238,12 +248,12 @@ class PurchaseAop extends Component
         $groupedArray = array_values($groupedArray);
 
         // Tambahkan filter sementara untuk hanya menampilkan data dengan BILLING_NUMBER 4009709627
-        $filteredGroupedArray = array_filter($groupedArray, function ($item) {
-            return $item['BILLING_NUMBER'] == '4009709627';
-        });
+        // $filteredGroupedArray = array_filter($groupedArray, function ($item) {
+        //     return $item['BILLING_NUMBER'] == '4009709627';
+        // });
 
-        // Konversi ke array numerik kembali setelah filter
-        $filteredGroupedArray = array_values($filteredGroupedArray);
+        // // Konversi ke array numerik kembali setelah filter
+        // $filteredGroupedArray = array_values($filteredGroupedArray);
 
         // Group data berdasarkan BILLING_NUMBER
         foreach ($groupedArray as $item) {
