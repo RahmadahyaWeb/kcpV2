@@ -295,7 +295,7 @@ class PurchaseAop extends Component
             $spbNoString = implode(',', $spbNos);
 
             // CEK APAKAH DATA SUDAH ADA SEBELUMNYA
-            $exists = DB::table('invoice_aop_header_new')
+            $exists = DB::table('invoice_aop_header')
                 ->where('invoiceAop', $billingNumber)
                 ->exists();
 
@@ -330,7 +330,7 @@ class PurchaseAop extends Component
 
         // Jika data tidak kosong, lakukan insert
         if (!empty($dataToInsert)) {
-            DB::table('invoice_aop_header_new')->insert($dataToInsert);
+            DB::table('invoice_aop_header')->insert($dataToInsert);
         }
     }
 
@@ -340,7 +340,7 @@ class PurchaseAop extends Component
 
         foreach ($groupedArray as $data) {
             // CEK APAKAH DATA SUDAH ADA SEBELUMNYA
-            $exists = DB::table('invoice_aop_detail_new')
+            $exists = DB::table('invoice_aop_detail')
                 ->where('invoiceAop', $data['BILLING_NUMBER'])
                 ->where('materialNumber', $data['MATERIAL_NUMBER'])
                 ->where('SPB', $data['SPB_NO'])
@@ -366,7 +366,46 @@ class PurchaseAop extends Component
 
         // Jika ada data yang akan dimasukkan, lakukan insert sekaligus (bulk insert)
         if (!empty($dataToInsert)) {
-            DB::table('invoice_aop_detail_new')->insert($dataToInsert);
+            DB::table('invoice_aop_detail')->insert($dataToInsert);
+        }
+    }
+
+    public function rollback_aop()
+    {
+        $spb_lists = [
+            '8700021025', '8700021026', '8700016165', '8700016173', '8700016180', '8700016184',
+            '8700016188', '8700016189', '8700016176', '8700016199', '8700016191', '8700016197',
+            '8700017350', '8700017920', '8700021001', '8700021002', '8700021017', '8700017456',
+            '8700017359', '8700017360', '8700018824', '8700018825', '3024062444', '3024070144',
+            '8700016500', '8700016501', '8700016502', '8700016507', '3024064007', '8700016981',
+            '8700016982', '8700016983', '8700016984', '8700016986', '8700016987', '8700016988',
+            '8700016989', '8700016990', '8700016991', '8700016995', '3024105361', '8700016997',
+            '8700017401', '8700017402', '8700017351', '8700017922', '8700017355', '8700017928',
+            '8700017446', '8700017448', '8700017450', '8700017451', '8700017452', '3024064005',
+            '8700013904', '3023995080', '8700013682', '3024055448', '8700013683', '8700013684',
+            '8700013688', '8700013691', '8700013692', '8700013689', '8700013693', '8700013694',
+            '8700014100', '8700014101', '8700013696', '8700014104', '8700014126', '8700014127',
+            '8700014128', '3023995082', '8700013594', '8700013900', '8700014130', '8700014132',
+            '3024055442', '8700014131', '8700014133', '8700014134', '8700014136'
+        ];
+
+        try {
+            $kcpapplication = DB::connection('mysql');
+            $kcpapplication->beginTransaction();
+
+            $kcpapplication->table('invoice_aop_header')
+                ->whereIn('SPB', $spb_lists)
+                ->delete();
+
+            $kcpapplication->table('invoice_aop_detail')
+                ->whereIn('SPB', $spb_lists)
+                ->delete();
+
+            $kcpapplication->commit();
+
+        } catch (\Exception $e) {
+            $kcpapplication->rollBack();
+            throw $e;
         }
     }
 
