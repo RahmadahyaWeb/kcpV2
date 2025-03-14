@@ -276,7 +276,10 @@ class PurchaseAop extends Component
 
     public function createInvoiceHeader($groupedData)
     {
+        $dataToInsert = []; // Array untuk menyimpan semua data sebelum insert
+
         foreach ($groupedData as $billingNumber => $data) {
+            // Kumpulkan semua SPB_NO unik
             $spbNos = [];
             $billingQty = 0;
 
@@ -284,87 +287,88 @@ class PurchaseAop extends Component
                 if (!in_array($value['SPB_NO'], $spbNos)) {
                     $spbNos[] = $value['SPB_NO'];
                 }
+
+                // Hitung total billingQty
                 $billingQty += $value['BILLING_QTY'];
             }
 
             $spbNoString = implode(',', $spbNos);
 
-            // Cek apakah data sudah ada
-            $existingData = DB::table('invoice_aop_header')
+            // CEK APAKAH DATA SUDAH ADA SEBELUMNYA
+            $exists = DB::table('invoice_aop_header_new')
                 ->where('invoiceAop', $billingNumber)
-                ->first();
+                ->exists();
 
-            $dataToSave = [
-                'invoiceAop'            => $billingNumber,
-                'SPB'                   => $spbNoString,
-                'customerTo'            => $data[0]['CUSTOMER_NUMBER'],
-                'customerName'          => $data[0]['CUSTOMER_NAME'],
-                'kdGudang'              => $data[0]['CUSTOMER_NUMBER'] == 'KCP01001' ? 'GD1' : 'GD2',
-                'billingDocumentDate'   => date('Y-m-d', strtotime($data[0]['BILLING_DOCUMENT_DATE'])),
-                'tanggalCetakFaktur'    => $data[0]['TANGGAL_CETAK_FAKTUR'] == '00.00.0000' ? NULL : date('Y-m-d', strtotime($data[0]['TANGGAL_CETAK_FAKTUR'])),
-                'tanggalJatuhTempo'     => date('Y-m-d', strtotime($data[0]['TANGGAL_JATUH_TEMPO'])),
-                'qty'                   => $billingQty,
-                'price'                 => 0,
-                'addDiscount'           => 0,
-                'extraPlafonDiscount'   => 0,
-                'cashDiscount'          => 0,
-                'netSales'              => 0,
-                'tax'                   => 0,
-                'amount'                => 0,
-                'grandTotal'            => 0,
-                'flag_final'            => 'N',
-                'flag_po'               => 'N',
-                'uploaded_by'           => Auth::user()->username,
-                'created_at'            => now(),
-                'updated_at'            => now(),
-            ];
-
-            if ($existingData) {
-                DB::table('invoice_aop_header')->where('invoiceAop', $billingNumber)->update($dataToSave);
-            } else {
-                DB::table('invoice_aop_header')->insert($dataToSave);
+            if (!$exists) {
+                $dataToInsert[] = [
+                    'invoiceAop'            => $billingNumber,
+                    'SPB'                   => $spbNoString,
+                    'customerTo'            => $data[0]['CUSTOMER_NUMBER'],
+                    'customerName'          => $data[0]['CUSTOMER_NAME'],
+                    'kdGudang'              => $data[0]['CUSTOMER_NUMBER'] == 'KCP01001' ? 'GD1' : 'GD2',
+                    'billingDocumentDate'   => date('Y-m-d', strtotime($data[0]['BILLING_DOCUMENT_DATE'])),
+                    'tanggalCetakFaktur'    => $data[0]['TANGGAL_CETAK_FAKTUR'] == '00.00.0000' ? NULL : date('Y-m-d', strtotime($data[0]['TANGGAL_CETAK_FAKTUR'])),
+                    'tanggalJatuhTempo'     => date('Y-m-d', strtotime($data[0]['TANGGAL_JATUH_TEMPO'])),
+                    'qty'                   => $billingQty,
+                    'price'                 => 0,
+                    'addDiscount'           => 0,
+                    'extraPlafonDiscount'   => 0,
+                    'cashDiscount'          => 0,
+                    'netSales'              => 0,
+                    'tax'                   => 0,
+                    'amount'                => 0,
+                    'grandTotal'            => 0,
+                    'uploaded_by'           => Auth::user()->username,
+                    'created_at'            => now(),
+                    'updated_at'            => now(),
+                ];
             }
+        }
+
+        // Debugging untuk melihat semua data yang akan disimpan
+        // dd($dataToInsert);
+
+        // Jika data tidak kosong, lakukan insert
+        if (!empty($dataToInsert)) {
+            DB::table('invoice_aop_header_new')->insert($dataToInsert);
         }
     }
 
     public function createInvoiceDetail($groupedArray)
     {
+        $dataToInsert = []; // Array untuk menyimpan semua data sebelum insert
+
         foreach ($groupedArray as $data) {
-            // Cek apakah data sudah ada
-            $existingData = DB::table('invoice_aop_detail')
+            // CEK APAKAH DATA SUDAH ADA SEBELUMNYA
+            $exists = DB::table('invoice_aop_detail_new')
                 ->where('invoiceAop', $data['BILLING_NUMBER'])
                 ->where('materialNumber', $data['MATERIAL_NUMBER'])
                 ->where('SPB', $data['SPB_NO'])
-                ->first();
+                ->exists();
 
-            $dataToSave = [
-                'invoiceAop'            => $data['BILLING_NUMBER'],
-                'SPB'                   => $data['SPB_NO'],
-                'customerTo'            => $data['CUSTOMER_NUMBER'],
-                'materialNumber'        => $data['MATERIAL_NUMBER'],
-                'qty'                   => $data['BILLING_QTY'],
-                'price'                 => $data['BILLING_AMOUNT'],
-                'extraPlafonDiscount'   => $data['EXTRA_DISCOUNT'],
-                'amount'                => $data['BILLING_AMOUNT'] + $data['EXTRA_DISCOUNT'],
-                'addDiscount'           => $data['ADD_DISCOUNT'],
-                'uploaded_by'           => Auth::user()->username,
-                'created_at'            => now(),
-                'updated_at'            => now()
-            ];
-
-            if ($existingData) {
-                DB::table('invoice_aop_detail')
-                    ->where('invoiceAop', $data['BILLING_NUMBER'])
-                    ->where('materialNumber', $data['MATERIAL_NUMBER'])
-                    ->where('SPB', $data['SPB_NO'])
-                    ->update($dataToSave);
-            } else {
-                DB::table('invoice_aop_detail')->insert($dataToSave);
+            if (!$exists) {
+                $dataToInsert[] = [
+                    'invoiceAop'            => $data['BILLING_NUMBER'],
+                    'SPB'                   => $data['SPB_NO'],
+                    'customerTo'            => $data['CUSTOMER_NUMBER'],
+                    'materialNumber'        => $data['MATERIAL_NUMBER'],
+                    'qty'                   => $data['BILLING_QTY'],
+                    'price'                 => $data['BILLING_AMOUNT'],
+                    'extraPlafonDiscount'   => $data['EXTRA_DISCOUNT'],
+                    'amount'                => $data['BILLING_AMOUNT'] + $data['EXTRA_DISCOUNT'],
+                    'addDiscount'           => $data['ADD_DISCOUNT'],
+                    'uploaded_by'           => Auth::user()->username,
+                    'created_at'            => now(),
+                    'updated_at'            => now()
+                ];
             }
         }
+
+        // Jika ada data yang akan dimasukkan, lakukan insert sekaligus (bulk insert)
+        if (!empty($dataToInsert)) {
+            DB::table('invoice_aop_detail_new')->insert($dataToInsert);
+        }
     }
-
-
 
     public function render()
     {
