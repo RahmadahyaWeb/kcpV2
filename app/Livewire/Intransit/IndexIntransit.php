@@ -27,13 +27,13 @@ class IndexIntransit extends Component
         //     ->whereDate('crea_date', '>=', '2025-03-05')
         //     ->delete();
 
-        $item = $kcpinformation->table('intransit_details')
-            ->where('no_sp_aop', '8700010672KCP02001')
-            // ->where('part_no', 'H2-412PA-K18-110H')
-            ->update([
-                'no_sp_aop' => "8700010671KCP02001",
-                'delivery_note' => "8700010671KCP02001"
-            ]);
+        // $item = $kcpinformation->table('intransit_details')
+        //     ->where('no_sp_aop', '8700010672KCP02001')
+        //     // ->where('part_no', 'H2-412PA-K18-110H')
+        //     ->update([
+        //         'no_sp_aop' => "8700010671KCP02001",
+        //         'delivery_note' => "8700010671KCP02001"
+        //     ]);
 
 
         $items = $kcpinformation->table('intransit_header')
