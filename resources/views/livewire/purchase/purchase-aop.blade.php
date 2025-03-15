@@ -126,9 +126,9 @@
                             <button type="button" class="btn btn-danger" wire:click="sync_intransit">
                                 Sync Intransit
                             </button>
-                            <button type="button" class="btn btn-secondary" wire:click="rollback_aop">
+                            {{-- <button type="button" class="btn btn-secondary" wire:click="rollback_aop">
                                 Rollback
-                            </button>
+                            </button> --}}
                         </div>
                     </div>
                 </div>
