@@ -221,7 +221,7 @@ class PurchaseOrderAOPController extends Controller
         return [
             'szAppId' => "BDI.KCP",
             'fPoData' => [
-                'szFPo_sId'              => $invoiceHeader->invoiceAop,
+                'szFPo_sId'              => $invoiceHeader->invoiceAop . "-TESTING",
                 'dtmPO'                  => Carbon::parse($invoiceHeader->billingDocumentDate)->toDateTimeString(),
                 'szSupplierId'           => "AOP",
                 'bReturn'                => false,
