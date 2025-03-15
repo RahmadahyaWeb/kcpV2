@@ -105,8 +105,6 @@ class PurchaseOrderAOPController extends Controller
      */
     private function sendDataToBosnet($data)
     {
-        dd($data);
-
         $credential = TokenBosnetController::signInForSecretKey();
 
         if (isset($credential['status'])) {
@@ -221,7 +219,7 @@ class PurchaseOrderAOPController extends Controller
         return [
             'szAppId' => "BDI.KCP",
             'fPoData' => [
-                'szFPo_sId'              => $invoiceHeader->invoiceAop . "-TESTING",
+                'szFPo_sId'              => $invoiceHeader->invoiceAop,
                 'dtmPO'                  => Carbon::parse($invoiceHeader->billingDocumentDate)->toDateTimeString(),
                 'szSupplierId'           => "AOP",
                 'bReturn'                => false,
