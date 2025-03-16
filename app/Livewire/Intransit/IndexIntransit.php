@@ -21,14 +21,14 @@ class IndexIntransit extends Component
             ->where('crea_by', 'SYSTEM')
             ->where('crea_date', '>=', '2025-03-15')
             // ->whereDate('tgl_packingsheet', '>=', '2025-03-05')
-            ->get();
+            ->delete();
 
-        dd($header_to_rollback);
+        // dd($header_to_rollback);
 
-        // $details_to_rollback = $kcpinformation->table('intransit_details')
-        //     ->where('crea_by', 'SYSTEM')
-        //     ->whereDate('crea_date', '>=', '2025-03-05')
-        //     ->delete();
+        $details_to_rollback = $kcpinformation->table('intransit_details')
+            ->where('crea_by', 'SYSTEM')
+            ->whereDate('crea_date', '>=', '2025-03-05')
+            ->delete();
 
         // $item = $kcpinformation->table('intransit_details')
         //     ->where('no_sp_aop', '8700010672KCP02001')
