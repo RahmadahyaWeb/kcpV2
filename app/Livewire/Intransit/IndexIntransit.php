@@ -19,7 +19,8 @@ class IndexIntransit extends Component
 
         $header_to_rollback = $kcpinformation->table('intransit_header')
             ->where('crea_by', 'SYSTEM')
-            ->whereDate('tgl_packingsheet', '>=', '2025-02-28')
+            ->where('crea_date', '>=', '2025-03-15')
+            // ->whereDate('tgl_packingsheet', '>=', '2025-03-05')
             ->get();
 
         dd($header_to_rollback);
