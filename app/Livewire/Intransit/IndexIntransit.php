@@ -17,10 +17,12 @@ class IndexIntransit extends Component
     {
         $kcpinformation = DB::connection('kcpinformation');
 
-        // $header_to_rollback = $kcpinformation->table('intransit_header')
-        //     ->where('crea_by', 'SYSTEM')
-        //     ->whereDate('tgl_packingsheet', '>=', '2025-03-05')
-        //     ->get();
+        $header_to_rollback = $kcpinformation->table('intransit_header')
+            ->where('crea_by', 'SYSTEM')
+            ->whereDate('tgl_packingsheet', '>=', '2025-03-05')
+            ->get();
+
+        dd($header_to_rollback);
 
         // $details_to_rollback = $kcpinformation->table('intransit_details')
         //     ->where('crea_by', 'SYSTEM')
