@@ -217,8 +217,8 @@ class SyncController extends Controller
 
         // Ambil data dari tabel invoice_aop_header
         $invoice_aop = $kcpapplication->table('invoice_aop_header')
+            ->whereIn('invoiceAop', ['4009709954', '4009709906'])
             ->whereDate('billingDocumentDate', '>=', '2025-02-28')
-            // ->whereIn('invoiceAop', ['4009709954', '4009709906'])
             ->select('SPB', 'customerTo', 'invoiceAop', 'billingDocumentDate')
             ->orderBy('created_at', 'desc')
             ->get();
@@ -242,89 +242,85 @@ class SyncController extends Controller
                 $kcpinformation->beginTransaction();
 
                 $spb_array = array_map('trim', explode(',', $value->SPB));
-                foreach ($spb_array as $spb) {
-                    $no_sp_aop = $spb . $value->customerTo;
-                    $tanggal_invoice = $value->billingDocumentDate;
+                $no_sp_aop = $spb_array[0] . $value->customerTo;
+                $tanggal_invoice = $value->billingDocumentDate;
 
-                    // Ambil detail invoice
-                    $invoice_aop_details = $kcpapplication->table('invoice_aop_detail')
-                        ->where('SPB', $spb)
-                        ->get();
+                $invoice_aop_details = $kcpapplication->table('invoice_aop_detail')
+                    ->whereIn('SPB', $spb_array)
+                    ->get();
 
-                    $partNumbers = $invoice_aop_details->pluck('materialNumber');
-                    $partData = $kcpinformation->table('mst_part')
-                        ->whereIn('part_no', $partNumbers)
-                        ->get(['part_no', 'nm_part']);
+                $partNumbers = $invoice_aop_details->pluck('materialNumber')->unique();
+                $partData = $kcpinformation->table('mst_part')
+                    ->whereIn('part_no', $partNumbers)
+                    ->pluck('nm_part', 'part_no');
 
-                    // Tambahkan nm_part ke detail
-                    $details = $invoice_aop_details->map(function ($item) use ($partData) {
-                        $item->nm_part = optional($partData->firstWhere('part_no', $item->materialNumber))->nm_part;
-                        return $item;
-                    });
+                // Tambahkan nm_part ke detail
+                $details = $invoice_aop_details->map(function ($item) use ($partData) {
+                    $item->nm_part = optional($partData->get($item->materialNumber));
+                    return $item;
+                });
 
-                    // Cek item yang tidak memiliki nm_part
-                    $invalidItems = $details->filter(fn($item) => is_null($item->nm_part));
-                    if ($invalidItems->isNotEmpty()) {
-                        $result['skipped_count']++;
-                        $result['skipped_invoices'][] = [
-                            'invoice' => $no_sp_aop,
-                            'invalid_items' => $invalidItems->pluck('materialNumber')->toArray(),
-                        ];
-                        $kcpinformation->rollBack();
-                        continue;
-                    }
+                // Cek item yang tidak memiliki nm_part
+                $invalidItems = $details->filter(fn($item) => is_null($item->nm_part));
+                if ($invalidItems->isNotEmpty()) {
+                    $result['skipped_count']++;
+                    $result['skipped_invoices'][] = [
+                        'invoice' => $no_sp_aop,
+                        'invalid_items' => $invalidItems->pluck('materialNumber')->toArray(),
+                    ];
+                    $kcpinformation->rollBack();
+                    continue;
+                }
 
-                    // Insert ke intransit_header jika belum ada
-                    if (!$kcpinformation->table('intransit_header')->where('no_sp_aop', $no_sp_aop)->exists()) {
-                        $kcpinformation->table('intransit_header')->insert([
+                if (!$kcpinformation->table('intransit_header')->where('no_sp_aop', $no_sp_aop)->exists()) {
+                    $kcpinformation->table('intransit_header')->insert([
+                        'no_sp_aop' => $no_sp_aop,
+                        'delivery_note' => $no_sp_aop,
+                        'kd_gudang_aop' => $value->customerTo,
+                        'tgl_packingsheet' => date('Y-m-d', strtotime($tanggal_invoice)),
+                        'status' => 'I',
+                        'ket_status' => 'INTRANSIT',
+                        'crea_date' => now(),
+                        'crea_by' => 'SYSTEM'
+                    ]);
+                }
+
+                // Bulk Insert untuk intransit_details
+                $intransitDetails = [];
+                foreach ($invoice_aop_details as $item) {
+                    if (!$kcpinformation->table('intransit_details')
+                        ->where('delivery_note', $no_sp_aop)
+                        ->where('part_no', $item->materialNumber)
+                        ->exists()) {
+                        $intransitDetails[] = [
                             'no_sp_aop' => $no_sp_aop,
                             'delivery_note' => $no_sp_aop,
                             'kd_gudang_aop' => $value->customerTo,
-                            'tgl_packingsheet' => date('Y-m-d', strtotime($tanggal_invoice)),
+                            'part_no' => $item->materialNumber,
+                            'qty' => $item->qty,
                             'status' => 'I',
-                            'ket_status' => 'INTRANSIT',
                             'crea_date' => now(),
                             'crea_by' => 'SYSTEM'
-                        ]);
-                    }
-
-                    // Insert ke intransit_details
-                    $isInserted = false;
-                    foreach ($invoice_aop_details as $item) {
-                        if (!$kcpinformation->table('intransit_details')
-                            ->where('delivery_note', $no_sp_aop)
-                            ->where('part_no', $item->materialNumber)
-                            ->exists()) {
-                            $kcpinformation->table('intransit_details')->insert([
-                                'no_sp_aop' => $no_sp_aop,
-                                'delivery_note' => $no_sp_aop,
-                                'kd_gudang_aop' => $value->customerTo,
-                                'part_no' => $item->materialNumber,
-                                'qty' => $item->qty,
-                                'status' => 'I',
-                                'crea_date' => now(),
-                                'crea_by' => 'SYSTEM'
-                            ]);
-                            $isInserted = true;
-                        }
-                    }
-
-                    if ($isInserted) {
-                        $result['success_count']++;
-                        $result['success_invoices'][] = [
-                            'invoice' => $no_sp_aop,
-                            'details' => $invoice_aop_details->map(fn($item) => [
-                                'part_no' => $item->materialNumber,
-                                'qty' => $item->qty
-                            ])->toArray(),
-                        ];
-                    } else {
-                        $result['skipped_count']++;
-                        $result['skipped_invoices'][] = [
-                            'invoice' => $no_sp_aop,
-                            'reason' => 'Semua data sudah ada di intransit',
                         ];
                     }
+                }
+
+                if (!empty($intransitDetails)) {
+                    $kcpinformation->table('intransit_details')->insert($intransitDetails);
+                    $result['success_count']++;
+                    $result['success_invoices'][] = [
+                        'invoice' => $no_sp_aop,
+                        'details' => collect($intransitDetails)->map(fn($item) => [
+                            'part_no' => $item['part_no'],
+                            'qty' => $item['qty']
+                        ])->toArray(),
+                    ];
+                } else {
+                    $result['skipped_count']++;
+                    $result['skipped_invoices'][] = [
+                        'invoice' => $no_sp_aop,
+                        'reason' => 'Semua data sudah ada di intransit',
+                    ];
                 }
 
                 $kcpinformation->commit();
