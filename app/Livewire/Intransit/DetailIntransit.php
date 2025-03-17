@@ -125,6 +125,9 @@ class DetailIntransit extends Component
             }
 
             $kcpinformation->commit();
+
+            $this->update_intransit_header();
+
             session()->flash('success', 'Berhasil update stock intransit menjadi stock on hand.');
 
             $this->redirectRoute('intransit.index');
@@ -176,7 +179,7 @@ class DetailIntransit extends Component
             ]);
     }
 
-    public function render()
+    private function update_intransit_header()
     {
         $kcpinformation = DB::connection('kcpinformation');
 
@@ -195,6 +198,18 @@ class DetailIntransit extends Component
                     'modi_by' => Auth::user()->username,
                 ]);
         }
+    }
+
+    public function render()
+    {
+        $kcpinformation = DB::connection('kcpinformation');
+
+        $items = $kcpinformation->table('intransit_details')
+            ->where('delivery_note', $this->delivery_note)
+            ->where('status', 'I')
+            ->get();
+
+        $this->update_intransit_header();
 
         return view('livewire.intransit.detail-intransit', compact('items'));
     }
