@@ -126,6 +126,8 @@ class DetailIntransit extends Component
 
             $kcpinformation->commit();
             session()->flash('success', 'Berhasil update stock intransit menjadi stock on hand.');
+
+            $this->redirectRoute('intransit.index');
         } catch (\Exception $e) {
             $kcpinformation->rollBack();
             session()->flash('error', $e->getMessage());
