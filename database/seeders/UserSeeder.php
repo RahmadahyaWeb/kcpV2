@@ -16,31 +16,23 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // SUPER
-        Role::create(['name' => 'super-user']);
-        Role::create(['name' => 'admin']);
+        // Role::create(['name' => 'super-user']);
+        // Role::create(['name' => 'admin']);
 
         // MARKETING
-        Role::create(['name' => 'supervisor-area']);
-        Role::create(['name' => 'head-marketing']);
-        Role::create(['name' => 'salesman']);
-        Role::create(['name' => 'fakturis']);
+        // Role::create(['name' => 'supervisor-area']);
+        // Role::create(['name' => 'head-marketing']);
+        // Role::create(['name' => 'salesman']);
+        // Role::create(['name' => 'fakturis']);
 
         // WAREHOUSE
-        Role::create(['name' => 'head-warehouse']);
-        Role::create(['name' => 'storer']);
-        Role::create(['name' => 'inventory']);
+        // Role::create(['name' => 'head-warehouse']);
+        // Role::create(['name' => 'storer']);
+        // Role::create(['name' => 'inventory']);
+        Role::create(['name' => 'driver']);
 
         // FINANCE
-        Role::create(['name' => 'finance']);
-        Role::create(['name' => 'ar']);
-
-        $su = User::create([
-            'name'      => 'Muhammad Achyadi Rahmat',
-            'username'  => 'rahmadahya',
-            'password'  => Hash::make('dedeikusyg24')
-        ]);
-
-        $su->assignRole('super-user');
-
+        // Role::create(['name' => 'finance']);
+        // Role::create(['name' => 'ar']);
     }
 }

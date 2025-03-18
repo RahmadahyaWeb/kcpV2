@@ -260,6 +260,17 @@ Route::middleware('auth')->group(function () {
         Route::get('/report-finance/aging', AgingReport::class)->name('report-finance.aging.index');
     });
 
+    /**
+     * super-user
+     * driver
+     */
+    Route::middleware('role:driver|super-user')->group(function () {
+        // DKS
+        Route::get('/dks/scan', Scan::class)->name('dks.index');
+        Route::get('/dks/scan/{kode_toko}', Submit::class)->name('dks.submit');
+        Route::post('dks/scan/store', [DksController::class, 'store'])->name('dks.store');
+    });
+
     // LOGOUT
     Route::get('logout', function () {
         Auth::logout();
