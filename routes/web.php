@@ -15,6 +15,7 @@ use App\Livewire\DeliveryOrder\IndexDeliveryOrder;
 use App\Livewire\Dks\RekapPunishment;
 use App\Livewire\Dks\Scan;
 use App\Livewire\Dks\Submit;
+use App\Livewire\DkSupir\IndexDaftarKehadiranSupir;
 use App\Livewire\GoodsReceipt\GoodsReceiptAop;
 use App\Livewire\GoodsReceipt\GoodsReceiptAopDetail;
 use App\Livewire\GoodsReceipt\GoodsReceiptNonAop;
@@ -266,9 +267,7 @@ Route::middleware('auth')->group(function () {
      */
     Route::middleware('role:driver|super-user')->group(function () {
         // DKS
-        Route::get('/dks/scan', Scan::class)->name('dks.index');
-        Route::get('/dks/scan/{kode_toko}', Submit::class)->name('dks.submit');
-        Route::post('dks/scan/store', [DksController::class, 'store'])->name('dks.store');
+        Route::get('/daftar-kehadiran-supir/scan', IndexDaftarKehadiranSupir::class)->name('daftar-kehadiran-supir.index');
     });
 
     // LOGOUT
