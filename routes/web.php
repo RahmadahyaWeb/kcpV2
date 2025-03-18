@@ -267,7 +267,7 @@ Route::middleware('auth')->group(function () {
      */
     Route::middleware('role:driver|super-user')->group(function () {
         // DKS
-        Route::get('/daftar-kehadiran-supir/scan', IndexDaftarKehadiranSupir::class)->name('daftar-kehadiran-supir.index');
+        Route::get('/daftar-kehadiran-driver/scan', IndexDaftarKehadiranSupir::class)->name('daftar-kehadiran-driver.index');
     });
 
     // LOGOUT
