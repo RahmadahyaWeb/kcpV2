@@ -44,6 +44,14 @@ return [
     ],
     [
         "label" => "Monitoring API",
+        "icon" => "bx bxs-car-crash",
+        "route" => "expedition.index",
+        "roles" => ['super-user'],
+        "active" => Request::is('master/expedition*'),
+        "children" => []
+    ],
+    [
+        "label" => "Monitoring API",
         "icon" => "bx bx-history",
         "route" => "log-viewer.index",
         "roles" => ['super-user'],
