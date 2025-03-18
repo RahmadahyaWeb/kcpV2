@@ -23,8 +23,6 @@ class IndexIntransit extends Component
         //     // ->whereDate('tgl_packingsheet', '>=', '2025-03-05')
         //     ->delete();
 
-        // // dd($header_to_rollback);
-
         // $details_to_rollback = $kcpinformation->table('intransit_details')
         //     ->where('crea_by', 'SYSTEM')
         //     ->whereDate('crea_date', '>=', '2025-03-05')
