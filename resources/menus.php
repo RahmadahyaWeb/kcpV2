@@ -43,7 +43,7 @@ return [
         "children" => []
     ],
     [
-        "label" => "Monitoring API",
+        "label" => "Expedition",
         "icon" => "bx bxs-car-crash",
         "route" => "expedition.index",
         "roles" => ['super-user'],
