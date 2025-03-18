@@ -30,7 +30,9 @@ use App\Livewire\Invoice\IndexInvoice;
 use App\Livewire\Invoice\IndexInvoiceBosnet;
 use App\Livewire\KelompokPart;
 use App\Livewire\LogViewer;
+use App\Livewire\Master\CreateExpedition;
 use App\Livewire\Master\CreateUser;
+use App\Livewire\Master\EditExpedition;
 use App\Livewire\Master\EditMasterToko;
 use App\Livewire\Master\EditUser;
 use App\Livewire\Master\IndexExpedition;
@@ -96,7 +98,8 @@ Route::middleware('auth')->group(function () {
 
         // EXPEDITION
         Route::get('/master/expedition', IndexExpedition::class)->name('expedition.index');
-        Route::get('/master/expedition/edit/{expedition}', IndexExpedition::class)->name('expedition.edit');
+        Route::get('/master/expedition/create', CreateExpedition::class)->name('expedition.create');
+        Route::get('/master/expedition/edit/{kd_expedition}', EditExpedition::class)->name('expedition.edit');
     });
 
     /**

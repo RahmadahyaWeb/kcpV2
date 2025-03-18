@@ -13,7 +13,7 @@
                                 <label for="kd_expedition" class="form-label">Kode Expedition</label>
                                 <input type="text" class="form-control @error('kd_expedition') is-invalid @enderror"
                                     id="kd_expedition" name="kd_expedition" wire:model="kd_expedition"
-                                    placeholder="Kode Expedition" disabled>
+                                    placeholder="Kode Expedition">
 
                                 @error('kd_expedition')
                                     <div class="invalid-feedback">

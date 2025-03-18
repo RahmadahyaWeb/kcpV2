@@ -2,45 +2,31 @@
 
 namespace App\Livewire\Master;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
-class EditExpedition extends Component
+class CreateExpedition extends Component
 {
     public $kd_expedition, $nama_expedition, $latitude, $longitude;
-
-    public function mount($kd_expedition)
-    {
-        $expedition = DB::table('mst_expedition')
-            ->where('kd_expedition', $kd_expedition)
-            ->first();
-
-        if ($expedition == null) {
-            session()->flash('error', 'Kode tidak ditemukan.');
-            abort(404);
-        }
-
-        $this->kd_expedition = $expedition->kd_expedition;
-        $this->nama_expedition = $expedition->nama_expedition;
-        $this->latitude = $expedition->latitude;
-        $this->longitude = $expedition->longitude;
-    }
 
     public function save()
     {
         $this->validate([
+            'kd_expedition'     => ['required'],
             'nama_expedition'   => ['required'],
             'latitude'          => ['required'],
             'longitude'         => ['required'],
         ]);
 
         DB::table('mst_expedition')
-            ->where('kd_expedition', $this->kd_expedition)
-            ->update([
+            ->insert([
+                'kd_expedition'     => $this->kd_expedition,
                 'nama_expedition'   => $this->nama_expedition,
                 'latitude'          => $this->latitude,
                 'longitude'         => $this->longitude,
-                'updated_at'        => now(),
+                'created_at'        => now(),
+                'crea_by'           => Auth::user()->username
             ]);
 
         session()->flash('success', 'Changes have been saved successfully');
@@ -50,6 +36,6 @@ class EditExpedition extends Component
 
     public function render()
     {
-        return view('livewire.master.edit-expedition');
+        return view('livewire.master.create-expedition');
     }
 }
