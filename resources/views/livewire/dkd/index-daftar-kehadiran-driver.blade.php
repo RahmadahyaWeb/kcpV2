@@ -9,7 +9,8 @@
 
         <div class="card-body">
             <div class="d-flex gap-2 mb-3 py-4" style="overflow-x: auto; white-space: nowrap;">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-dks">Scan</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#modal-dks">Scan</button>
             </div>
 
             <div class="table-responsive mb-3">
@@ -138,14 +139,16 @@
 
                         const qrCodeSuccessCallback = (decodedText, decodedResult) => {
                             let redirectUrl = '';
-                            const url = new URL(decodedText);
-                            const kd_toko = url.searchParams.get('kd_toko');
-                            const katalog = url.searchParams.get('Katalog');
 
-                            if (katalog) {
-                                redirectUrl = `/dks/scan/${kd_toko}?katalog=${katalog}`;
-                            } else {
-                                redirectUrl = `/dks/scan/${kd_toko}`;
+                            try {
+                                const url = new URL(
+                                    decodedText);
+
+                                const kd_toko = url.searchParams.get('kd_toko');
+
+                                redirectUrl = `/daftar-kehadiran-driver/scan/${kd_toko}`;
+                            } catch (error) {
+                                redirectUrl = `/daftar-kehadiran-driver/scan/${decodedText}`;
                             }
 
                             document.getElementById("loading").classList.remove('d-none');
@@ -156,13 +159,13 @@
 
                                 window.location.href = redirectUrl;
                             });
-                        };
+                        }
 
                         html5QrCode.start({
 
                             facingMode: {
-                                exact: "environment"
-                                // exact: "user"
+                                // exact: "environment"
+                                exact: "user"
                             }
                         }, config, qrCodeSuccessCallback).then(() => {
                             scanning = true;

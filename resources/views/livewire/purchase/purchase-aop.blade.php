@@ -123,9 +123,9 @@
                             Data AOP
                         </div>
                         <div class="col d-flex justify-content-end">
-                            <button type="button" class="btn btn-danger" wire:click="sync_intransit">
+                            {{-- <button type="button" class="btn btn-danger" wire:click="sync_intransit">
                                 Sync Intransit
-                            </button>
+                            </button> --}}
                             {{-- <button type="button" class="btn btn-secondary" wire:click="rollback_aop">
                                 Rollback
                             </button> --}}

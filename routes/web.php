@@ -12,10 +12,11 @@ use App\Livewire\CustomerPayment\IndexCustomerPayment;
 use App\Livewire\Dashboard;
 use App\Livewire\DeliveryOrder\DetailDeliveryOrder;
 use App\Livewire\DeliveryOrder\IndexDeliveryOrder;
+use App\Livewire\Dkd\IndexDaftarKehadiranDriver;
+use App\Livewire\Dkd\SubmitDaftarKehadiranDriver;
 use App\Livewire\Dks\RekapPunishment;
 use App\Livewire\Dks\Scan;
 use App\Livewire\Dks\Submit;
-use App\Livewire\DkSupir\IndexDaftarKehadiranSupir;
 use App\Livewire\GoodsReceipt\GoodsReceiptAop;
 use App\Livewire\GoodsReceipt\GoodsReceiptAopDetail;
 use App\Livewire\GoodsReceipt\GoodsReceiptNonAop;
@@ -32,6 +33,7 @@ use App\Livewire\LogViewer;
 use App\Livewire\Master\CreateUser;
 use App\Livewire\Master\EditMasterToko;
 use App\Livewire\Master\EditUser;
+use App\Livewire\Master\IndexExpedition;
 use App\Livewire\Master\IndexMasterToko;
 use App\Livewire\Master\IndexUser;
 use App\Livewire\Pajak\IndexPajakKeluaran;
@@ -91,6 +93,10 @@ Route::middleware('auth')->group(function () {
 
         // SYNC INTRANSI
         // Route::get('/sync/intransit', [SyncController::class, 'sync_intransit'])->name('sync.intransit');
+
+        // EXPEDITION
+        Route::get('/master/expedition', IndexExpedition::class)->name('expedition.index');
+        Route::get('/master/expedition/edit/{expedition}', IndexExpedition::class)->name('expedition.edit');
     });
 
     /**
@@ -267,7 +273,8 @@ Route::middleware('auth')->group(function () {
      */
     Route::middleware('role:driver|super-user')->group(function () {
         // DKS
-        Route::get('/daftar-kehadiran-driver/scan', IndexDaftarKehadiranSupir::class)->name('daftar-kehadiran-driver.index');
+        Route::get('/daftar-kehadiran-driver/scan', IndexDaftarKehadiranDriver::class)->name('daftar-kehadiran-driver.index');
+        Route::get('/daftar-kehadiran-driver/scan/{kode_toko}', SubmitDaftarKehadiranDriver::class)->name('daftar-kehadiran-driver.submit');
     });
 
     // LOGOUT
