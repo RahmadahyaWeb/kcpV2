@@ -37,7 +37,7 @@
                             <div class="col-md-12 mb-3">
                                 <label for="user_driver" class="form-label">Pilih Driver</label>
                                 <select wire:model.change="user_driver" class="form-select">
-                                    <option value="all">Semua sales</option>
+                                    <option value="all">Semua driver</option>
                                     @foreach ($users as $user)
                                         <option value="{{ $user->username }}">{{ $user->name }}</option>
                                     @endforeach
