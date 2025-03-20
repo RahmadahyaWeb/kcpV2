@@ -22,7 +22,7 @@ class SubmitDaftarKehadiranDriver extends Component
         if (strpos($this->kode_toko, 'E_') !== false) {
             $toko = DB::connection('mysql')
                 ->table('mst_expedition')
-                ->select(['kd_expedition as kd_outlet', 'nama_expedition', 'latitude', 'longitude'])
+                ->select(['kd_expedition as kd_outlet', 'nama_expedition as nm_outlet', 'latitude', 'longitude'])
                 ->where('kd_expedition', $this->kode_toko)
                 ->first();
         } else {
