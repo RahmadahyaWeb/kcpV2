@@ -164,8 +164,8 @@
                         html5QrCode.start({
 
                             facingMode: {
-                                // exact: "environment"
-                                exact: "user"
+                                exact: "environment"
+                                // exact: "user"
                             }
                         }, config, qrCodeSuccessCallback).then(() => {
                             scanning = true;
