@@ -24,7 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withSchedule(function (Schedule $schedule) {
         $schedule->command('app:send-invoice-to-bosnet')->everyFiveMinutes();
-        // $schedule->command('app:sync-intransit')->everyMinute();
+        $schedule->command('app:sync-intransit')->everyTenMinutes();
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
