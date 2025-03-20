@@ -119,6 +119,8 @@ class GoodsReceiptAopDetail extends Component
             }
         }
 
+        dd($grouped_data);
+
         // Proses items dan tambahkan informasi jika qty_terima lebih besar
         $items_with_qty = $items->map(function ($item) use ($grouped_data, $spb) {
             $material_number = $item->materialNumber;
