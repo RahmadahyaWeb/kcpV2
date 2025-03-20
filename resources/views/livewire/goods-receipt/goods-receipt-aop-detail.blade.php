@@ -70,7 +70,7 @@
                                     @if ($item->status == 'KCP')
                                         {{ $item->status }}
                                     @else
-                                        {{ $item->status }} / {{ $item->gr_date }}
+                                        {{ $item->status }}
                                     @endif
                                 </td>
                             </tr>
