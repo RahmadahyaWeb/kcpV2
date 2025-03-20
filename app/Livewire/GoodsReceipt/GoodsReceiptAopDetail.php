@@ -157,8 +157,66 @@ class GoodsReceiptAopDetail extends Component
 
             $this->items_with_qty = $items_with_qty;
         } else {
-            // Gunakan kode lama (kosongkan variabel jika tidak ada kode lama)
-            $this->items_with_qty = collect([]);
+            // Ambil SPB dari invoice_aop_header
+            $spb = DB::table('invoice_aop_header')
+                ->where('invoiceAop', $this->invoiceAop)
+                ->value('SPB');
+
+            // Ambil data items dari invoice_aop_detail
+            $items = DB::table('invoice_aop_detail')
+                ->where('invoiceAop', $this->invoiceAop)
+                ->get();
+
+            // Total items terkirim
+            $total_items_terkirim = DB::table('invoice_aop_detail')
+                ->where('invoiceAop', $this->invoiceAop)
+                ->where('status', 'BOSNET')
+                ->count();
+
+            // Ambil data intransit dari intransit_details
+            $intransit = $kcpinformation->table('intransit_details')
+                ->where('no_sp_aop', 'like', '%' . $spb . '%')
+                ->get();
+
+            // Kelompokkan qty_terima berdasarkan part_no
+            $grouped_data = [];
+
+            foreach ($intransit as $value) {
+                $part_no = $value->part_no;
+
+                if (isset($grouped_data[$part_no])) {
+                    $grouped_data[$part_no] += $value->qty_terima;
+                } else {
+                    $grouped_data[$part_no] = $value->qty_terima;
+                }
+            }
+
+            // Proses items dan tambahkan informasi jika qty_terima lebih besar
+            $items_with_qty = $items->map(function ($item) use ($grouped_data, $spb) {
+                $material_number = $item->materialNumber;
+
+                // Default nilai qty_terima
+                $item->qty_terima = isset($grouped_data[$material_number]) ? $grouped_data[$material_number] : 0;
+
+                // Tambahkan field 'asal_qty' jika qty_terima > qty
+                if ($item->qty_terima > $item->qty) {
+                    $other_invoice_qty = $this->find_qty_in_other_invoice($material_number, $spb);
+
+                    // Format data asal qty
+                    $item->asal_qty = $other_invoice_qty->map(function ($other) {
+                        return [
+                            'qty' => $other->qty,
+                            'invoice' => $other->invoiceAop, // Tambahkan invoiceAop
+                        ];
+                    });
+                } else {
+                    $item->asal_qty = [];
+                }
+
+                return $item;
+            });
+
+            $this->items_with_qty = $items_with_qty;
         }
 
         return view('livewire.goods-receipt.goods-receipt-aop-detail', compact(
