@@ -111,6 +111,7 @@ class GoodsReceiptAopDetail extends Component
 
         foreach ($intransit as $value) {
             $part_no = $value->part_no;
+            dd($value);
 
             if (isset($grouped_data[$part_no])) {
                 $grouped_data[$part_no] += $value->qty_terima;
