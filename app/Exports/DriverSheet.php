@@ -50,8 +50,6 @@ class DriverSheet implements FromCollection, WithHeadings, WithCustomStartCell, 
                 $sheet->mergeCells('E1:E2');
                 $sheet->mergeCells('F1:F2');
                 $sheet->mergeCells('G1:G2');
-                $sheet->mergeCells('H1:I1');
-                $sheet->mergeCells('J1:K1');
 
                 // SET HEADER TITLE
                 $sheet->setCellValue('A1', "Sales");
@@ -62,9 +60,7 @@ class DriverSheet implements FromCollection, WithHeadings, WithCustomStartCell, 
                 $sheet->setCellValue('F1', "Check Out");
                 $sheet->setCellValue('G1', "Keterangan");
                 $sheet->setCellValue('H1', "Durasi Kunjungan");
-                $sheet->setCellValue('H2', "Lama");
                 $sheet->setCellValue('J1', "Durasi Perjalanan");
-                $sheet->setCellValue('J2', "Lama");
 
                 // HEADER STYLE
                 $styleArray = [
@@ -166,7 +162,9 @@ class DriverSheet implements FromCollection, WithHeadings, WithCustomStartCell, 
         } else if ($row->kd_toko == 'TQ2') {
             $nama_toko = 'SINAR TAQWA MOTOR 2';
         } else {
-            $nama_toko = '';
+            $nama_toko = DB::table('mst_expedition')
+                ->where('kd_expedition', $row->kd_toko)
+                ->value('nama_expedition');;
         }
 
         // WAKTU CEK IN
@@ -178,95 +176,15 @@ class DriverSheet implements FromCollection, WithHeadings, WithCustomStartCell, 
         // KETERANGAN
         $keterangan = strtolower($row->keterangan);
 
-        /**
-         * PUNISHMENT DURASI LAMA KUNJUNGAN
-         * MINIMAL KUNJUNGAN ADALAH 30 MENIT
-         */
-        $punishment_lama_kunjungan = 0;
-
         if ($row->lama_kunjungan !== null) {
             $hours = floor($row->lama_kunjungan / 60);
             $minutes = $row->lama_kunjungan % 60;
             $lama_kunjungan = sprintf('%02d:%02d:00', $hours, $minutes);
-
-            if ($row->lama_kunjungan < 30) {
-                $punishment_lama_kunjungan = 1;
-            } else {
-                $punishment_lama_kunjungan = 0;
-            }
         } else {
             $lama_kunjungan = '00:00:00';
-            $punishment_lama_kunjungan = 1;
         }
 
-        /**
-         * PUNISHMENT DURASI LAMA PERJALANAN
-         * MAKSIMAL DURASI LAMA PERJALANAN ADALAH 4O MENIT
-         * ISTIRAHAT JUMAT 1 JAM 45 MENIT + 40 MENIT
-         * ISTIRAHAT SELAIN JUMAT 1 JAM 15 MENIT + 40 MENIT
-         */
         $durasi_perjalanan = $row->durasi_perjalanan;
-
-        if ($durasi_perjalanan != 0) {
-            list($hours, $minutes, $seconds) = explode(':', $durasi_perjalanan);
-            $lama_perjalanan_dalam_menit = ($hours * 60) + $minutes;
-
-            $max_durasi_lama_perjalanan = 40;
-            $isFriday = Carbon::parse($row->tgl_kunjungan)->isFriday();
-            $waktu_istirahat = $isFriday ? 105 : 75;
-            $max_durasi_lama_perjalanan_plus_waktu_istirahat = $waktu_istirahat + $max_durasi_lama_perjalanan;
-
-            if (strpos($keterangan, 'ist') !== false) {
-                $punishment_durasi_lama_perjalanan = ($lama_perjalanan_dalam_menit > $max_durasi_lama_perjalanan_plus_waktu_istirahat) ? 1 : 0;
-            } else {
-                $punishment_durasi_lama_perjalanan = ($lama_perjalanan_dalam_menit > $max_durasi_lama_perjalanan) ? 1 : 0;
-            }
-
-            if ($lama_perjalanan_dalam_menit == 0) {
-                $durasi_perjalanan = '00:00:00';
-            }
-        } else {
-            $durasi_perjalanan = '00:00:00';
-            $punishment_durasi_lama_perjalanan = 0;
-        }
-
-        // KUNJUNGAN
-        if ($row->lama_kunjungan) {
-            $kunjungan = 1;
-        } else {
-            $kunjungan = 0;
-        }
-
-        // PUNISHMENT KUNJUNGAN
-        if ($waktu_cek_in == $waktu_cek_out) {
-            $punishment_cek_in_cek_out = 1;
-        } else {
-            $punishment_cek_in_cek_out = 0;
-        }
-
-        // KATALOG
-        $katalog = $row->katalog_at;
-
-        if ($katalog) {
-            $tgl_katalog = Date::dateTimeToExcel(Carbon::parse($row->katalog_at));
-            $jam_katalog = Carbon::parse($row->katalog_at)->format('H:i:s');
-        } else {
-            $tgl_katalog = '';
-            $jam_katalog = '';
-        }
-
-        if (in_array($row->kd_toko, $tokoAbsen)) {
-            $punishment_lama_kunjungan = 0;
-            $punishment_durasi_lama_perjalanan = 0;
-            $punishment_cek_in_cek_out = 0;
-            $kunjungan = 'ABSEN';
-        }
-
-        if ($waktu_cek_in == '') {
-            $punishment_lama_kunjungan = 0;
-            $punishment_durasi_lama_perjalanan = 0;
-            $punishment_cek_in_cek_out = 0;
-        }
 
         return [
             $nama_lengkap_sales,
@@ -277,13 +195,7 @@ class DriverSheet implements FromCollection, WithHeadings, WithCustomStartCell, 
             $waktu_cek_out,
             $keterangan,
             $lama_kunjungan,
-            $punishment_lama_kunjungan,
             $durasi_perjalanan,
-            $punishment_durasi_lama_perjalanan,
-            $kunjungan,
-            $punishment_cek_in_cek_out,
-            $tgl_katalog,
-            $jam_katalog
         ];
     }
 
