@@ -172,7 +172,7 @@ class DriverSheet implements FromCollection, WithHeadings, WithCustomStartCell, 
         } else if ($kd_toko == 'TQ2') {
             $nama_toko = 'SINAR TAQWA MOTOR 2';
         } else {
-            $nama_toko = 'ERROR: TOKO TIDAK TERDAFTAR';
+            $nama_toko = '';
         }
 
         // WAKTU CEK IN
