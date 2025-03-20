@@ -158,15 +158,17 @@ class GoodsReceiptAopDetail extends Component
             $items_grouped = [];
 
             foreach ($items_with_qty as $item) {
-                dd($item);
                 $material_number = $item->materialNumber;
 
                 if (!isset($items_grouped[$material_number])) {
+                    // Jika material number belum ada, masukkan data pertama kali
                     $items_grouped[$material_number] = (object) [
                         'materialNumber' => $material_number,
                         'qty' => $item->qty,
                         'qty_terima' => $item->qty_terima,
                         'asal_qty' => $item->asal_qty,
+                        'status' => $item->status, // Ambil status awal
+                        'status_list' => [$item->status], // Simpan daftar status
                     ];
                 } else {
                     // Jika materialNumber sama, jumlahkan qty dan qty_terima
@@ -178,6 +180,15 @@ class GoodsReceiptAopDetail extends Component
                         $items_grouped[$material_number]->asal_qty,
                         $item->asal_qty
                     );
+
+                    // Tambahkan status ke daftar status
+                    $items_grouped[$material_number]->status_list[] = $item->status;
+
+                    // Jika ada lebih dari satu status yang berbeda, ubah status menjadi "KCP"
+                    $unique_statuses = array_unique($items_grouped[$material_number]->status_list);
+                    if (count($unique_statuses) > 1) {
+                        $items_grouped[$material_number]->status = "KCP";
+                    }
                 }
             }
 
