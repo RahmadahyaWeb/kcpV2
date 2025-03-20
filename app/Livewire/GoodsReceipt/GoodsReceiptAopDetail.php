@@ -155,6 +155,34 @@ class GoodsReceiptAopDetail extends Component
                 return $item;
             });
 
+            $items_grouped = [];
+
+            foreach ($items_with_qty as $item) {
+                $material_number = $item->materialNumber;
+
+                if (!isset($items_grouped[$material_number])) {
+                    $items_grouped[$material_number] = (object) [
+                        'materialNumber' => $material_number,
+                        'spb_customer' => $item->spb_customer,
+                        'qty' => $item->qty,
+                        'qty_terima' => $item->qty_terima,
+                        'asal_qty' => $item->asal_qty,
+                    ];
+                } else {
+                    // Jika materialNumber sama, jumlahkan qty dan qty_terima
+                    $items_grouped[$material_number]->qty += $item->qty;
+                    $items_grouped[$material_number]->qty_terima += $item->qty_terima;
+
+                    // Gabungkan asal_qty jika ada
+                    $items_grouped[$material_number]->asal_qty = array_merge(
+                        $items_grouped[$material_number]->asal_qty,
+                        $item->asal_qty
+                    );
+                }
+            }
+
+            dd($items_grouped);
+
             $this->items_with_qty = $items_with_qty;
         } else {
             // Ambil SPB dari invoice_aop_header
