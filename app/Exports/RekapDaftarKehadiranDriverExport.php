@@ -16,8 +16,6 @@ class RekapDaftarKehadiranDriverExport implements WithMultipleSheets
         $this->fromDate = $fromDate;
         $this->toDate = $toDate;
         $this->items = $items;
-
-        dd($items);
     }
 
     public function sheets(): array
