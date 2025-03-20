@@ -163,7 +163,6 @@ class GoodsReceiptAopDetail extends Component
                 if (!isset($items_grouped[$material_number])) {
                     $items_grouped[$material_number] = (object) [
                         'materialNumber' => $material_number,
-                        'spb_customer' => $item->spb_customer,
                         'qty' => $item->qty,
                         'qty_terima' => $item->qty_terima,
                         'asal_qty' => $item->asal_qty,
@@ -181,9 +180,7 @@ class GoodsReceiptAopDetail extends Component
                 }
             }
 
-            dd($items_grouped);
-
-            $this->items_with_qty = $items_with_qty;
+            $this->items_with_qty = collect(array_values($items_grouped));
         } else {
             // Ambil SPB dari invoice_aop_header
             $spb = DB::table('invoice_aop_header')
