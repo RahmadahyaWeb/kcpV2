@@ -124,7 +124,6 @@ class GoodsReceiptAopDetail extends Component
         }
 
         // Jika ingin array dengan indeks numerik (bukan associative array)
-        $grouped_data = array_values($grouped_data);
 
         dd($grouped_data);
 
