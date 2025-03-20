@@ -89,11 +89,9 @@ class GoodsReceiptAopDetail extends Component
         // Ambil data items dari invoice_aop_detail
         $items = DB::table('invoice_aop_detail')
             ->where('invoiceAop', $this->invoiceAop)
-            ->get()
-            ->map(function ($item) {
-                $item->spb_customer = $item->SPB . ' ' . $item->customer_to;
-                return $item;
-            });
+            ->selectRaw("CONCAT(SPB, ' ', customer_to) as spb_customer, *")
+            ->get();
+
 
         dd($items);
 
