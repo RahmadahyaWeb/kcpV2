@@ -59,7 +59,7 @@ class MonitoringDkd extends Component
             ->when($this->kd_toko, function ($query) {
                 return $query->where('in_data.kd_toko', $this->kd_toko);
             })
-            ->when($this->user_sales, function ($query) {
+            ->when($this->user_driver, function ($query) {
                 return $query->where('in_data.user_sales', $this->user_sales);
             })
             ->whereDate('in_data.tgl_kunjungan', '>=', $startOfMonth)
@@ -114,8 +114,6 @@ class MonitoringDkd extends Component
         $driver = User::role('driver')
             ->orderBy('name', 'asc')
             ->get();
-
-        dd($items);
 
         return view('livewire.report-warehouse.monitoring-dkd', compact(
             'items',
