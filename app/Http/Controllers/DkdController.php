@@ -134,7 +134,7 @@ class DkdController extends Controller
             DB::commit();
 
             $action = $katalog == 'Y' ? 'scan katalog' : "check $type";
-            return redirect()->route('dks.index')->with('success', "Berhasil melakukan $action");
+            return redirect()->route('daftar-kehadiran-driver.index')->with('success', "Berhasil melakukan $action");
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->redirectBackWithError($e->getMessage());
