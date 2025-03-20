@@ -33,11 +33,24 @@ LEFT JOIN
               WHERE x.flag_approve1 = 'Y'
               GROUP BY x.noinv) c ON a.noinv = c.noinv
    WHERE a.flag_pembayaran_lunas = 'N' AND a.flag_batal = 'N') h ON p.kd_outlet = h.kd_outlet
-WHERE p.kd_outlet = 'M9'
+WHERE p.kd_outlet = '$kd_outlet'
 GROUP BY p.kd_outlet
         ");
 
-        dd($query);
+        foreach ($query as $key => $value) {
+            if ($value->hutang == 0) {
+                $nominal_plafond = $value->nominal_plafond_upload;
+            } else {
+                $nominal_plafond = $value->nominal_plafond_upload - $value->hutang;
+            }
+
+            DB::connection('kcpinformation')
+                ->table('trns_plafond')
+                ->where('kd_outlet', $kd_outlet)
+                ->update([
+                    'nominal_plafond' => $nominal_plafond
+                ]);
+        }
     }
 
     public function sync_intransit()
