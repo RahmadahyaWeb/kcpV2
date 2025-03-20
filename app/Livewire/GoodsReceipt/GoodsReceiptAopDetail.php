@@ -192,6 +192,8 @@ class GoodsReceiptAopDetail extends Component
                 }
             }
 
+            dd($items_grouped);
+
             $this->items_with_qty = collect(array_values($items_grouped));
         } else {
             // Ambil SPB dari invoice_aop_header
