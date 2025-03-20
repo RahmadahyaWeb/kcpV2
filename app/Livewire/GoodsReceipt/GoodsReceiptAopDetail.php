@@ -164,6 +164,7 @@ class GoodsReceiptAopDetail extends Component
                     // Jika material number belum ada, masukkan data pertama kali
                     $items_grouped[$material_number] = (object) [
                         'materialNumber' => $material_number,
+                        'invoiceAop' => $item->invoiceAop, // Tambahkan invoiceAop
                         'qty' => $item->qty,
                         'qty_terima' => $item->qty_terima,
                         'asal_qty' => $item->asal_qty,
@@ -191,8 +192,6 @@ class GoodsReceiptAopDetail extends Component
                     }
                 }
             }
-
-            dd($items_grouped);
 
             $this->items_with_qty = collect(array_values($items_grouped));
         } else {
