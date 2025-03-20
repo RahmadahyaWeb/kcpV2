@@ -34,7 +34,7 @@ LEFT JOIN
               GROUP BY x.noinv) c ON a.noinv = c.noinv
    WHERE a.flag_pembayaran_lunas = 'N' AND a.flag_batal = 'N') h ON p.kd_outlet = h.kd_outlet
 WHERE p.kd_outlet = 'M9'
-GROUP BY p.kd_outlet
+GROUP BY p.kd_outlet
         ");
 
         dd($query);
