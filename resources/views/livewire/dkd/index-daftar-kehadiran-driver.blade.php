@@ -21,7 +21,6 @@
                             <th>Tgl. Kunjungan</th>
                             <th>Toko</th>
                             <th>Check In</th>
-                            <th>Katalog</th>
                             <th>Check Out</th>
                             <th>Lama Kunjungan</th>
                             <th>Keterangan</th>
@@ -46,13 +45,6 @@
                                     <td style="white-space: nowrap">{{ $formattedDate }}</td>
                                     <td style="white-space: nowrap">{{ $item->nama_toko }}</td>
                                     <td>{{ date('H:i:s', strtotime($item->waktu_cek_in)) }}</td>
-                                    <td>
-                                        @if ($item->katalog_at)
-                                            {{ date('H:i:s', strtotime($item->katalog_at)) }}
-                                        @else
-                                            Belum scan katalog
-                                        @endif
-                                    </td>
                                     @if (in_array($item->kd_toko, $absen_toko))
                                         <td>
                                             @if ($item->waktu_cek_out)
