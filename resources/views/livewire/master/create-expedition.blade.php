@@ -26,7 +26,7 @@
                                 <input type="text"
                                     class="form-control @error('nama_expedition') is-invalid @enderror"
                                     id="nama_expedition" name="nama_expedition" wire:model="nama_expedition"
-                                    placeholder="Kode Expedition">
+                                    placeholder="Nama Expedition">
 
                                 @error('nama_expedition')
                                     <div class="invalid-feedback">
@@ -37,7 +37,7 @@
                             <div class="col-12 mb-3">
                                 <label for="latitude" class="form-label">Latitude</label>
                                 <input type="text" class="form-control @error('latitude') is-invalid @enderror"
-                                    id="latitude" name="latitude" wire:model="latitude" placeholder="Kode Expedition">
+                                    id="latitude" name="latitude" wire:model="latitude" placeholder="Latitude">
 
                                 @error('latitude')
                                     <div class="invalid-feedback">
@@ -49,7 +49,7 @@
                                 <label for="longitude" class="form-label">Longitude</label>
                                 <input type="text" class="form-control @error('longitude') is-invalid @enderror"
                                     id="longitude" name="longitude" wire:model="longitude"
-                                    placeholder="Kode Expedition">
+                                    placeholder="Longitude">
 
                                 @error('longitude')
                                     <div class="invalid-feedback">
