@@ -278,4 +278,18 @@ return [
         "active" => Request::is('daftar-kehadiran-driver/scan*'),
         "children" => []
     ],
+    [
+        "label" => "Report Warehouse",
+        "icon" => "bx bx-layout",
+        "route" => null,
+        "roles" => ['super-user', 'head-warehouse'],
+        "active" => Request::is('report-warehouse*'),
+        "children" => [
+            [
+                "label" => "DKD",
+                "route" => "report-warehouse.dkd",
+                "active" => Request::is('report-warehouse/dkd*')
+            ],
+        ]
+    ],
 ];

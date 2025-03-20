@@ -57,6 +57,7 @@ use App\Livewire\Master\IndexMasterPart;
 use App\Livewire\Pajak\IndexPajakMasukan;
 use App\Livewire\ReportFinance\AgingReport;
 use App\Livewire\ReportMarketing\IndexLaporanInvoice;
+use App\Livewire\ReportWarehouse\MonitoringDkd;
 use App\Livewire\StockPart\IndexStockPart;
 use App\Livewire\StockPart\IndexStockPartRak;
 use App\Livewire\StoreRak\DetailStoreRak;
@@ -280,6 +281,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/daftar-kehadiran-driver/scan', IndexDaftarKehadiranDriver::class)->name('daftar-kehadiran-driver.index');
         Route::get('/daftar-kehadiran-driver/scan/{kode_toko}', SubmitDaftarKehadiranDriver::class)->name('daftar-kehadiran-driver.submit');
         Route::post('daftar-kehadiran-driver/scan/store', [DkdController::class, 'store'])->name('daftar-kehadiran-driver.store');
+    });
+
+    /**
+     * super-user
+     * head-warehouse
+     */
+    Route::middleware('role:driver|super-user')->group(function () {
+        Route::get('/report-warehouse/dks', MonitoringDkd::class)->name('report-warehouse.dkd');
+        // Route::get('/report-warehouse/dks/rekap-punishment', RekapPunishment::class)->name('report-warehouse.dks.rekap-punishment');
     });
 
     // LOGOUT
