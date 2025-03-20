@@ -7,7 +7,7 @@ use Livewire\Component;
 
 class EditExpedition extends Component
 {
-    public $kd_expedition, $nama_expedition, $latitude, $longitude;
+    public $kd_expedition, $nama_expedition, $latitude, $longitude, $kd_prp;
 
     public function mount($kd_expedition)
     {
@@ -32,6 +32,7 @@ class EditExpedition extends Component
             'nama_expedition'   => ['required'],
             'latitude'          => ['required'],
             'longitude'         => ['required'],
+            'kd_prp'            => ['required']
         ]);
 
         DB::table('mst_expedition')
@@ -40,6 +41,7 @@ class EditExpedition extends Component
                 'nama_expedition'   => $this->nama_expedition,
                 'latitude'          => $this->latitude,
                 'longitude'         => $this->longitude,
+                'kd_prp'            => $this->kd_prp,
                 'updated_at'        => now(),
             ]);
 

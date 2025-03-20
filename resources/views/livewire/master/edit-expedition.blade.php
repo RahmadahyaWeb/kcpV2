@@ -57,6 +57,13 @@
                                     </div>
                                 @enderror
                             </div>
+                            <div class="col-12 mb-3">
+                                <label for="kd_prp" class="form-label">Provinsi</label>
+                                <select name="kd_prp" id="kd_prp" class="form-select @error('kd_prp') is-invalid @enderror" wire:model="kd_prp">
+                                    <option value="6200">KALIMANTAN TENGAH</option>
+                                    <option value="6300">KALIMANTAN SELATAN</option>
+                                </select>
+                            </div>
                             <div class="col-12 d-flex justify-content-end">
                                 <button type="submit" class="btn btn-primary">Simpan</button>
                             </div>
