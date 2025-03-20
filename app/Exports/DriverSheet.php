@@ -163,8 +163,6 @@ class DriverSheet implements FromCollection, WithHeadings, WithCustomStartCell, 
                     ->select(['nama_expedition'])
                     ->where('kd_expedition', $kd_toko)
                     ->value('nama_expedition');
-
-                dd($nama_toko);
             } else {
                 $nama_toko = DB::connection('kcpinformation')
                     ->table('mst_outlet')
