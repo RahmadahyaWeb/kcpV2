@@ -270,4 +270,12 @@ return [
         "active" => Request::is('stock-movement*'),
         "children" => []
     ],
+    [
+        "label" => "DKD Scan",
+        "icon" => "bx bx-qr-scan",
+        "route" => "daftar-kehadiran-driver.index",
+        "roles" => ['super-user', 'driver'],
+        "active" => Request::is('daftar-kehadiran-driver/scan*'),
+        "children" => []
+    ],
 ];
