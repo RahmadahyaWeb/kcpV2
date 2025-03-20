@@ -173,6 +173,13 @@ class RekapDaftarKehadiranDriver extends Component
 
     public function render()
     {
-        return view('livewire.dkd.rekap-daftar-kehadiran-driver');
+        $users = User::role('driver')
+            ->where('status', 'active')
+            ->orderBy('name', 'asc')
+            ->get();
+
+        return view('livewire.dkd.rekap-daftar-kehadiran-driver', compact(
+            'users'
+        ));
     }
 }
