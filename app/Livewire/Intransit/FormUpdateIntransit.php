@@ -45,8 +45,6 @@ class FormUpdateIntransit extends Component
 
         session()->flash('success', "Berhasil update part number");
 
-        dd($this->delivery_note);
-
         $this->redirectRoute('intransit.detail', $this->delivery_note);
     }
 
@@ -61,7 +59,7 @@ class FormUpdateIntransit extends Component
         $this->qty = $item->qty;
         $this->qty_terima = $item->qty_terima;
         $this->kd_rak = $item->kd_rak;
-        $this->delivery_note = $item->no_sp_aop;
+        $this->delivery_note = $item->delivery_note;
 
         $kd_gudang = ($item->kd_gudang_aop == 'KCP01001') ? 'GD1' : 'GD2';
 
