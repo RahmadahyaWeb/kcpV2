@@ -156,17 +156,23 @@ class DriverSheet implements FromCollection, WithHeadings, WithCustomStartCell, 
         $kd_toko = $row->kd_toko;
 
         // NAMA TOKO
-        if ($row->kd_toko && $row->kd_toko != 'TQ2') {
-            $nama_toko = DB::connection('kcpinformation')
-                ->table('mst_outlet')
-                ->where('kd_outlet', $row->kd_toko)
-                ->value('nm_outlet');
-        } else if ($row->kd_toko == 'TQ2') {
+        if ($kd_toko && $kd_toko != 'TQ2') {
+            if (strpos($kd_toko, 'E_') !== false) {
+                $toko = DB::connection('mysql')
+                    ->table('mst_expedition')
+                    ->select(['kd_expedition as kd_outlet', 'nama_expedition as nm_outlet', 'latitude', 'longitude'])
+                    ->where('kd_expedition', $kd_toko)
+                    ->first();
+            } else {
+                $nama_toko = DB::connection('kcpinformation')
+                    ->table('mst_outlet')
+                    ->where('kd_outlet', $kd_toko)
+                    ->value('nm_outlet');
+            }
+        } else if ($kd_toko == 'TQ2') {
             $nama_toko = 'SINAR TAQWA MOTOR 2';
         } else {
-            $nama_toko = DB::table('mst_expedition')
-                ->where('kd_expedition', $row->kd_toko)
-                ->value('nama_expedition');;
+            $nama_toko = 'ERROR: TOKO TIDAK TERDAFTAR';
         }
 
         // WAKTU CEK IN
