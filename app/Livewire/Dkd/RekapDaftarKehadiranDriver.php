@@ -2,11 +2,13 @@
 
 namespace App\Livewire\Dkd;
 
+use App\Exports\RekapDaftarKehadiranDriverExport;
 use App\Models\User;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 class RekapDaftarKehadiranDriver extends Component
 {
@@ -154,7 +156,7 @@ class RekapDaftarKehadiranDriver extends Component
 
         $filename = "rekap-daftar-kehadiran-driver_{$fromDateFormatted}_-_{$toDateFormatted}.xlsx";
 
-        // return Excel::download(new RekapPunishmentExport($this->fromDate, $this->toDate, $usersData), $filename);
+        return Excel::download(new RekapDaftarKehadiranDriverExport($this->fromDate, $this->toDate, $usersData), $filename);
     }
 
     private function getDateRange()
