@@ -48,12 +48,8 @@
                         @foreach ($items_with_qty as $item)
                             <tr>
                                 <td>
-                                    {{ dd($item->qty, $item->qty_terima, $item->asal_qty ? $item->asal_qty->sum('qty') : 0, $item->status) }}
-
-                                </td>
-                                <td>
                                     <input type="checkbox" wire:model.change="selectedItems"
-                                        value="{{ $item->materialNumber }}" @disabled($item->qty <= $item->qty_terima - ($item->asal_qty ? $item->asal_qty->sum('qty') : 0) && $item->status != 'BOSNET') />
+                                        value="{{ $item->materialNumber }}" @disabled(!($item->qty >= $item->qty_terima - ($item->asal_qty ? $item->asal_qty->sum('qty') : 0)) || $item->status == 'BOSNET') />
                                 </td>
                                 <td>{{ $item->materialNumber }}</td>
                                 <td>{{ $item->qty }}</td>
