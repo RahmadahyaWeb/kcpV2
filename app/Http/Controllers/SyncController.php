@@ -65,7 +65,7 @@ class SyncController extends Controller
         $kcpinformation = DB::connection('kcpinformation');
 
         $invoice_aop = $kcpapplication->table('invoice_aop_header')
-            ->whereDate('billingDocumentDate', '>=', '2025-02-28')
+            ->whereDate('billingDocumentDate', '>=', '2025-03-01')
             // ->whereIn('invoiceAop', ['4009709954', '4009709906'])
             ->select('SPB', 'customerTo', 'invoiceAop', 'billingDocumentDate')
             ->orderBy('created_at', 'desc')
