@@ -45,7 +45,9 @@ class FormUpdateIntransit extends Component
 
         session()->flash('success', "Berhasil update part number");
 
-        $this->redirectRoute('intransit.detail', $this->no_sp_aop);
+        dd($this->delivery_note);
+
+        $this->redirectRoute('intransit.detail', $this->delivery_note);
     }
 
     public function render()
