@@ -81,75 +81,85 @@ class GoodsReceiptAopDetail extends Component
     {
         $kcpinformation = DB::connection('kcpinformation');
 
-        // Ambil SPB dari invoice_aop_header
-        $spb = DB::table('invoice_aop_header')
+        // BILLING DOCUMENT DATE
+        $bill_date = DB::table('invoice_aop_header')
             ->where('invoiceAop', $this->invoiceAop)
-            ->value('SPB');
+            ->value('billingDocumentDate');
 
-        // Ambil data items dari invoice_aop_detail
-        $items = DB::table('invoice_aop_detail')
-            ->where('invoiceAop', $this->invoiceAop)
-            ->get()
-            ->map(function ($item) {
-                $item->spb_customer = $item->SPB . '' . $item->customerTo;
+        if ($bill_date >= '2025-02-28') {
+            // Ambil SPB dari invoice_aop_header
+            $spb = DB::table('invoice_aop_header')
+                ->where('invoiceAop', $this->invoiceAop)
+                ->value('SPB');
+
+            // Ambil data items dari invoice_aop_detail
+            $items = DB::table('invoice_aop_detail')
+                ->where('invoiceAop', $this->invoiceAop)
+                ->get()
+                ->map(function ($item) {
+                    $item->spb_customer = $item->SPB . '' . $item->customerTo;
+                    return $item;
+                });
+
+            // Total items terkirim
+            $total_items_terkirim = DB::table('invoice_aop_detail')
+                ->where('invoiceAop', $this->invoiceAop)
+                ->where('status', 'BOSNET')
+                ->count();
+
+            // Ambil data intransit dari intransit_details
+            $intransit = $kcpinformation->table('intransit_details')
+                ->whereIn('delivery_note', $items->pluck('spb_customer')->toArray())
+                ->get();
+
+            // Kelompokkan qty_terima berdasarkan part_no dan delivery_note
+            $grouped_data = [];
+
+            foreach ($intransit as $value) {
+                $key = $value->part_no . '|' . $value->delivery_note;
+
+                if (isset($grouped_data[$key])) {
+                    $grouped_data[$key]['qty_terima'] += $value->qty_terima;
+                } else {
+                    $grouped_data[$key] = [
+                        'part_no' => $value->part_no,
+                        'delivery_note' => $value->delivery_note,
+                        'qty_terima' => $value->qty_terima,
+                    ];
+                }
+            }
+
+            // Proses items dan tambahkan informasi jika qty_terima lebih besar
+            $items_with_qty = $items->map(function ($item) use ($grouped_data, $spb) {
+                $material_number = $item->materialNumber;
+                $key =  $material_number . '|' . $item->spb_customer;
+
+                // Default nilai qty_terima
+                $item->qty_terima = isset($grouped_data[$key]) ? $grouped_data[$key]['qty_terima'] : 0;
+
+                // Tambahkan field 'asal_qty' jika qty_terima > qty
+                if ($item->qty_terima > $item->qty) {
+                    $other_invoice_qty = $this->find_qty_in_other_invoice($material_number, $spb);
+
+                    // Format data asal qty
+                    $item->asal_qty = $other_invoice_qty->map(function ($other) {
+                        return [
+                            'qty' => $other->qty,
+                            'invoice' => $other->invoiceAop, // Tambahkan invoiceAop
+                        ];
+                    });
+                } else {
+                    $item->asal_qty = [];
+                }
+
                 return $item;
             });
 
-        // Total items terkirim
-        $total_items_terkirim = DB::table('invoice_aop_detail')
-            ->where('invoiceAop', $this->invoiceAop)
-            ->where('status', 'BOSNET')
-            ->count();
-
-        // Ambil data intransit dari intransit_details
-        $intransit = $kcpinformation->table('intransit_details')
-            ->whereIn('delivery_note', $items->pluck('spb_customer')->toArray())
-            ->get();
-
-        // Kelompokkan qty_terima berdasarkan part_no
-        $grouped_data = [];
-
-        foreach ($intransit as $value) {
-            $key = $value->part_no . '|' . $value->delivery_note;
-
-            if (isset($grouped_data[$key])) {
-                $grouped_data[$key]['qty_terima'] += $value->qty_terima;
-            } else {
-                $grouped_data[$key] = [
-                    'part_no' => $value->part_no,
-                    'delivery_note' => $value->delivery_note,
-                    'qty_terima' => $value->qty_terima,
-                ];
-            }
+            $this->items_with_qty = $items_with_qty;
+        } else {
+            // Gunakan kode lama (kosongkan variabel jika tidak ada kode lama)
+            $this->items_with_qty = collect([]);
         }
-
-        // Proses items dan tambahkan informasi jika qty_terima lebih besar
-        $items_with_qty = $items->map(function ($item) use ($grouped_data, $spb) {
-            $material_number = $item->materialNumber;
-            $key =  $material_number . '|' . $item->spb_customer;
-
-            // Default nilai qty_terima
-            $item->qty_terima = isset($grouped_data[$key]) ? $grouped_data[$key]['qty_terima'] : 0;
-
-            // Tambahkan field 'asal_qty' jika qty_terima > qty
-            if ($item->qty_terima > $item->qty) {
-                $other_invoice_qty = $this->find_qty_in_other_invoice($material_number, $spb);
-
-                // Format data asal qty
-                $item->asal_qty = $other_invoice_qty->map(function ($other) {
-                    return [
-                        'qty' => $other->qty,
-                        'invoice' => $other->invoiceAop, // Tambahkan invoiceAop
-                    ];
-                });
-            } else {
-                $item->asal_qty = [];
-            }
-
-            return $item;
-        });
-
-        $this->items_with_qty = $items_with_qty;
 
         return view('livewire.goods-receipt.goods-receipt-aop-detail', compact(
             'items_with_qty',
