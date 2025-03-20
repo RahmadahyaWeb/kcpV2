@@ -175,8 +175,6 @@ class DriverSheet implements FromCollection, WithHeadings, WithCustomStartCell, 
             $nama_toko = '';
         }
 
-        dd($nama_toko);
-
         // WAKTU CEK IN
         $waktu_cek_in = $row->waktu_cek_in ? Carbon::parse($row->waktu_cek_in)->format('H:i:s') : '';
 
