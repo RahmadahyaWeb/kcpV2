@@ -95,7 +95,7 @@ class GoodsReceiptAopDetail extends Component
                 return $item;
             });
 
-        dd($items->pluck('spb_customer')->toArray());
+
 
         // Total items terkirim
         $total_items_terkirim = DB::table('invoice_aop_detail')
@@ -105,8 +105,10 @@ class GoodsReceiptAopDetail extends Component
 
         // Ambil data intransit dari intransit_details
         $intransit = $kcpinformation->table('intransit_details')
-            ->where('delivery_note', 'like', '%' . $spb . '%')
+            ->whereIn('delivery_note', $items->pluck('spb_customer')->toArray())
             ->get();
+
+        dd($intransit);
 
         // Kelompokkan qty_terima berdasarkan part_no
         $grouped_data = [];
