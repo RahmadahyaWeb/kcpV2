@@ -12,29 +12,29 @@ class SyncController extends Controller
     {
         $query = DB::connection('kcpinformation')->select("
             SELECT
-                p.kd_outlet,
-                p.nm_outlet,
-                p.nominal_plafond_upload,
-                p.nominal_plafond,
-                IFNULL(SUM(h.hutang), 0) AS hutang
-                FROM
-                (SELECT kd_outlet, nm_outlet, nominal_plafond_upload, nominal_plafond
-                FROM kcpinformation.trns_plafond) p
-                LEFT JOIN
-                (SELECT a.kd_outlet, a.nm_outlet, (a.amount_total - IFNULL(b.nominal, 0)) AS hutang
-                FROM kcpinformation.trns_inv_header a
-                LEFT JOIN (SELECT noinv, kd_outlet, SUM(nominal) AS nominal
-                            FROM kcpinformation.trns_pembayaran_piutang
-                            WHERE status = 'C'
-                            GROUP BY noinv) b ON a.noinv = b.noinv
-                LEFT JOIN (SELECT x.noinv, SUM(y.nominal_total) AS nominal_retur
-                            FROM kcpinformation.trns_retur_header x
-                            JOIN kcpinformation.trns_retur_details y ON x.noretur = y.noretur
-                            WHERE x.flag_approve1 = 'Y'
-                            GROUP BY x.noinv) c ON a.noinv = c.noinv
-                WHERE a.flag_pembayaran_lunas = 'N' AND a.flag_batal = 'N') h ON p.kd_outlet = h.kd_outlet
-                WHERE p.kd_outlet = 'M9'
-                GROUP BY p.kd_outlet
+  p.kd_outlet,
+  p.nm_outlet,
+  p.nominal_plafond_upload,
+  p.nominal_plafond,
+  IFNULL(SUM(h.hutang), 0) AS hutang
+FROM
+  (SELECT kd_outlet, nm_outlet, nominal_plafond_upload, nominal_plafond
+   FROM kcpinformation.trns_plafond) p
+LEFT JOIN
+  (SELECT a.kd_outlet, a.nm_outlet, (a.amount_total - IFNULL(b.nominal, 0)) AS hutang
+   FROM kcpinformation.trns_inv_header a
+   LEFT JOIN (SELECT noinv, kd_outlet, SUM(nominal) AS nominal
+              FROM kcpinformation.trns_pembayaran_piutang
+              WHERE status = 'C'
+              GROUP BY noinv) b ON a.noinv = b.noinv
+   LEFT JOIN (SELECT x.noinv, SUM(y.nominal_total) AS nominal_retur
+              FROM kcpinformation.trns_retur_header x
+              JOIN kcpinformation.trns_retur_details y ON x.noretur = y.noretur
+              WHERE x.flag_approve1 = 'Y'
+              GROUP BY x.noinv) c ON a.noinv = c.noinv
+   WHERE a.flag_pembayaran_lunas = 'N' AND a.flag_batal = 'N') h ON p.kd_outlet = h.kd_outlet
+WHERE p.kd_outlet = 'M9'
+GROUP BY p.kd_outlet
         ");
 
         dd($query);
