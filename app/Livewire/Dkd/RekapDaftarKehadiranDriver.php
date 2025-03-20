@@ -26,7 +26,7 @@ class RekapDaftarKehadiranDriver extends Component
             'laporan'       => 'required'
         ]);
 
-        $usersQuery = User::role('salesman')->where('status', 'active');
+        $usersQuery = User::role('driver')->where('status', 'active');
 
         if ($this->user_sales != 'all') {
             $usersQuery->where('username', '=', $this->user_sales);
