@@ -54,6 +54,7 @@
                                 <td>{{ $item->materialNumber }}</td>
                                 <td>{{ $item->qty }}</td>
                                 <td>{{ $item->qty_terima }}</td>
+                                <td>{{ ($item->asal_qty ? $item->asal_qty->sum('qty') : 0) }}</td>
                                 <td>
                                     @if (!empty($item->asal_qty))
                                         {!! implode(
