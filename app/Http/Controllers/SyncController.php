@@ -10,7 +10,7 @@ class SyncController extends Controller
 {
     public function sync_limit_kredit($kd_outlet)
     {
-        $query = DB::select("
+        $query = DB::connection('kcpinformation')->select("
             SELECT
                 p.kd_outlet,
                 p.nm_outlet,
