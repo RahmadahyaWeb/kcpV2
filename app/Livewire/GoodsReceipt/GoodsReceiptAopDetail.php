@@ -129,6 +129,9 @@ class GoodsReceiptAopDetail extends Component
         // Proses items dan tambahkan informasi jika qty_terima lebih besar
         $items_with_qty = $items->map(function ($item) use ($grouped_data, $spb) {
             $material_number = $item->materialNumber;
+            $spb = $item->spb_customer;
+
+            dd($spb);
 
             // Default nilai qty_terima
             $item->qty_terima = isset($grouped_data[$material_number]) ? $grouped_data[$material_number] : 0;
