@@ -91,6 +91,8 @@ class GoodsReceiptAopDetail extends Component
             ->where('invoiceAop', $this->invoiceAop)
             ->get();
 
+        dd($items);
+
         // Total items terkirim
         $total_items_terkirim = DB::table('invoice_aop_detail')
             ->where('invoiceAop', $this->invoiceAop)
