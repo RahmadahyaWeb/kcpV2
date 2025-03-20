@@ -91,11 +91,11 @@ class GoodsReceiptAopDetail extends Component
             ->where('invoiceAop', $this->invoiceAop)
             ->get()
             ->map(function ($item) {
-                $item->spb_customer = $item->SPB . ' ' . $item->customerTo;
+                $item->spb_customer = $item->SPB . '' . $item->customerTo;
                 return $item;
             });
 
-        dd($items);
+        dd($items->pluck('spb_customer')->toArray());
 
         // Total items terkirim
         $total_items_terkirim = DB::table('invoice_aop_detail')
