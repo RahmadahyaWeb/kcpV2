@@ -126,6 +126,8 @@ class GoodsReceiptAopDetail extends Component
         // Jika ingin array dengan indeks numerik (bukan associative array)
         $grouped_data = array_values($grouped_data);
 
+        dd($grouped_data);
+
         // Proses items dan tambahkan informasi jika qty_terima lebih besar
         $items_with_qty = $items->map(function ($item) use ($grouped_data, $spb) {
             $material_number = $item->materialNumber;
