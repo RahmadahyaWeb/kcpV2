@@ -123,19 +123,13 @@ class GoodsReceiptAopDetail extends Component
             }
         }
 
-        // Jika ingin array dengan indeks numerik (bukan associative array)
-
-        dd($grouped_data);
-
         // Proses items dan tambahkan informasi jika qty_terima lebih besar
         $items_with_qty = $items->map(function ($item) use ($grouped_data, $spb) {
             $material_number = $item->materialNumber;
-            $spb = $item->spb_customer;
-
-            dd($spb);
+            $key = $item->spb_customer;
 
             // Default nilai qty_terima
-            $item->qty_terima = isset($grouped_data[$material_number]) ? $grouped_data[$material_number] : 0;
+            $item->qty_terima = isset($grouped_data[$key]) ? $grouped_data[$key]['qty_terima'] : 0;
 
             // Tambahkan field 'asal_qty' jika qty_terima > qty
             if ($item->qty_terima > $item->qty) {
