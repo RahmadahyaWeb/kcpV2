@@ -60,7 +60,7 @@ class DriverSheet implements FromCollection, WithHeadings, WithCustomStartCell, 
                 $sheet->setCellValue('F1', "Check Out");
                 $sheet->setCellValue('G1', "Keterangan");
                 $sheet->setCellValue('H1', "Durasi Kunjungan");
-                $sheet->setCellValue('J1', "Durasi Perjalanan");
+                $sheet->setCellValue('I1', "Durasi Perjalanan");
 
                 // HEADER STYLE
                 $styleArray = [
