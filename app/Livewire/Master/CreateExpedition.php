@@ -31,7 +31,7 @@ class CreateExpedition extends Component
 
         session()->flash('success', 'Changes have been saved successfully');
 
-        $this->redirectRoute('expedition.index');
+        $this->redirectRoute('expedition.index', [], true, true);
     }
 
     public function render()
