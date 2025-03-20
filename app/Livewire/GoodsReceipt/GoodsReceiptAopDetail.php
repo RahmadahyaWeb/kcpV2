@@ -110,15 +110,21 @@ class GoodsReceiptAopDetail extends Component
         $grouped_data = [];
 
         foreach ($intransit as $value) {
-            $part_no = $value->part_no;
-            dd($value);
+            $key = $value->part_no . '|' . $value->delivery_note;
 
-            if (isset($grouped_data[$part_no])) {
-                $grouped_data[$part_no] += $value->qty_terima;
+            if (isset($grouped_data[$key])) {
+                $grouped_data[$key]['qty_terima'] += $value->qty_terima;
             } else {
-                $grouped_data[$part_no] = $value->qty_terima;
+                $grouped_data[$key] = [
+                    'part_no' => $value->part_no,
+                    'delivery_note' => $value->delivery_note,
+                    'qty_terima' => $value->qty_terima,
+                ];
             }
         }
+
+        // Jika ingin array dengan indeks numerik (bukan associative array)
+        $grouped_data = array_values($grouped_data);
 
         dd($grouped_data);
 
