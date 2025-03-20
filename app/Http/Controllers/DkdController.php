@@ -39,7 +39,7 @@ class DkdController extends Controller
 
         $provinsiToko = DB::table('mst_expedition')
             ->where('kd_expedition', $kd_toko)
-            ->value('kode_prp');
+            ->value('kd_prp');
 
         // Penyesuaian Waktu
         $waktu_kunjungan = $this->adjustVisitTime($provinsiToko);
