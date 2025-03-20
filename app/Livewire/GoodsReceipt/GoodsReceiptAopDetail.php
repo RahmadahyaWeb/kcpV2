@@ -112,57 +112,50 @@ class GoodsReceiptAopDetail extends Component
                 ->whereIn('delivery_note', $items->pluck('spb_customer')->toArray())
                 ->get();
 
-            // Kelompokkan qty_terima berdasarkan part_no
+            // Kelompokkan qty_terima berdasarkan part_no dan delivery_note
             $grouped_data = [];
 
             foreach ($intransit as $value) {
-                $key = $value->part_no; // Kelompokkan berdasarkan part_no saja
+                $key = $value->part_no . '|' . $value->delivery_note;
 
                 if (isset($grouped_data[$key])) {
                     $grouped_data[$key]['qty_terima'] += $value->qty_terima;
                 } else {
                     $grouped_data[$key] = [
                         'part_no' => $value->part_no,
+                        'delivery_note' => $value->delivery_note,
                         'qty_terima' => $value->qty_terima,
                     ];
                 }
             }
 
             // Proses items dan tambahkan informasi jika qty_terima lebih besar
-            $items_grouped = [];
-
-            foreach ($items as $item) {
+            $items_with_qty = $items->map(function ($item) use ($grouped_data, $spb) {
                 $material_number = $item->materialNumber;
+                $key =  $material_number . '|' . $item->spb_customer;
 
-                if (!isset($items_grouped[$material_number])) {
-                    $items_grouped[$material_number] = (object) [
-                        'materialNumber' => $material_number,
-                        'qty' => $item->qty,
-                        'qty_terima' => isset($grouped_data[$material_number]) ? $grouped_data[$material_number]['qty_terima'] : 0,
-                        'asal_qty' => [],
-                    ];
-                } else {
-                    $items_grouped[$material_number]->qty += $item->qty;
-                    $items_grouped[$material_number]->qty_terima += isset($grouped_data[$material_number]) ? $grouped_data[$material_number]['qty_terima'] : 0;
-                }
+                // Default nilai qty_terima
+                $item->qty_terima = isset($grouped_data[$key]) ? $grouped_data[$key]['qty_terima'] : 0;
 
                 // Tambahkan field 'asal_qty' jika qty_terima > qty
-                if ($items_grouped[$material_number]->qty_terima > $items_grouped[$material_number]->qty) {
+                if ($item->qty_terima > $item->qty) {
                     $other_invoice_qty = $this->find_qty_in_other_invoice($material_number, $spb);
 
-                    $items_grouped[$material_number]->asal_qty = $other_invoice_qty->map(function ($other) {
+                    // Format data asal qty
+                    $item->asal_qty = $other_invoice_qty->map(function ($other) {
                         return [
                             'qty' => $other->qty,
-                            'invoice' => $other->invoiceAop,
+                            'invoice' => $other->invoiceAop, // Tambahkan invoiceAop
                         ];
                     });
+                } else {
+                    $item->asal_qty = [];
                 }
-            }
 
-            dd($items_grouped);
+                return $item;
+            });
 
-            // Konversi hasil grouping menjadi koleksi
-            $this->items_with_qty = collect(array_values($items_grouped));
+            $this->items_with_qty = $items_with_qty;
         } else {
             // Ambil SPB dari invoice_aop_header
             $spb = DB::table('invoice_aop_header')
