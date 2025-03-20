@@ -99,7 +99,7 @@ class GoodsReceiptAopDetail extends Component
 
         // Ambil data intransit dari intransit_details
         $intransit = $kcpinformation->table('intransit_details')
-            ->where('no_sp_aop', 'like', '%' . $spb . '%')
+            ->where('delivery_note', 'like', '%' . $spb . '%')
             ->get();
 
         // Kelompokkan qty_terima berdasarkan part_no
