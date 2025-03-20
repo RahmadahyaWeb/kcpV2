@@ -159,6 +159,8 @@ class GoodsReceiptAopDetail extends Component
                 }
             }
 
+            dd($items_grouped);
+
             // Konversi hasil grouping menjadi koleksi
             $this->items_with_qty = collect(array_values($items_grouped));
         } else {
