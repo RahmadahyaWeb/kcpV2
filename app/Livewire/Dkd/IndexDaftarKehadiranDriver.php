@@ -59,6 +59,10 @@ class IndexDaftarKehadiranDriver extends Component
             if (isset($masterTokoArray[$item->kd_toko])) {
                 $item->nama_toko = $masterTokoArray[$item->kd_toko]->nm_outlet; // Menambahkan nama toko
                 // Anda bisa menambahkan field lain sesuai kebutuhan
+            } else {
+                $item->nama_toko = DB::table('mst_expedition')
+                    ->where('kd_expedition', $item->kd_toko)
+                    ->value('nama_expedition');
             }
             return $item;
         });
