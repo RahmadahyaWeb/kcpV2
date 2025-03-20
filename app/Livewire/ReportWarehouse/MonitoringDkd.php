@@ -115,6 +115,8 @@ class MonitoringDkd extends Component
             ->orderBy('name', 'asc')
             ->get();
 
+        dd($items);
+
         return view('livewire.report-warehouse.monitoring-dkd', compact(
             'items',
             'absen_toko',
