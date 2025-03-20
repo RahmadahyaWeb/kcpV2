@@ -3,6 +3,7 @@
 namespace App\Livewire\Dkd;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -37,6 +38,16 @@ class SubmitDaftarKehadiranDriver extends Component
             abort(404);
         }
 
-        return view('livewire.dkd.submit-daftar-kehadiran-driver');
+        $check = DB::table('trans_dkd')
+            ->where('kd_toko', $this->kode_toko)
+            ->where('user_sales', Auth::user()->username)
+            ->where('type', 'in')
+            ->whereDate('tgl_kunjungan', now()->toDateString())
+            ->count();
+
+        return view('livewire.dkd.submit-daftar-kehadiran-driver', compact(
+            'toko',
+            'check'
+        ));
     }
 }

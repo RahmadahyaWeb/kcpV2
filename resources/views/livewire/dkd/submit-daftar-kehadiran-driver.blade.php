@@ -8,8 +8,6 @@
 
                 if ($check == 1) {
                     $inOrOut = 'Check Out';
-                } elseif ($check == 'katalog') {
-                    $inOrOut = 'Katalog';
                 } else {
                     $inOrOut = 'Check In';
                 }
