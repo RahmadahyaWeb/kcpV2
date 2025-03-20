@@ -29,7 +29,7 @@
                     <div id="map"></div>
                 </div>
 
-                <form action="{{ route('dks.store') }}" method="POST" onsubmit="return validateForm(event)">
+                <form action="{{ route('daftar-kehadiran-driver.store') }}" method="POST" onsubmit="return validateForm(event)">
                     @csrf
                     <input type="hidden" name="kode_toko" value="{{ $toko->kd_outlet }}">
                     <input type="hidden" name="latitude" id="latitude">

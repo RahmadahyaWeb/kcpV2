@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\ReturManualController;
+use App\Http\Controllers\DkdController;
 use App\Http\Controllers\DksController;
 use App\Http\Controllers\SyncController;
 use App\Http\Controllers\UploadController;
@@ -278,6 +279,7 @@ Route::middleware('auth')->group(function () {
         // DKS
         Route::get('/daftar-kehadiran-driver/scan', IndexDaftarKehadiranDriver::class)->name('daftar-kehadiran-driver.index');
         Route::get('/daftar-kehadiran-driver/scan/{kode_toko}', SubmitDaftarKehadiranDriver::class)->name('daftar-kehadiran-driver.submit');
+        Route::post('daftar-kehadiran-driver/scan/store', [DkdController::class, 'store'])->name('daftar-kehadiran-driver.store');
     });
 
     // LOGOUT
