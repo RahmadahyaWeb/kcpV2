@@ -4,7 +4,7 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <b>Rekap Punishment DKS</b>
+                    <b>Rekap Daftar Kehadiran Driver</b>
                 </div>
                 <div class="card-body">
                     <form wire:submit.prevent="export">
@@ -35,8 +35,8 @@
                             </div>
 
                             <div class="col-md-12 mb-3">
-                                <label for="user_sales" class="form-label">Pilih Sales</label>
-                                <select wire:model.change="user_sales" class="form-select">
+                                <label for="user_driver" class="form-label">Pilih Driver</label>
+                                <select wire:model.change="user_driver" class="form-select">
                                     <option value="all">Semua sales</option>
                                     @foreach ($users as $user)
                                         <option value="{{ $user->username }}">{{ $user->name }}</option>
@@ -49,7 +49,7 @@
                                 <select wire:model.change="laporan"
                                     class="form-select @error('laporan') is-invalid @enderror">
                                     <option value="">Pilih laporan</option>
-                                    <option value="rekap_punishment">Rekap Punishment</option>
+                                    <option value="rekap_punishment">Rekap DKD</option>
                                 </select>
                                 @error('laporan')
                                     <div class="invalid-feedback">

@@ -15,7 +15,7 @@ class RekapDaftarKehadiranDriver extends Component
     public $target = 'export';
     public $fromDate;
     public $toDate;
-    public $user_sales = 'all';
+    public $user_driver = 'all';
     public $laporan;
 
     public function export()
@@ -28,8 +28,8 @@ class RekapDaftarKehadiranDriver extends Component
 
         $usersQuery = User::role('driver')->where('status', 'active');
 
-        if ($this->user_sales != 'all') {
-            $usersQuery->where('username', '=', $this->user_sales);
+        if ($this->user_driver != 'all') {
+            $usersQuery->where('username', '=', $this->user_driver);
         }
 
         $users = $usersQuery->get();
