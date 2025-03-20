@@ -14,6 +14,7 @@ use App\Livewire\Dashboard;
 use App\Livewire\DeliveryOrder\DetailDeliveryOrder;
 use App\Livewire\DeliveryOrder\IndexDeliveryOrder;
 use App\Livewire\Dkd\IndexDaftarKehadiranDriver;
+use App\Livewire\Dkd\RekapDaftarKehadiranDriver;
 use App\Livewire\Dkd\SubmitDaftarKehadiranDriver;
 use App\Livewire\Dks\RekapPunishment;
 use App\Livewire\Dks\Scan;
@@ -288,8 +289,8 @@ Route::middleware('auth')->group(function () {
      * head-warehouse
      */
     Route::middleware('role:driver|super-user')->group(function () {
-        Route::get('/report-warehouse/dks', MonitoringDkd::class)->name('report-warehouse.dkd');
-        // Route::get('/report-warehouse/dks/rekap-punishment', RekapPunishment::class)->name('report-warehouse.dks.rekap-punishment');
+        Route::get('/report-warehouse/dkd', MonitoringDkd::class)->name('report-warehouse.dkd');
+        Route::get('/report-warehouse/dkd/rekap-punishment', RekapDaftarKehadiranDriver::class)->name('report-warehouse.dkd.rekap-daftar-kehadiran-driver');
     });
 
     // LOGOUT
