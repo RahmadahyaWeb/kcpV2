@@ -160,9 +160,9 @@ class DriverSheet implements FromCollection, WithHeadings, WithCustomStartCell, 
             if (strpos($kd_toko, 'E_') !== false) {
                 $nama_toko = DB::connection('mysql')
                     ->table('mst_expedition')
-                    ->select(['kd_expedition as kd_outlet', 'nama_expedition as nm_outlet', 'latitude', 'longitude'])
+                    ->select(['kd_expedition', 'nama_expedition', 'latitude', 'longitude'])
                     ->where('kd_expedition', $kd_toko)
-                    ->first();
+                    ->value('nama_expedition');
             } else {
                 $nama_toko = DB::connection('kcpinformation')
                     ->table('mst_outlet')
