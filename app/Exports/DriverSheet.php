@@ -50,6 +50,8 @@ class DriverSheet implements FromCollection, WithHeadings, WithCustomStartCell, 
                 $sheet->mergeCells('E1:E2');
                 $sheet->mergeCells('F1:F2');
                 $sheet->mergeCells('G1:G2');
+                $sheet->mergeCells('H1:H2');
+                $sheet->mergeCells('I1:I2');
 
                 // SET HEADER TITLE
                 $sheet->setCellValue('A1', "Sales");
