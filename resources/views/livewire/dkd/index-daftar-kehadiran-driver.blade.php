@@ -4,7 +4,7 @@
 
     <div class="card">
         <div class="card-header">
-            DKS Monitoring Harian
+            DKD Monitoring Harian
         </div>
 
         <div class="card-body">
