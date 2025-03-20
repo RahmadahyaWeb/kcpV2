@@ -46,6 +46,7 @@
                     </thead>
                     <tbody>
                         @foreach ($items_with_qty as $item)
+                        @dd($item->qty <= $item->qty_terima - ($item->asal_qty ? $item->asal_qty->sum('qty') : 0))
                             <tr>
                                 <td>
                                     <input type="checkbox" wire:model.change="selectedItems"
