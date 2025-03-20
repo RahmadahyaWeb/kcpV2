@@ -158,6 +158,7 @@ class GoodsReceiptAopDetail extends Component
             $items_grouped = [];
 
             foreach ($items_with_qty as $item) {
+                dd($item);
                 $material_number = $item->materialNumber;
 
                 if (!isset($items_grouped[$material_number])) {
