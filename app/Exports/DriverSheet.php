@@ -155,16 +155,16 @@ class DriverSheet implements FromCollection, WithHeadings, WithCustomStartCell, 
         // KODE TOKO
         $kd_toko = $row->kd_toko;
 
-        dd($kd_toko);
-
         // NAMA TOKO
         if ($kd_toko && $kd_toko != 'TQ2') {
             if (strpos($kd_toko, 'E_') !== false) {
                 $nama_toko = DB::connection('mysql')
                     ->table('mst_expedition')
-                    ->select(['kd_expedition', 'nama_expedition', 'latitude', 'longitude'])
+                    ->select(['nama_expedition'])
                     ->where('kd_expedition', $kd_toko)
                     ->value('nama_expedition');
+
+                dd($nama_toko);
             } else {
                 $nama_toko = DB::connection('kcpinformation')
                     ->table('mst_outlet')
