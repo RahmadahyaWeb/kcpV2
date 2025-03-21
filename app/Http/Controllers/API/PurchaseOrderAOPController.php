@@ -208,6 +208,8 @@ class PurchaseOrderAOPController extends Controller
         // Ubah menjadi indexed array
         $items = array_values($groupedItems);
 
+        dd($items);
+
         return $items;
     }
 
