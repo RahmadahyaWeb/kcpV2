@@ -148,44 +148,63 @@ class PurchaseOrderAOPController extends Controller
     {
         $items = [];
 
-        // KIRIM NET SALES
+        // KIRIM GRAND TOTAL
         // foreach ($invoiceDetails as $detail) {
+        //     // $decAmount = ($detail->price * config('tax.ppn_percentage')) + $detail->price; //12.951.649,83
+        //     $decAmount = round(($detail->price * config('tax.ppn_percentage')) + $detail->price); //12.951.649
+
         //     $items[] = [
         //         'szProductId'          => $detail->materialNumber,
         //         'decQty'               => $detail->qty,
         //         'szUomId'              => "PCS",
-        //         'decPrice'             => $detail->price / $detail->qty,
+        //         'decPrice'             => $decAmount / $detail->qty,
         //         'bTaxable'             => true,
         //         'decDiscount'          => 0,
         //         'decDiscPercentage'    => 0,
-        //         'decDPP'               => $detail->price / config('tax.ppn_factor'),
-        //         'decPPN'               => ($detail->price / config('tax.ppn_factor')) * config('tax.ppn_percentage'),
-        //         'decAmount'            => $detail->price,
+        //         'decDPP'               => $detail->price,
+        //         'decPPN'               => $detail->price * config('tax.ppn_percentage'),
+        //         'decAmount'            => $decAmount,
         //         'purchaseItemTypeId'   => "BELI",
         //         'deliveryList'         => [['qty' => $detail->qty]],
         //     ];
         // }
 
-        // KIRIM GRAND TOTAL
-        foreach ($invoiceDetails as $detail) {
-            // $decAmount = ($detail->price * config('tax.ppn_percentage')) + $detail->price; //12.951.649,83
-            $decAmount = round(($detail->price * config('tax.ppn_percentage')) + $detail->price); //12.951.649
+        $groupedItems = [];
 
-            $items[] = [
-                'szProductId'          => $detail->materialNumber,
-                'decQty'               => $detail->qty,
-                'szUomId'              => "PCS",
-                'decPrice'             => $decAmount / $detail->qty,
-                'bTaxable'             => true,
-                'decDiscount'          => 0,
-                'decDiscPercentage'    => 0,
-                'decDPP'               => $detail->price,
-                'decPPN'               => $detail->price * config('tax.ppn_percentage'),
-                'decAmount'            => $decAmount,
-                'purchaseItemTypeId'   => "BELI",
-                'deliveryList'         => [['qty' => $detail->qty]],
-            ];
+        foreach ($invoiceDetails as $detail) {
+            $materialNumber = $detail->materialNumber;
+            $decPPN = $detail->price * config('tax.ppn_percentage');
+            $decAmount = round(($detail->price * config('tax.ppn_percentage')) + $detail->price);
+
+            if (!isset($groupedItems[$materialNumber])) {
+                // Jika belum ada, buat entry baru
+                $groupedItems[$materialNumber] = [
+                    'szProductId'          => $materialNumber,
+                    'decQty'               => $detail->qty,
+                    'szUomId'              => "PCS",
+                    'decPrice'             => $decAmount / $detail->qty,
+                    'bTaxable'             => true,
+                    'decDiscount'          => 0,
+                    'decDiscPercentage'    => 0,
+                    'decDPP'               => $detail->price,
+                    'decPPN'               => $decPPN,
+                    'decAmount'            => $decAmount,
+                    'purchaseItemTypeId'   => "BELI",
+                    'deliveryList'         => [['qty' => $detail->qty]],
+                ];
+            } else {
+                // Jika sudah ada, lakukan penjumlahan nilai yang relevan
+                $groupedItems[$materialNumber]['decQty'] += $detail->qty;
+                $groupedItems[$materialNumber]['decDPP'] += $detail->price;
+                $groupedItems[$materialNumber]['decPPN'] += $decPPN;
+                $groupedItems[$materialNumber]['decAmount'] += $decAmount;
+                $groupedItems[$materialNumber]['decPrice'] = $groupedItems[$materialNumber]['decAmount'] / $groupedItems[$materialNumber]['decQty'];
+                $groupedItems[$materialNumber]['deliveryList'][] = ['qty' => $detail->qty];
+            }
         }
+
+        // Ubah menjadi indexed array
+        $items = array_values($groupedItems);
 
         dd($items);
 
