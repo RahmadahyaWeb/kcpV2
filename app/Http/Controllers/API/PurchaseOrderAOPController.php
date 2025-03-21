@@ -187,6 +187,8 @@ class PurchaseOrderAOPController extends Controller
             ];
         }
 
+        dd($items);
+
         return $items;
     }
 
