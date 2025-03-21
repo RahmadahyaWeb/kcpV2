@@ -201,7 +201,7 @@ class PurchaseOrderAOPController extends Controller
                 $groupedItems[$materialNumber]['decPPN'] += $decPPN;
                 $groupedItems[$materialNumber]['decAmount'] += $decAmount;
                 $groupedItems[$materialNumber]['decPrice'] = $groupedItems[$materialNumber]['decAmount'] / $groupedItems[$materialNumber]['decQty'];
-                $groupedItems[$materialNumber]['deliveryList']['qty'] += $detail->qty;
+                $groupedItems[$materialNumber]['deliveryList'][0]['qty'] += $detail->qty;
             }
         }
 
