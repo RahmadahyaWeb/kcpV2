@@ -74,6 +74,8 @@ class PurchaseOrderAOPController extends Controller
             // Prepare the payload
             $dataToSend = $this->preparePayload($invoiceHeader, $items, $paymentTermId);
 
+            dd($dataToSend);
+
             // Send data to BOSNET
             $response = $this->sendDataToBosnet($dataToSend);
 
@@ -201,14 +203,12 @@ class PurchaseOrderAOPController extends Controller
                 $groupedItems[$materialNumber]['decPPN'] += $decPPN;
                 $groupedItems[$materialNumber]['decAmount'] += $decAmount;
                 $groupedItems[$materialNumber]['decPrice'] = $groupedItems[$materialNumber]['decAmount'] / $groupedItems[$materialNumber]['decQty'];
-                $groupedItems[$materialNumber]['deliveryList']['qty'] += $detail->qty;
+                $groupedItems[$materialNumber]['deliveryList'][] = ['qty' => $detail->qty];
             }
         }
 
         // Ubah menjadi indexed array
         $items = array_values($groupedItems);
-
-        dd($items);
 
         return $items;
     }
