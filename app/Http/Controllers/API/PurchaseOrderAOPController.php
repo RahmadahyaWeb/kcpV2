@@ -74,8 +74,6 @@ class PurchaseOrderAOPController extends Controller
             // Prepare the payload
             $dataToSend = $this->preparePayload($invoiceHeader, $items, $paymentTermId);
 
-            dd($dataToSend);
-
             // Send data to BOSNET
             $response = $this->sendDataToBosnet($dataToSend);
 
