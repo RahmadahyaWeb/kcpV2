@@ -193,7 +193,11 @@ class GoodsReceiptAopDetail extends Component
                 }
             }
 
-            $this->items_with_qty = collect(array_values($items_grouped));
+            usort($items_grouped, function ($a, $b) {
+                return strcmp($a->materialNumber, $b->materialNumber);
+            });
+
+            $this->items_with_qty = collect($items_grouped);
         } else {
             // Ambil SPB dari invoice_aop_header
             $spb = DB::table('invoice_aop_header')
