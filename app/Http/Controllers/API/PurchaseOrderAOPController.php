@@ -105,6 +105,8 @@ class PurchaseOrderAOPController extends Controller
      */
     private function sendDataToBosnet($data)
     {
+        dd($data);
+
         $credential = TokenBosnetController::signInForSecretKey();
 
         if (isset($credential['status'])) {
@@ -205,8 +207,6 @@ class PurchaseOrderAOPController extends Controller
 
         // Ubah menjadi indexed array
         $items = array_values($groupedItems);
-
-        dd($items);
 
         return $items;
     }
