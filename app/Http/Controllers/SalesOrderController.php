@@ -9,27 +9,27 @@ use Illuminate\Support\Facades\DB;
 
 class SalesOrderController extends Controller
 {
-    public function get_product_parts($kcpinformation, $noinv_list)
-    {
-        return $kcpinformation->table('trns_inv_details as details')
-            ->join('mst_part as part', 'part.part_no', '=', 'details.part_no')
-            ->whereIn('details.noinv', $noinv_list)
-            ->groupBy('details.noinv', 'part.produk_part', 'part.supplier', 'part.kelompok_part')
-            ->select([
-                'details.noinv',
-                'part.produk_part',
-                'part.supplier',
-                'part.kelompok_part'
-            ])
-            ->get()
-            ->mapWithKeys(function ($item) {
-                return [$item->noinv => [
-                    'product_part' => $item->produk_part,
-                    'supplier'     => $item->supplier,
-                    'kelompok_part' => $item->kelompok_part
-                ]];
-            });
-    }
+    // public function get_product_parts($kcpinformation, $noso)
+    // {
+    //     return $kcpinformation->table('trns_so_details as details')
+    //         ->join('mst_part as part', 'part.part_no', '=', 'details.part_no')
+    //         ->where('details.noso', $noso)
+    //         ->groupBy('details.noso', 'part.produk_part', 'part.supplier', 'part.kelompok_part')
+    //         ->select([
+    //             'details.noso',
+    //             'part.produk_part',
+    //             'part.supplier',
+    //             'part.kelompok_part'
+    //         ])
+    //         ->get()
+    //         ->mapWithKeys(function ($item) {
+    //             return [$item->noso => [
+    //                 'product_part' => $item->produk_part,
+    //                 'supplier'     => $item->supplier,
+    //                 'kelompok_part' => $item->kelompok_part
+    //             ]];
+    //         });
+    // }
 
     public function print($noso)
     {
@@ -39,10 +39,14 @@ class SalesOrderController extends Controller
             ->where('noso', $noso)
             ->first();
 
-        $details = $kcpinformation->table('trns_so_details')
-            ->where('noso', $noso)
-            ->orderBy('part_no')
+        $details = $kcpinformation->table('trns_so_details as details')
+            ->join('mst_part as part', 'part.part_no', '=', 'details.part_no')
+            ->where('details.noso', $noso)
+            ->orderBy('details.part_no')
+            ->select('details.*', 'part.produk_part')
             ->get();
+
+        dd($details);
 
         $data_outlet = $kcpinformation->table('mst_outlet')
             ->where('kd_outlet', $header->kd_outlet)
