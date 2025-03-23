@@ -203,9 +203,12 @@
                     }
                 @endphp
 
-                <tr class="items" style="{{ $isFederal ? 'background-color: black; color: white;' : 'background-color: red; color: white;' }}">
+                <tr class="items">
                     <td style="text-align:center;">{{ $index + 1 }}.</td>
-                    <td>{{ $detail->part_no }}</td>
+                    <td
+                        style="{{ $isFederal ? 'background-color: black; color: white;' : 'background-color: red; color: white;' }}">
+                        {{ $detail->part_no }}
+                    </td>
                     <td>{{ $detail->nm_part }}</td>
                     <td style="text-align:center;">{{ $detail->qty }}</td>
                     <td style="text-align:center;">{{ $data_stock->stock }}</td>
