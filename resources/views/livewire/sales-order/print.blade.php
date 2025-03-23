@@ -190,7 +190,7 @@
                             if ($value_rak->qty >= $tempQty) {
                                 $rak = $rak . $value_rak->kd_rak;
                             } elseif ($value_rak->qty < $tempQty) {
-                                $tempQty = $tempQty - $detail['qty'];
+                                $tempQty = $tempQty - $detail->qty;
                                 if ($tempQty == 0) {
                                     $rak = $rak . $value_rak->kd_rak;
                                 } else {
