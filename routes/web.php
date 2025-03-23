@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\ReturManualController;
 use App\Http\Controllers\DkdController;
 use App\Http\Controllers\DksController;
+use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\SyncController;
 use App\Http\Controllers\UploadController;
 use App\Livewire\Auth\Login;
@@ -103,6 +104,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/master/expedition', IndexExpedition::class)->name('expedition.index');
         Route::get('/master/expedition/create', CreateExpedition::class)->name('expedition.create');
         Route::get('/master/expedition/edit/{kd_expedition}', EditExpedition::class)->name('expedition.edit');
+
+        // PRINT SO
+        Route::get('/sales-order/print/{noso}', [SalesOrderController::class, 'print'])->name('so.print');
     });
 
     /**
