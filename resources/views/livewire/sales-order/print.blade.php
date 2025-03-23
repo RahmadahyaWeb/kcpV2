@@ -153,6 +153,8 @@
 
             @foreach ($details as $index => $detail)
                 @php
+                    $isFederal = in_array($detail->produk_part, $list_federal);
+
                     $data_stock = $kcpinformation
                         ->table('stock_part')
                         ->where('kd_gudang', $kode_gudang)
@@ -201,7 +203,7 @@
                     }
                 @endphp
 
-                <tr class="items">
+                <tr class="items" style="{{ $isFederal ? 'background-color: black; color: white;' : 'background-color: red; color: white;' }}">
                     <td style="text-align:center;">{{ $index + 1 }}.</td>
                     <td>{{ $detail->part_no }}</td>
                     <td>{{ $detail->nm_part }}</td>

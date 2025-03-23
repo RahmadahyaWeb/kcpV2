@@ -46,8 +46,6 @@ class SalesOrderController extends Controller
             ->select('details.*', 'part.produk_part')
             ->get();
 
-        dd($details);
-
         $data_outlet = $kcpinformation->table('mst_outlet')
             ->where('kd_outlet', $header->kd_outlet)
             ->first();
@@ -74,6 +72,12 @@ class SalesOrderController extends Controller
             ->where('kd_gudang', $kode_gudang)
             ->value('nm_gudang');
 
+        $list_federal = [
+            "FEDERAL BATTERY",
+            "FEDERAL PARTS",
+            "FEDERAL TUBE 2W"
+        ];
+
         $data = [
             'kcpinformation' => $kcpinformation,
             'noso' => $noso,
@@ -84,7 +88,7 @@ class SalesOrderController extends Controller
             'data_provinsi' => $data_provinsi,
             'nama_gudang' => $nama_gudang,
             'kode_gudang' => $kode_gudang,
-
+            'list_federal' => $list_federal
         ];
 
         $pdf = Pdf::loadView('livewire.sales-order.print', $data)->setPaper('letter');
