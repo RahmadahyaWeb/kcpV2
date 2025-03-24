@@ -225,7 +225,7 @@
                         </table>
                     </td>
                     <td style="text-align:center;">
-                        {{ $rak }}
+                        {!! $rak !!}
                     </td>
                     <td>{{ $text_mutasi }}</td>
                 </tr>
