@@ -15,7 +15,7 @@
 
         body {
             font-family: Helvetica, sans-serif;
-            font-size: 12px;
+            font-size: 10px;
         }
 
         h4 {
@@ -141,14 +141,14 @@
     <div class="margin-top">
         <table class="products">
             <tr>
-                <th style="text-align:center;width:20px">No.</th>
-                <th style="width:150px">Part No.</th>
-                <th style="width:200px">Nama Barang</th>
-                <th style="text-align:center;width:25px">Qty</th>
-                <th style="text-align:center;width:30px">Qty Stock</th>
-                <th style="text-align:center;width:30px">Check</th>
-                <th style="text-align:center;width:60px">Lokasi</th>
-                <th style="text-align:center;width:74px">Ket.</th>
+                <th style="text-align:center;">No.</th>
+                <th style="white-space: nowrap">Part No.</th>
+                <th>Nama Barang</th>
+                <th style="text-align:center;">Qty</th>
+                <th style="text-align:center;">Qty Stock</th>
+                <th style="text-align:center;">Check</th>
+                <th style="text-align:center; white-space: nowrap;">Lokasi</th>
+                <th style="text-align:center;">Ket.</th>
             </tr>
 
             @foreach ($details as $index => $detail)
