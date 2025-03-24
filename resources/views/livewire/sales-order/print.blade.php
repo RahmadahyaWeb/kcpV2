@@ -188,23 +188,25 @@
 
                         $tempQty = 0;
                         $tempQty = $detail->qty - $tempQty;
+                        $rak = '';
+
                         foreach ($data_rak as $value_rak) {
                             if ($value_rak->qty >= $tempQty) {
-                                $rak = $rak . $value_rak->kd_rak;
+                                $rak .= $value_rak->kd_rak;
                             } elseif ($value_rak->qty < $tempQty) {
                                 $tempQty = $tempQty - $detail->qty;
                                 if ($tempQty == 0) {
-                                    $rak = $rak . $value_rak->kd_rak;
+                                    $rak .= $value_rak->kd_rak;
                                 } else {
-                                    $rak = $rak . $value_rak->kd_rak . '<br>';
+                                    $rak .= $value_rak->kd_rak . '<br>';
                                 }
                             }
                         }
                     }
 
-                if ($detail->part_no == '11-4PK1060') {
-                    dd($rak);
-                }
+                    if ($detail->part_no == '11-4PK1060') {
+                        dd($rak); // Cek hasilnya
+                    }
 
                 @endphp
 
