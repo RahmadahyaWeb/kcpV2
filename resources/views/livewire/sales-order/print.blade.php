@@ -206,9 +206,9 @@
 
                     $rak = implode('<br>', $rakArray);
 
-                    if ($detail->part_no == '11-4PK1060') {
-                        dd($rak); // Debug hasil akhir
-                    }
+                    // if ($detail->part_no == '11-4PK1060') {
+                    //     dd($rak); // Debug hasil akhir
+                    // }
 
                 @endphp
 
