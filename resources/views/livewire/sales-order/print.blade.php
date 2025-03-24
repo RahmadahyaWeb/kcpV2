@@ -201,6 +201,8 @@
                             }
                         }
                     }
+
+                    dd($rak);
                 @endphp
 
                 <tr class="items">
