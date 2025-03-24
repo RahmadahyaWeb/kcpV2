@@ -146,7 +146,7 @@
                 <th>Nama Barang</th>
                 <th style="text-align:center;">Qty</th>
                 <th style="text-align:center;">Qty Stock</th>
-                <th style="text-align:center;">Check</th>
+                <th style="text-align:center; width: 25px;">Check</th>
                 <th style="text-align:center; white-space: nowrap;">Lokasi</th>
                 <th style="text-align:center;">Ket.</th>
             </tr>
@@ -219,7 +219,11 @@
                             </tr>
                         </table>
                     </td>
-                    <td style="text-align:center;">{{ $rak }}</td>
+                    <td style="text-align:center;">
+                        {{ $rak }}
+
+                        <br>
+                    </td>
                     <td>{{ $text_mutasi }}</td>
                 </tr>
             @endforeach
