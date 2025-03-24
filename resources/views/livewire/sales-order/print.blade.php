@@ -186,28 +186,26 @@
                             ->where('qty', '>', 0)
                             ->get();
 
-                        $tempQty = $detail->qty; // Ambil qty awal dari detail
-                        $rakArray = []; // Simpan kode rak dalam array
+                        $tempQty = 0;
+                        $tempQty = $detail->qty - $tempQty;
+                        $rakArray = [];
 
                         foreach ($data_rak as $value_rak) {
-                            if ($tempQty <= 0) {
-                                break; // Jika kebutuhan sudah terpenuhi, hentikan loop
-                            }
-
                             if ($value_rak->qty >= $tempQty) {
-                                $rakArray[] = $value_rak->kd_rak; // Tambahkan rak ke dalam array
-                                $tempQty = 0; // Kebutuhan terpenuhi, set 0 agar loop berhenti
-                            } else {
-                                $rakArray[] = $value_rak->kd_rak; // Tambahkan rak ke dalam array
-                                $tempQty -= $value_rak->qty; // Kurangi kebutuhan qty
+                                $rakArray[] = $value_rak->kd_rak;
+                                break;
+                            } elseif ($value_rak->qty < $tempQty) {
+                                $rakArray[] = $value_rak->kd_rak;
+                                $tempQty -= $value_rak->qty;
+                                if ($tempQty <= 0) {
+                                    break;
+                                }
                             }
                         }
                     }
 
-                    $rak = implode('<br>', $rakArray);
-
                     if ($detail->part_no == '11-4PK1060') {
-                        dd($rak); // Debug hasil akhir
+                        dd($rak);
                     }
 
                 @endphp
