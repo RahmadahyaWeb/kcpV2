@@ -188,24 +188,26 @@
 
                         $tempQty = 0;
                         $tempQty = $detail->qty - $tempQty;
-                        $rak = '';
+                        $rakArray = [];
 
                         foreach ($data_rak as $value_rak) {
                             if ($value_rak->qty >= $tempQty) {
-                                $rak .= $value_rak->kd_rak;
+                                $rakArray[] = $value_rak->kd_rak;
+                                break;
                             } elseif ($value_rak->qty < $tempQty) {
-                                $tempQty = $tempQty - $detail->qty;
-                                if ($tempQty == 0) {
-                                    $rak .= $value_rak->kd_rak;
-                                } else {
-                                    $rak .= $value_rak->kd_rak . '<br>';
+                                $tempQty = $tempQty - $value_rak->qty;
+                                $rakArray[] = $value_rak->kd_rak;
+                                if ($tempQty <= 0) {
+                                    break;
                                 }
                             }
                         }
                     }
 
+                    $rak = implode('<br>', $rakArray);
+
                     if ($detail->part_no == '11-4PK1060') {
-                        dd($rak); // Cek hasilnya
+                        dd($rak); // Debug hasil akhir
                     }
 
                 @endphp
