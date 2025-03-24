@@ -206,10 +206,6 @@
                         $rak = implode('<br>', $rakArray);
                     }
 
-                    if ($detail->part_no == '11-4PK1060') {
-                        dd($rak);
-                    }
-
                 @endphp
 
                 <tr class="items">
@@ -230,8 +226,6 @@
                     </td>
                     <td style="text-align:center;">
                         {{ $rak }}
-
-                        <br>
                     </td>
                     <td>{{ $text_mutasi }}</td>
                 </tr>
