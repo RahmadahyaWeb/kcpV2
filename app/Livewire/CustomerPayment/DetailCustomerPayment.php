@@ -56,11 +56,11 @@ class DetailCustomerPayment extends Component
 
     private static function formatInvoiceNumber($no_invoice)
     {
-        if (strpos($no_invoice, '/') !== false) {
-            return str_replace('/', '-', $no_invoice);
-        } else {
-            return $no_invoice;
-        }
+        // Ganti '/' dengan '-'
+        $no_invoice = str_replace('/', '-', $no_invoice);
+
+        // Hilangkan "-FIXING" jika ada di akhir string
+        return preg_replace('/-FIXING$/', '', $no_invoice);
     }
 
     public static function get_nominal_pembayaran($no_invoice)
