@@ -193,15 +193,17 @@
                         foreach ($data_rak as $value_rak) {
                             if ($value_rak->qty >= $tempQty) {
                                 $rakArray[] = $value_rak->kd_rak;
-                                break;
                             } elseif ($value_rak->qty < $tempQty) {
-                                $rakArray[] = $value_rak->kd_rak;
-                                $tempQty -= $value_rak->qty;
-                                if ($tempQty <= 0) {
-                                    break;
+                                $tempQty = $tempQty - $detail->qty;
+                                if ($tempQty == 0) {
+                                    $rakArray[] = $value_rak->kd_rak;
+                                } else {
+                                    $rakArray[] = $value_rak->kd_rak;
                                 }
                             }
                         }
+
+                        $rak = implode('<br>', $rakArray);
                     }
 
                     if ($detail->part_no == '11-4PK1060') {
