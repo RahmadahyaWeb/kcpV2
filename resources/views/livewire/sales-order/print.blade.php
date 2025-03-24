@@ -202,6 +202,10 @@
                         }
                     }
 
+                if ($detail->part_no == '11-4PK1060') {
+                    dd($rak);
+                }
+
                 @endphp
 
                 <tr class="items">
