@@ -9,28 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 class SalesOrderController extends Controller
 {
-    // public function get_product_parts($kcpinformation, $noso)
-    // {
-    //     return $kcpinformation->table('trns_so_details as details')
-    //         ->join('mst_part as part', 'part.part_no', '=', 'details.part_no')
-    //         ->where('details.noso', $noso)
-    //         ->groupBy('details.noso', 'part.produk_part', 'part.supplier', 'part.kelompok_part')
-    //         ->select([
-    //             'details.noso',
-    //             'part.produk_part',
-    //             'part.supplier',
-    //             'part.kelompok_part'
-    //         ])
-    //         ->get()
-    //         ->mapWithKeys(function ($item) {
-    //             return [$item->noso => [
-    //                 'product_part' => $item->produk_part,
-    //                 'supplier'     => $item->supplier,
-    //                 'kelompok_part' => $item->kelompok_part
-    //             ]];
-    //         });
-    // }
-
     public function print($noso)
     {
         $kcpinformation = DB::connection('kcpinformation');
@@ -90,6 +68,15 @@ class SalesOrderController extends Controller
             'kode_gudang' => $kode_gudang,
             'list_federal' => $list_federal
         ];
+
+        $kcpinformation->table('trns_so_header')
+            ->where('noso', $noso)
+            ->update([
+                'flag_cetak_gudang' => 'Y',
+                'flag_cetak_gudang_date' => now(),
+                'modi_date' => now(),
+                'modi_by' => Auth::user()->username
+            ]);
 
         $pdf = Pdf::loadView('livewire.sales-order.print', $data)->setPaper('letter');
 
