@@ -53,7 +53,7 @@ class InvoiceAopExport implements FromCollection, WithHeadings, WithMapping
             ->sum('potonganProgram');
 
         // AMOUNT
-        $amount = DB::table('program_aop')
+        $amount = DB::table('invoice_aop_detail')
             ->where('invoiceAop', $invoice_aop)
             ->sum('amount');
 
