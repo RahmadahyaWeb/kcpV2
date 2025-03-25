@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\ReturManualController;
 use App\Http\Controllers\DkdController;
 use App\Http\Controllers\DksController;
+use App\Http\Controllers\PackingSheetController;
 use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\SyncController;
 use App\Http\Controllers\UploadController;
@@ -209,6 +210,9 @@ Route::middleware('auth')->group(function () {
 
         // PRINT SO
         Route::get('/sales-order/print/{noso}', [SalesOrderController::class, 'print'])->name('so.print');
+
+        // PRINT LABEL
+        Route::get('/packingsheet/print/label/{nops}', [PackingSheetController::class, 'print_label'])->name('ps.print.label');
     });
 
     /**
