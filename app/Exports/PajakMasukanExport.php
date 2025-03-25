@@ -31,6 +31,8 @@ class PajakMasukanExport implements FromCollection, WithTitle, WithMapping, With
 
     public function map($row): array
     {
+        $invoice_aop = $row->invoiceAop;
+
         $fm = "FM";
         $kd_jenis_transaksi = "1";
         $fg_pengganti = "0";
@@ -42,8 +44,26 @@ class PajakMasukanExport implements FromCollection, WithTitle, WithMapping, With
         $npwp = "013452438054000";
         $nama = "PT ASTRA OTOPARTS TBK.";
         $alamat_lengkap = "";
-        $jumlah_dpp = $row->netSales;
-        $jumlah_ppn = $row->tax;
+
+        // EXTRA PLAFON DISCOUNT
+        $extra_plafon_discount = DB::table('program_aop')
+            ->where('invoiceAop', $invoice_aop)
+            ->sum('potonganProgram');
+
+        // AMOUNT
+        $amount = DB::table('invoice_aop_detail')
+            ->where('invoiceAop', $invoice_aop)
+            ->sum('amount');
+
+        // NET SALES
+        $net_sales = $amount - $extra_plafon_discount;
+
+        // TAX
+        $tax = intval($net_sales * config('tax.ppn_percentage'));
+
+        $jumlah_dpp = $net_sales;
+        $jumlah_ppn = $tax;
+
         $jumlah_ppnb = "0";
         $is_creditable = "1";
 
