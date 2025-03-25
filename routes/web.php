@@ -104,9 +104,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/master/expedition', IndexExpedition::class)->name('expedition.index');
         Route::get('/master/expedition/create', CreateExpedition::class)->name('expedition.create');
         Route::get('/master/expedition/edit/{kd_expedition}', EditExpedition::class)->name('expedition.edit');
-
-        // PRINT SO
-        Route::get('/sales-order/print/{noso}', [SalesOrderController::class, 'print'])->name('so.print');
     });
 
     /**
@@ -210,7 +207,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/retur/invoice', IndexReturInvoice::class)->name('retur.invoice.index');
         Route::get('/retur/invoice/{no_retur}', DetailReturInvoice::class)->name('retur.invoice.detail');
 
-        // Route::get('/retur/manual', [ReturManualController::class, 'sendToBosnet']);
+        // PRINT SO
+        Route::get('/sales-order/print/{noso}', [SalesOrderController::class, 'print'])->name('so.print');
     });
 
     /**
