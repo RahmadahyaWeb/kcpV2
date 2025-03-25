@@ -24,7 +24,7 @@ class InvoiceAopExport implements FromCollection, WithHeadings, WithMapping
     public function collection()
     {
         $rows = DB::table('invoice_aop_header as header')
-            ->join('invoice_aop_detail as detail', 'detail.invoiceAop', '=', 'header.invoiceAop')
+            ->where('flag_final', 'Y')
             ->whereBetween('header.billingDocumentDate', [$this->from_date, $this->to_date])
             ->get();
 
