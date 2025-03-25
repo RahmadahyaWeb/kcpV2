@@ -18,7 +18,7 @@ class SalesOrderController extends Controller
             ->first();
 
         if (!($header->flag_selesai == 'Y' && $header->flag_cetak_gudang == 'N')) {
-            echo "Maaf, SO masih diperiksa Fakturis";
+            echo "<b> Maaf, SO masih diperiksa Fakturis </b>";
             exit;
         }
 
