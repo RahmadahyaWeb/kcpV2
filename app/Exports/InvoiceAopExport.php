@@ -64,7 +64,7 @@ class InvoiceAopExport implements FromCollection, WithHeadings, WithMapping
         $tax = intval($net_sales * config('tax.ppn_percentage'));
 
         // GRAND TOTAL
-        $grand_total = $net_sales - $tax;
+        $grand_total = $net_sales + $tax;
 
         return [
             $tanggal_jatuh_tempo,
