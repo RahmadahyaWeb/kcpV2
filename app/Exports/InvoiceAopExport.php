@@ -23,35 +23,59 @@ class InvoiceAopExport implements FromCollection, WithHeadings, WithMapping
      */
     public function collection()
     {
-        return DB::table('invoice_aop_header')
-            ->select([
-                'tanggalJatuhTempo',
-                'invoiceAop',
-                'billingDocumentDate',
-                'price',
-                'addDiscount',
-                'extraPlafonDiscount',
-                'amount',
-                'tax',
-                'grandTotal',
-                'netSales'
-            ])
-            ->whereBetween('billingDocumentDate', [$this->from_date, $this->to_date])
+        $rows = DB::table('invoice_aop_header as header')
+            ->join('invoice_aop_detail as detail', 'detail.invoiceAop', '=', 'header.invoiceAop')
+            ->whereBetween('header.billingDocumentDate', [$this->from_date, $this->to_date])
             ->get();
+
+        return $rows;
     }
 
     public function map($row): array
     {
+        $invoice_aop = $row->invoiceAop;
+        $tanggal_jatuh_tempo = $row->tanggalJatuhTempo;
+        $billing_document_date = $row->billingDocumentDate;
+
+        // PRICE
+        $price = DB::table('invoice_aop_detail')
+            ->where('invoiceAop', $invoice_aop)
+            ->sum('price');
+
+        // ADD DISC
+        $add_discount = DB::table('invoice_aop_detail')
+            ->where('invoiceAop', $invoice_aop)
+            ->sum('addDiscount');
+
+        // EXTRA PLAFON DISCOUNT
+        $extra_plafon_discount = DB::table('program_aop')
+            ->where('invoiceAop', $invoice_aop)
+            ->sum('potonganProgram');
+
+        // AMOUNT
+        $amount = DB::table('program_aop')
+            ->where('invoiceAop', $invoice_aop)
+            ->sum('amount');
+
+        // NET SALES
+        $net_sales = $amount - $extra_plafon_discount;
+
+        // TAX
+        $tax = intval($net_sales * config('tax.ppn_percentage'));
+
+        // GRAND TOTAL
+        $grand_total = $net_sales - $tax;
+
         return [
-            $row->tanggalJatuhTempo,
-            $row->invoiceAop,
-            $row->billingDocumentDate,
-            $row->price,
-            $row->addDiscount,
-            $row->extraPlafonDiscount,
-            $row->netSales,
-            $row->tax,
-            $row->grandTotal,
+            $tanggal_jatuh_tempo,
+            $invoice_aop,
+            $billing_document_date,
+            $price,
+            $add_discount,
+            $extra_plafon_discount,
+            $net_sales,
+            $tax,
+            $grand_total,
         ];
     }
 
