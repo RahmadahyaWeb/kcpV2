@@ -17,6 +17,11 @@ class SalesOrderController extends Controller
             ->where('noso', $noso)
             ->first();
 
+        if (!($header->flag_selesai == 'Y' && $header->flag_cetak_gudang == 'N')) {
+            echo "Maaf, SO masih diperiksa Fakturis";
+            exit;
+        }
+
         $details = $kcpinformation->table('trns_so_details as details')
             ->join('mst_part as part', 'part.part_no', '=', 'details.part_no')
             ->where('details.noso', $noso)
