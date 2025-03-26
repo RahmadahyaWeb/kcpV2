@@ -99,17 +99,47 @@ class GoodsReceiptAOPController extends Controller
      * @param array $details
      * @return array
      */
+    // private function prepareItemList($details)
+    // {
+    //     $items = [];
+    //     foreach ($details as $value) {
+    //         $items[] = [
+    //             'szProductId'           => $value->materialNumber,
+    //             'decQty'                => $value->qty,
+    //             'szUomId'               => "PCS",
+    //             'purchaseITemTypeId'    => "BELI"
+    //         ];
+    //     }
+    //     return $items;
+    // }
+
     private function prepareItemList($details)
     {
         $items = [];
+        $groupedItems = [];
+
+        // Group items by materialNumber and sum the quantities
         foreach ($details as $value) {
+            $materialNumber = $value->materialNumber;
+            if (!isset($groupedItems[$materialNumber])) {
+                $groupedItems[$materialNumber] = [
+                    'materialNumber' => $materialNumber,
+                    'qty' => 0,
+                ];
+            }
+            $groupedItems[$materialNumber]['qty'] += $value->qty;
+        }
+
+        // Now prepare the final items list
+        foreach ($groupedItems as $group) {
             $items[] = [
-                'szProductId'           => $value->materialNumber,
-                'decQty'                => $value->qty,
+                'szProductId'           => $group['materialNumber'],
+                'decQty'                => $group['qty'],
                 'szUomId'               => "PCS",
                 'purchaseITemTypeId'    => "BELI"
             ];
         }
+
         return $items;
     }
 
