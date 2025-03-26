@@ -37,6 +37,8 @@ class SyncController extends Controller
             GROUP BY p.kd_outlet
         ");
 
+        dd($query);
+
         foreach ($query as $key => $value) {
             if ($value->hutang == 0) {
                 $nominal_plafond = $value->nominal_plafond_upload;
