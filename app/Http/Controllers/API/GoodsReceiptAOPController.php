@@ -251,8 +251,6 @@ class GoodsReceiptAOPController extends Controller
      */
     public function sendDataToBosnet($data)
     {
-        dd($data);
-
         $credential = TokenBosnetController::signInForSecretKey();
 
         if (isset($credential['status'])) {
