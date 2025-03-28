@@ -179,7 +179,7 @@ class GoodsReceiptAopDetail extends Component
                     // Gabungkan asal_qty jika ada
                     $items_grouped[$material_number]->asal_qty = array_merge(
                         $items_grouped[$material_number]->asal_qty,
-                        $item->asal_qty->toArray()
+                        $item->asal_qty
                     );
 
                     // Tambahkan status ke daftar status
