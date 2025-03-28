@@ -216,7 +216,7 @@ class ReturInvoiceController extends Controller
                 "szLogisticType"    => "POS",
                 "szOrderTypeId"     => "RETUR",
                 "dtmDelivery"       => Carbon::parse($flag_nota_date)->format('Y-m-d'),
-                // "dtmDelivery"       => date('Y-m-d', strtotime('2025-02-17')),
+                "dtmDelivery"       => date('Y-m-d'),
                 "szCustId"          => $item->kd_outlet,
                 "decAmount"         => -$decDPPTotal,
                 "decTax"            => -$decTaxTotal,
