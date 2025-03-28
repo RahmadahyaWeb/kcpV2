@@ -167,7 +167,7 @@ class GoodsReceiptAopDetail extends Component
                         'invoiceAop' => $item->invoiceAop, // Tambahkan invoiceAop
                         'qty' => $item->qty,
                         'qty_terima' => $item->qty_terima,
-                        'asal_qty' => $item->asal_qty,
+                        'asal_qty' => is_array($item->asal_qty) ? $item->asal_qty : (method_exists($item->asal_qty, 'toArray') ? $item->asal_qty->toArray() : [$item->asal_qty]),
                         'status' => $item->status, // Ambil status awal
                         'status_list' => [$item->status], // Simpan daftar status
                     ];
@@ -177,9 +177,11 @@ class GoodsReceiptAopDetail extends Component
                     $items_grouped[$material_number]->qty_terima += $item->qty_terima;
 
                     // Gabungkan asal_qty jika ada
+                    $asal_qty = is_array($item->asal_qty) ? $item->asal_qty : (method_exists($item->asal_qty, 'toArray') ? $item->asal_qty->toArray() : [$item->asal_qty]);
+
                     $items_grouped[$material_number]->asal_qty = array_merge(
                         $items_grouped[$material_number]->asal_qty,
-                        $item->asal_qty
+                        $asal_qty
                     );
 
                     // Tambahkan status ke daftar status
