@@ -72,10 +72,10 @@ class IndexStockPart extends Component
             $firstItem = $group->first(); // Ambil item pertama untuk part_no ini
 
             // Gabungkan qty_on_hand dan qty_intransit per gudang
-            $firstItem->qty_on_hand_KS = $group->where('kd_gudang', 'KS')->sum('qty_on_hand_KS');
-            $firstItem->qty_on_hand_KT = $group->where('kd_gudang', 'KT')->sum('qty_on_hand_KT');
-            $firstItem->qty_intransit_KS = $group->where('kd_gudang', 'KS')->sum('qty_intransit_KS');
-            $firstItem->qty_intransit_KT = $group->where('kd_gudang', 'KT')->sum('qty_intransit_KT');
+            $firstItem->qty_on_hand_KS = $group->where('kd_gudang', 'GD1')->sum('qty_on_hand_KS');
+            $firstItem->qty_on_hand_KT = $group->where('kd_gudang', 'GD2')->sum('qty_on_hand_KT');
+            $firstItem->qty_intransit_KS = $group->where('kd_gudang', 'GD1')->sum('qty_intransit_KS');
+            $firstItem->qty_intransit_KT = $group->where('kd_gudang', 'GD2')->sum('qty_intransit_KT');
 
             return $firstItem;
         })->values();
