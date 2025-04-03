@@ -85,10 +85,10 @@ class PajakKeluaranHeaderSheet implements FromCollection, WithMapping, WithEvent
                 $highestRow = $sheet->getHighestRow();
                 for ($row = 4; $row <= $highestRow; $row++) {
                     $sheet->getDelegate()->setCellValueExplicit('A' . $row, $sheet->getCell('A' . $row)->getValue(), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-                    $sheet->getDelegate()->setCellValueExplicit('K' . $row, $sheet->getCell('J' . $row)->getValue(), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING); // NPWP NIK PEMBELI
-                    $sheet->getDelegate()->setCellValueExplicit('N' . $row, $sheet->getCell('M' . $row)->getValue(), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING); // NOMOR DOKUMEN PEMBELI
-                    $sheet->getDelegate()->setCellValueExplicit('O' . $row, $sheet->getCell('N' . $row)->getValue(), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING); // NAMA PEMBELI
-                    $sheet->getDelegate()->setCellValueExplicit('R' . $row, $sheet->getCell('Q' . $row)->getValue(), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING); // ID TKU PEMBELI
+                    $sheet->getDelegate()->setCellValueExplicit('K' . $row, $sheet->getCell('K' . $row)->getValue(), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING); // NPWP NIK PEMBELI
+                    $sheet->getDelegate()->setCellValueExplicit('N' . $row, $sheet->getCell('N' . $row)->getValue(), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING); // NOMOR DOKUMEN PEMBELI
+                    $sheet->getDelegate()->setCellValueExplicit('O' . $row, $sheet->getCell('O' . $row)->getValue(), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING); // NAMA PEMBELI
+                    $sheet->getDelegate()->setCellValueExplicit('R' . $row, $sheet->getCell('R' . $row)->getValue(), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING); // ID TKU PEMBELI
                 }
             }
         ];
