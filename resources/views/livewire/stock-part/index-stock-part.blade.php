@@ -30,6 +30,7 @@
                             <th>STOCK ON HAND</th>
                             <th>STOCK BOOKING</th>
                             <th>STOCK</th>
+                            <th>INTRANSIT</th>
                             <th>KETERANGAN</th>
                         </tr>
                     </thead>
@@ -47,11 +48,12 @@
                                 <td>{{ $item->stock - $item->stock_booking }}</td>
                                 <td>{{ $item->stock_booking }}</td>
                                 <td>{{ $item->stock }}</td>
+                                <td>{{ $item->qty_intransit }}</td>
                                 <td>{{ $item->ket_status }}</td>
                             </tr>
                         @empty
                             <tr>
-                                <td class="text-center" colspan="11">No Data</td>
+                                <td class="text-center" colspan="12">No Data</td>
                             </tr>
                         @endforelse
                     </tbody>
