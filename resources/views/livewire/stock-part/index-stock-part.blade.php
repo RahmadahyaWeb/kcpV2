@@ -35,7 +35,7 @@
                     </thead>
 
                     <tbody>
-                        @forelse ($items as $item)
+                        @forelse ($paginatedItems as $item)
                             <tr>
                                 <td class="text-nowrap">{{ $item->kd_gudang == 'GD1' ? 'KAL-SEL' : 'KAL-TENG' }}</td>
                                 <td class="text-nowrap">{{ $item->part_no }}</td>
