@@ -63,17 +63,18 @@ class PajakKeluaranHeaderSheet implements FromCollection, WithMapping, WithEvent
                 $sheet->setCellValue('D3', "Kode Transaksi");
                 $sheet->setCellValue('E3', "Keterangan Tambahan");
                 $sheet->setCellValue('F3', "Dokumen Pendukung");
-                $sheet->setCellValue('G3', "Referensi");
-                $sheet->setCellValue('H3', "Cap Fasilitas");
-                $sheet->setCellValue('I3', "ID TKU Penjual");
-                $sheet->setCellValue('J3', "NPWP/NIK Pembeli");
-                $sheet->setCellValue('K3', "Jenis ID Pembeli");
-                $sheet->setCellValue('L3', "Negara Pembeli");
-                $sheet->setCellValue('M3', "Nomor Dokumen Pembeli");
-                $sheet->setCellValue('N3', "Nama Pembeli");
-                $sheet->setCellValue('O3', "Alamat Pembeli");
-                $sheet->setCellValue('P3', "Email Pembeli");
-                $sheet->setCellValue('Q3', "ID TKU Pembeli");
+                $sheet->setCellValue('G3', "Period Dok Pendukung");
+                $sheet->setCellValue('H3', "Referensi");
+                $sheet->setCellValue('I3', "Cap Fasilitas");
+                $sheet->setCellValue('J3', "ID TKU Penjual");
+                $sheet->setCellValue('K3', "NPWP/NIK Pembeli");
+                $sheet->setCellValue('L3', "Jenis ID Pembeli");
+                $sheet->setCellValue('M3', "Negara Pembeli");
+                $sheet->setCellValue('N3', "Nomor Dokumen Pembeli");
+                $sheet->setCellValue('O3', "Nama Pembeli");
+                $sheet->setCellValue('P3', "Alamat Pembeli");
+                $sheet->setCellValue('Q3', "Email Pembeli");
+                $sheet->setCellValue('R3', "ID TKU Pembeli");
 
                 // GET TOTAL ROWS WITH DATA
                 $totalRows = count($event->sheet->getDelegate()->toArray());
@@ -84,10 +85,10 @@ class PajakKeluaranHeaderSheet implements FromCollection, WithMapping, WithEvent
                 $highestRow = $sheet->getHighestRow();
                 for ($row = 4; $row <= $highestRow; $row++) {
                     $sheet->getDelegate()->setCellValueExplicit('A' . $row, $sheet->getCell('A' . $row)->getValue(), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-                    $sheet->getDelegate()->setCellValueExplicit('J' . $row, $sheet->getCell('J' . $row)->getValue(), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-                    $sheet->getDelegate()->setCellValueExplicit('M' . $row, $sheet->getCell('M' . $row)->getValue(), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-                    $sheet->getDelegate()->setCellValueExplicit('N' . $row, $sheet->getCell('N' . $row)->getValue(), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-                    $sheet->getDelegate()->setCellValueExplicit('Q' . $row, $sheet->getCell('Q' . $row)->getValue(), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+                    $sheet->getDelegate()->setCellValueExplicit('K' . $row, $sheet->getCell('J' . $row)->getValue(), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING); // NPWP NIK PEMBELI
+                    $sheet->getDelegate()->setCellValueExplicit('N' . $row, $sheet->getCell('M' . $row)->getValue(), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING); // NOMOR DOKUMEN PEMBELI
+                    $sheet->getDelegate()->setCellValueExplicit('O' . $row, $sheet->getCell('N' . $row)->getValue(), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING); // NAMA PEMBELI
+                    $sheet->getDelegate()->setCellValueExplicit('R' . $row, $sheet->getCell('Q' . $row)->getValue(), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING); // ID TKU PEMBELI
                 }
             }
         ];
@@ -155,6 +156,7 @@ class PajakKeluaranHeaderSheet implements FromCollection, WithMapping, WithEvent
             $kode_transaksi,
             $keterangan_tambahan,
             $dokumen_pendukung,
+            "", // PERIOD DOK PENDUKUNG
             $referensi,
             $cap_fasilitas,
             $id_tku_penjual,
