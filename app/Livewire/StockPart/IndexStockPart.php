@@ -58,14 +58,18 @@ class IndexStockPart extends Component
         });
 
         // Pagination manual
-        $page = $this->getPage(); // Livewire menangani page otomatis
-        $offset = ($page - 1) * $this->getPage();
-        $pagedItems = $modifiedItems->slice($offset, $this->getPage())->values();
+        $page = $this->getPage(); // Livewire menangani current page otomatis
+        $perPage = 10; // Ambil jumlah item per halaman dari property
+        $offset = ($page - 1) * $perPage;
 
+        // Potong data sesuai halaman
+        $pagedItems = $modifiedItems->slice($offset, $perPage)->values();
+
+        // Buat LengthAwarePaginator manual
         $paginatedItems = new LengthAwarePaginator(
             $pagedItems,
             $modifiedItems->count(),
-            $this->getPage(),
+            $perPage,
             $page,
             ['path' => request()->url()]
         );
