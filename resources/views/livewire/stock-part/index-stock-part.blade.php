@@ -9,7 +9,7 @@
                     Stock Part
                 </div>
                 <div class="col d-flex justify-content-end">
-                    <button wire:click="export">Export</button>
+                    <button wire:click="export" class="btn btn-sm btn-success">Export</button>
                 </div>
             </div>
         </div>

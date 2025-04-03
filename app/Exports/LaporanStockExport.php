@@ -76,7 +76,13 @@ class LaporanStockExport implements FromCollection, WithMapping, WithTitle, With
     {
         return [
             $row->part_no,
-            $row->nm_part
+            $row->nm_part,
+            $row->supplier,
+            $row->produk_part,
+            $row->qty_on_hand_KS,
+            $row->qty_intransit_KS,
+            $row->qty_on_hand_KT,
+            $row->qty_intransit_KT
         ];
     }
 
