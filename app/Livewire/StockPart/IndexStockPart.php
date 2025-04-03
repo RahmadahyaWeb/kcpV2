@@ -21,7 +21,7 @@ class IndexStockPart extends Component
         $kcpinformation = DB::connection('kcpinformation');
 
         // Ambil semua data stok part
-        $items = DB::table('stock_part as stock')
+        $items = $kcpinformation->table('stock_part as stock')
             ->join('mst_part as part', 'part.part_no', '=', 'stock.part_no')
             ->where('part.status', 'Y')
             ->where(function ($query) {
@@ -35,7 +35,7 @@ class IndexStockPart extends Component
         $partNumbers = $items->pluck('part_no')->toArray();
 
         // Ambil data intransit stock
-        $intransitStock = DB::table('intransit_details as intransit')
+        $intransitStock = $kcpinformation->table('intransit_details as intransit')
             ->join('mst_gudang as gudang', 'intransit.kd_gudang_aop', '=', 'gudang.kd_gudang_aop')
             ->where('intransit.status', 'I')
             ->whereIn('intransit.part_no', $partNumbers)
