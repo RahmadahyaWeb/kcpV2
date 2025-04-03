@@ -19,38 +19,43 @@ class IndexStockPart extends Component
     {
         $kcpinformation = DB::connection('kcpinformation');
 
-        // $items = $kcpinformation->table('stock_part as stock')
-        //     ->join('mst_part as part', 'part.part_no', '=', 'stock.part_no')
-        //     ->where('part.status', 'Y')
-        //     ->where(function ($query) {
-        //         $query->where('part.part_no', 'like', '%' . $this->search . '%')
-        //             ->orWhere('part.nm_part', 'like', '%' . $this->search . '%');
-        //     })
-        //     ->orderBy('part.nm_part')
-        //     ->paginate();
-
+        // Ambil data stok part
         $items = $kcpinformation->table('stock_part as stock')
             ->join('mst_part as part', 'part.part_no', '=', 'stock.part_no')
-            ->leftJoin('intransit_details as intransit', function ($join) {
-                $join->on('stock.part_no', '=', 'intransit.part_no')
-                    ->join('mst_gudang as gudang', 'intransit.kd_gudang_aop', '=', 'gudang.kd_gudang_aop')
-                    ->where('intransit.status', 'I');
-            })
             ->where('part.status', 'Y')
             ->where(function ($query) {
                 $query->where('part.part_no', 'like', '%' . $this->search . '%')
                     ->orWhere('part.nm_part', 'like', '%' . $this->search . '%');
             })
-            ->select(
-                'part.part_no',
-                'part.nm_part',
-                'stock.stock',
-                DB::raw("SUM(CASE WHEN gudang.kd_gudang = 'GD1' THEN intransit.qty ELSE 0 END) as qty_intransit_kalsel"),
-                DB::raw("SUM(CASE WHEN gudang.kd_gudang = 'GD2' THEN intransit.qty ELSE 0 END) as qty_intransit_kalteng")
-            )
-            ->groupBy('part.part_no', 'part.nm_part', 'stock.stock')
             ->orderBy('part.nm_part')
-            ->paginate();
+            ->get();
+
+        // Ambil daftar part_no dari hasil query pertama untuk keperluan pencarian intransit stock
+        $partNumbers = $items->pluck('part_no')->toArray();
+
+        // Ambil data stock intransit
+        $intransitStock = $kcpinformation->table('intransit_details as intransit')
+            ->join('mst_gudang as gudang', 'intransit.kd_gudang_aop', '=', 'gudang.kd_gudang_aop')
+            ->where('intransit.status', 'I')
+            ->whereIn('intransit.part_no', $partNumbers) // Hanya untuk part_no yang ada di $items
+            ->groupBy('intransit.kd_gudang_aop', 'intransit.part_no')
+            ->select(
+                'intransit.kd_gudang_aop as gudang_aop',
+                'intransit.part_no',
+                DB::raw('SUM(intransit.qty) as qty_intransit')
+            )
+            ->get();
+
+        // Ubah hasil intransitStock menjadi associative array dengan part_no sebagai key
+        $intransitMap = $intransitStock->keyBy('part_no');
+
+        // Gabungkan data stock dengan stock intransit
+        $items = $items->map(function ($item) use ($intransitMap) {
+            $partNo = $item->part_no;
+            $item->qty_intransit = $intransitMap[$partNo]->qty_intransit ?? 0;
+            return $item;
+        });
+
         dd($items);
 
         return view('livewire.stock-part.index-stock-part', compact('items'));
