@@ -2,6 +2,7 @@
 
 namespace App\Livewire\StockPart;
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -19,8 +20,8 @@ class IndexStockPart extends Component
     {
         $kcpinformation = DB::connection('kcpinformation');
 
-        // Ambil data stok part
-        $items = $kcpinformation->table('stock_part as stock')
+        // Ambil semua data stok part
+        $items = DB::table('stock_part as stock')
             ->join('mst_part as part', 'part.part_no', '=', 'stock.part_no')
             ->where('part.status', 'Y')
             ->where(function ($query) {
@@ -30,14 +31,14 @@ class IndexStockPart extends Component
             ->orderBy('part.nm_part')
             ->get();
 
-        // Ambil daftar part_no dari hasil query pertama untuk keperluan pencarian intransit stock
+        // Ambil daftar part_no untuk query kedua
         $partNumbers = $items->pluck('part_no')->toArray();
 
-        // Ambil data stock intransit
-        $intransitStock = $kcpinformation->table('intransit_details as intransit')
+        // Ambil data intransit stock
+        $intransitStock = DB::table('intransit_details as intransit')
             ->join('mst_gudang as gudang', 'intransit.kd_gudang_aop', '=', 'gudang.kd_gudang_aop')
             ->where('intransit.status', 'I')
-            ->whereIn('intransit.part_no', $partNumbers) // Hanya untuk part_no yang ada di $items
+            ->whereIn('intransit.part_no', $partNumbers)
             ->groupBy('intransit.kd_gudang_aop', 'intransit.part_no')
             ->select(
                 'intransit.kd_gudang_aop as gudang_aop',
@@ -46,17 +47,28 @@ class IndexStockPart extends Component
             )
             ->get();
 
-        // Ubah hasil intransitStock menjadi associative array dengan part_no sebagai key
+        // Buat mapping untuk qty_intransit
         $intransitMap = $intransitStock->keyBy('part_no');
 
-        // Gabungkan data stock dengan stock intransit
-        $items = $items->map(function ($item) use ($intransitMap) {
+        // Tambahkan qty_intransit ke hasil utama
+        $modifiedItems = $items->map(function ($item) use ($intransitMap) {
             $partNo = $item->part_no;
             $item->qty_intransit = $intransitMap[$partNo]->qty_intransit ?? 0;
             return $item;
         });
 
-        dd($items);
+        // Pagination manual
+        $page = $this->page; // Livewire menangani page otomatis
+        $offset = ($page - 1) * $this->perPage;
+        $pagedItems = $modifiedItems->slice($offset, $this->perPage)->values();
+
+        $paginatedItems = new LengthAwarePaginator(
+            $pagedItems,
+            $modifiedItems->count(),
+            $this->perPage,
+            $page,
+            ['path' => request()->url()]
+        );
 
         return view('livewire.stock-part.index-stock-part', compact('items'));
     }
