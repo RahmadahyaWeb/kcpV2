@@ -44,11 +44,11 @@ class IndexStockPart extends Component
             ->select(
                 'part.part_no',
                 'part.nm_part',
-                'stock.qty',
+                'stock.stock',
                 DB::raw("SUM(CASE WHEN gudang.kd_gudang = 'GD1' THEN intransit.qty ELSE 0 END) as qty_intransit_kalsel"),
                 DB::raw("SUM(CASE WHEN gudang.kd_gudang = 'GD2' THEN intransit.qty ELSE 0 END) as qty_intransit_kalteng")
             )
-            ->groupBy('part.part_no', 'part.nm_part', 'stock.qty')
+            ->groupBy('part.part_no', 'part.nm_part', 'stock.stock')
             ->orderBy('part.nm_part')
             ->paginate();
         dd($items);
