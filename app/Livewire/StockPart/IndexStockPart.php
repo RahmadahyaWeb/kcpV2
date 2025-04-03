@@ -49,6 +49,8 @@ class IndexStockPart extends Component
             return [$key => $intransit->qty_intransit]; // Menyimpan qty_intransit untuk setiap key
         });
 
+        dd($intransitMap);
+
         // Gabungkan data stok part (OH) dengan stok intransit per gudang
         $modifiedItems = $items->map(function ($item) use ($intransitMap) {
             // Ambil qty_on_hand per part_no dan gudang
