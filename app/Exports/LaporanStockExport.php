@@ -9,10 +9,11 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 use DateTime;
+use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class LaporanStockExport implements FromCollection, WithMapping, WithTitle, WithColumnFormatting
+class LaporanStockExport implements FromCollection, WithMapping, WithTitle, WithColumnFormatting, WithCustomStartCell
 {
     private $items;
 
@@ -33,6 +34,11 @@ class LaporanStockExport implements FromCollection, WithMapping, WithTitle, With
         return $items->map(function ($row) {
             return $row;
         });
+    }
+
+    public function startCell(): string
+    {
+        return 'A3';
     }
 
     public function registerEvents(): array
@@ -67,7 +73,10 @@ class LaporanStockExport implements FromCollection, WithMapping, WithTitle, With
 
     public function map($row): array
     {
-        return [];
+        return [
+            $row->part_no,
+            $row->nm_part
+        ];
     }
 
     public function columnFormats(): array
