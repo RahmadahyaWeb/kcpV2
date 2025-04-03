@@ -24,10 +24,7 @@ class IndexStockPart extends Component
         $items = $kcpinformation->table('stock_part as stock')
             ->join('mst_part as part', 'part.part_no', '=', 'stock.part_no')
             ->where('part.status', 'Y')
-            ->where(function ($query) {
-                $query->where('part.part_no', 'like', '%' . $this->search . '%')
-                    ->orWhere('part.nm_part', 'like', '%' . $this->search . '%');
-            })
+            ->where('part.part_no', 'FP-231PA-K0J-2700')
             ->orderBy('part.nm_part')
             ->get();
 
