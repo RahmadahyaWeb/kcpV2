@@ -49,7 +49,9 @@ class IndexStockPart extends Component
             ->select(
                 'stock.*',
                 'part.*',
-                'intransit.qty as qty_intransit'
+                'intransit.qty as qty_intransit', // Alias untuk menghindari nama duplikat
+                'part.part_no as part_no_part',   // Alias untuk part_no dari tabel part
+                'intransit.part_no as part_no_intransit' // Alias untuk part_no dari tabel intransit
             )
             ->groupBy('part.part_no')
             ->orderBy('part.nm_part')
