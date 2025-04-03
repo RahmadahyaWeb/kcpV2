@@ -11,7 +11,7 @@ class IndexStockPart extends Component
 {
     use WithPagination;
 
-    public $target = 'search';
+    public $target = 'search, export';
     public $search;
 
     use WithPagination;
@@ -55,7 +55,7 @@ class IndexStockPart extends Component
         // Gabungkan data stok part (OH) dengan stok intransit per gudang
         $modifiedItems = $items->map(function ($item) use ($intransitMap) {
             // Ambil qty_on_hand per part_no dan gudang
-            $qty_on_hand = $item->qty_on_hand;
+            $qty_on_hand = $item->stock;
 
             // Tentukan stok intransit berdasarkan gudang
             $qty_intransit_KS = $intransitMap[$item->part_no . '-KS'] ?? 0;
