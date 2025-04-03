@@ -70,6 +70,6 @@ class IndexStockPart extends Component
             ['path' => request()->url()]
         );
 
-        return view('livewire.stock-part.index-stock-part', compact('items'));
+        return view('livewire.stock-part.index-stock-part', compact('paginatedItems'));
     }
 }
