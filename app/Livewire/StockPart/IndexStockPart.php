@@ -16,7 +16,77 @@ class IndexStockPart extends Component
 
     use WithPagination;
 
-    public function render()
+    public function export()
+    {
+        $kcpinformation = DB::connection('kcpinformation');
+
+        // Ambil semua data stok part
+        $items = $kcpinformation->table('stock_part as stock')
+            ->join('mst_part as part', 'part.part_no', '=', 'stock.part_no')
+            ->where('part.status', 'Y')
+            ->where(function ($query) {
+                $query->where('part.part_no', 'like', '%' . $this->search . '%')
+                    ->orWhere('part.nm_part', 'like', '%' . $this->search . '%');
+            })
+            ->orderBy('part.nm_part')
+            ->get();
+
+        // Ambil daftar part_no untuk query kedua
+        $partNumbers = $items->pluck('part_no')->toArray();
+
+        $intransitStock = $kcpinformation->table('intransit_details as intransit')
+            ->join('mst_gudang as gudang', 'intransit.kd_gudang_aop', '=', 'gudang.kd_gudang_aop')
+            ->where('intransit.status', 'I')
+            ->whereIn('intransit.part_no', $partNumbers)
+            ->groupBy('intransit.part_no', 'gudang.kd_gudang') // Group berdasarkan part_no dan kd_gudang
+            ->select(
+                'intransit.part_no',
+                'gudang.kd_gudang', // Gudang
+                DB::raw('SUM(intransit.qty) as qty_intransit') // Jumlahkan stok intransit
+            )
+            ->get();
+
+        // Buat mapping untuk stok intransit per part_no dan kd_gudang
+        $intransitMap = $intransitStock->mapWithKeys(function ($intransit) {
+            $key = $intransit->part_no . '-' . $intransit->kd_gudang; // Key gabungan part_no dan kd_gudang
+            return [$key => $intransit->qty_intransit]; // Menyimpan qty_intransit untuk setiap key
+        });
+
+        // Gabungkan data stok part (OH) dengan stok intransit per gudang
+        $modifiedItems = $items->map(function ($item) use ($intransitMap) {
+            // Ambil qty_on_hand per part_no dan gudang
+            $qty_on_hand = $item->qty_on_hand;
+
+            // Tentukan stok intransit berdasarkan gudang
+            $qty_intransit_KS = $intransitMap[$item->part_no . '-KS'] ?? 0;
+            $qty_intransit_KT = $intransitMap[$item->part_no . '-KT'] ?? 0;
+
+            // Tambahkan stok per gudang
+            $item->qty_on_hand_KS = $item->kd_gudang == 'KS' ? $qty_on_hand : 0;
+            $item->qty_on_hand_KT = $item->kd_gudang == 'KT' ? $qty_on_hand : 0;
+            $item->qty_intransit_KS = $qty_intransit_KS;
+            $item->qty_intransit_KT = $qty_intransit_KT;
+
+            return $item;
+        });
+
+        // Gabungkan menjadi satu entri berdasarkan part_no
+        $finalItems = $modifiedItems->groupBy('part_no')->map(function ($group) {
+            $firstItem = $group->first(); // Ambil item pertama untuk part_no ini
+
+            // Gabungkan qty_on_hand dan qty_intransit per gudang
+            $firstItem->qty_on_hand_KS = $group->where('kd_gudang', 'KS')->sum('qty_on_hand_KS');
+            $firstItem->qty_on_hand_KT = $group->where('kd_gudang', 'KT')->sum('qty_on_hand_KT');
+            $firstItem->qty_intransit_KS = $group->where('kd_gudang', 'KS')->sum('qty_intransit_KS');
+            $firstItem->qty_intransit_KT = $group->where('kd_gudang', 'KT')->sum('qty_intransit_KT');
+
+            return $firstItem;
+        })->values();
+
+        dd($finalItems);
+    }
+
+    public function fetch()
     {
         $kcpinformation = DB::connection('kcpinformation');
 
@@ -57,6 +127,13 @@ class IndexStockPart extends Component
             $item->qty_intransit = $intransitMap[$key]->qty_intransit ?? 0;
             return $item;
         });
+
+        return $modifiedItems;
+    }
+
+    public function render()
+    {
+        $modifiedItems = $this->fetch();
 
         // Pagination manual
         $page = $this->getPage(); // Livewire menangani current page otomatis

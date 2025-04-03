@@ -4,7 +4,14 @@
 
     <div class="card">
         <div class="card-header">
-            Stock Part
+            <div class="row">
+                <div class="col">
+                    Stock Part
+                </div>
+                <div class="col d-flex justify-content-end">
+                    <button wire:click="export">Export</button>
+                </div>
+            </div>
         </div>
 
         <div class="card-body">
