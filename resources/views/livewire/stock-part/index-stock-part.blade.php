@@ -60,7 +60,7 @@
         </div>
 
         <div class="card-footer">
-            {{ $items->links() }}
+            {{ $paginatedItems->links() }}
         </div>
     </div>
 </div>
