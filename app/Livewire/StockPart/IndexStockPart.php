@@ -82,7 +82,7 @@ class IndexStockPart extends Component
             return $firstItem;
         })->values();
 
-        $filename = "LAPORAN_STOK_" . date('Y-m-d');
+        $filename = "LAPORAN_STOK_" . date('Y-m-d') . ".xlsx";
 
         return Excel::download(new LaporanStockExport($finalItems), $filename);
     }
