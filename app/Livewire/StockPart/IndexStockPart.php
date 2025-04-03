@@ -2,10 +2,12 @@
 
 namespace App\Livewire\StockPart;
 
+use App\Exports\LaporanStockExport;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
 
 class IndexStockPart extends Component
 {
@@ -80,7 +82,9 @@ class IndexStockPart extends Component
             return $firstItem;
         })->values();
 
-        dd($finalItems);
+        $filename = "LAPORAN_STOK_" . date('Y-m-d');
+
+        return Excel::download(new LaporanStockExport($finalItems), $filename);
     }
 
     public function fetch()

@@ -28,7 +28,11 @@ class LaporanStockExport implements FromCollection, WithMapping, WithTitle, With
 
     public function collection()
     {
-        //
+        $items = collect($this->items);
+
+        return $items->map(function ($row) {
+            return $row;
+        });
     }
 
     public function registerEvents(): array
