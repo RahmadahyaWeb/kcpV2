@@ -10,10 +10,11 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 use DateTime;
 use Maatwebsite\Excel\Concerns\WithCustomStartCell;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class LaporanStockExport implements FromCollection, WithMapping, WithTitle, WithColumnFormatting, WithCustomStartCell
+class LaporanStockExport implements FromCollection, WithMapping, WithTitle, WithColumnFormatting, WithCustomStartCell, WithEvents
 {
     private $items;
 
