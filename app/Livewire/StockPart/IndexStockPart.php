@@ -31,32 +31,26 @@ class IndexStockPart extends Component
 
         $items = $kcpinformation->table('stock_part as stock')
             ->join('mst_part as part', 'part.part_no', '=', 'stock.part_no')
-            ->leftJoin('kcpinformation.intransit_details as intransit', function ($join) {
-                $join->on('part.part_no', '=', 'intransit.part_no')
+            ->leftJoin('intransit_details as intransit', function ($join) {
+                $join->on('stock.part_no', '=', 'intransit.part_no')
+                    ->join('mst_gudang as gudang', 'intransit.kd_gudang_aop', '=', 'gudang.kd_gudang_aop')
                     ->where('intransit.status', 'I');
             })
-            ->leftJoin('kcpinformation.mst_gudang as gudang', 'intransit.kd_gudang_aop', '=', 'gudang.kd_gudang_aop')
             ->where('part.status', 'Y')
             ->where(function ($query) {
                 $query->where('part.part_no', 'like', '%' . $this->search . '%')
                     ->orWhere('part.nm_part', 'like', '%' . $this->search . '%');
             })
-            ->where(function ($query) {
-                // Menambahkan filter untuk gudang Kalsel dan Kalteng
-                $query->where('gudang.kd_gudang', 'GD1')
-                    ->orWhere('gudang.kd_gudang', 'GD2');
-            })
             ->select(
-                'stock.*',
-                'part.*',
-                'intransit.qty as qty_intransit', // Alias untuk menghindari nama duplikat
-                'part.part_no as part_no_part',   // Alias untuk part_no dari tabel part
-                'intransit.part_no as part_no_intransit' // Alias untuk part_no dari tabel intransit
+                'part.part_no',
+                'part.nm_part',
+                'stock.qty',
+                DB::raw("SUM(CASE WHEN gudang.kd_gudang = 'GD1' THEN intransit.qty ELSE 0 END) as qty_intransit_kalsel"),
+                DB::raw("SUM(CASE WHEN gudang.kd_gudang = 'GD2' THEN intransit.qty ELSE 0 END) as qty_intransit_kalteng")
             )
-            ->groupBy('part.part_no')
+            ->groupBy('part.part_no', 'part.nm_part', 'stock.qty')
             ->orderBy('part.nm_part')
             ->paginate();
-
         dd($items);
 
         return view('livewire.stock-part.index-stock-part', compact('items'));
