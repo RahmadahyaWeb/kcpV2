@@ -27,7 +27,7 @@ class IndexStockPart extends Component
             ->join('mst_part as part', 'part.part_no', '=', 'stock.part_no')
             ->where('part.status', 'Y')
             // ->where('part.part_no', 'FP-231PA-K0J-2700')
-            ->orderBy('part.nm_part', 'desc')
+            ->orderBy('part.nm_part')
             ->get();
 
         // Ambil daftar part_no untuk query kedua
@@ -80,7 +80,9 @@ class IndexStockPart extends Component
             $firstItem->qty_intransit_KT = $group->where('kd_gudang', 'GD2')->sum('qty_intransit_KT');
 
             return $firstItem;
-        })->values();
+        })
+        ->sortBy('part_no')
+        ->values();
 
         $filename = "LAPORAN_STOK_" . date('Y-m-d') . ".xlsx";
 
