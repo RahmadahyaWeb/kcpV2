@@ -69,6 +69,9 @@ class LaporanStockExport implements FromCollection, WithMapping, WithTitle, With
                 $sheet->setCellValue('G2', "OH");
                 $sheet->setCellValue('H2', "INT");
                 $sheet->mergeCells('G1:H1');
+
+                $sheet->setCellValue('I1', "HET");
+                $sheet->mergeCells('I1:I2');
             }
         ];
     }
@@ -84,6 +87,7 @@ class LaporanStockExport implements FromCollection, WithMapping, WithTitle, With
             $row->qty_intransit_KS !== null ? $row->qty_intransit_KS : 0,
             $row->qty_on_hand_KT !== null ? $row->qty_on_hand_KT : 0,
             $row->qty_intransit_KT !== null ? $row->qty_intransit_KT : 0,
+            $row->hrg_jual_pcs !== null? $row->hrg_jual_pcs : 0
         ];
     }
 
