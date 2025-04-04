@@ -75,14 +75,14 @@ class LaporanStockExport implements FromCollection, WithMapping, WithTitle, With
     public function map($row): array
     {
         return [
-            $row->part_no,
-            $row->nm_part,
-            $row->supplier,
-            $row->produk_part,
-            $row->qty_on_hand_KS,
-            $row->qty_intransit_KS,
-            $row->qty_on_hand_KT,
-            $row->qty_intransit_KT
+            $row->part_no ?? '',
+            $row->nm_part ?? '',
+            $row->supplier ?? '',
+            $row->produk_part ?? '',
+            $row->qty_on_hand_KS !== null ? $row->qty_on_hand_KS : 0,
+            $row->qty_intransit_KS !== null ? $row->qty_intransit_KS : 0,
+            $row->qty_on_hand_KT !== null ? $row->qty_on_hand_KT : 0,
+            $row->qty_intransit_KT !== null ? $row->qty_intransit_KT : 0,
         ];
     }
 
