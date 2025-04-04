@@ -27,7 +27,7 @@ class IndexStockPart extends Component
             ->join('mst_part as part', 'part.part_no', '=', 'stock.part_no')
             ->where('part.status', 'Y')
             // ->where('part.part_no', 'FP-231PA-K0J-2700')
-            ->orderBy('part.nm_part')
+            ->orderBy('part.nm_part', 'desc')
             ->get();
 
         // Ambil daftar part_no untuk query kedua
