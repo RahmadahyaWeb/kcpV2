@@ -60,9 +60,9 @@
                                     @if (!empty($item->asal_qty))
                                         {!! implode(
                                             '<br>',
-                                            $item->asal_qty->map(function ($asal) {
-                                                    return "Qty: {$asal['qty']} (Invoice: {$asal['invoice']})";
-                                                })->toArray(),
+                                            array_map(function ($asal) {
+                                                return "Qty: {$asal['qty']} (Invoice: {$asal['invoice']})";
+                                            }, $item->asal_qty ?? []),
                                         ) !!}
                                     @else
                                         {{ $item->invoiceAop }}
