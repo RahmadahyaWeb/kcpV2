@@ -254,7 +254,7 @@ class GoodsReceiptAopDetail extends Component
                         ];
                     });
                 } else {
-                    $item->asal_qty = [];
+                    $item->asal_qty = collect();
                 }
 
                 return $item;
@@ -262,8 +262,6 @@ class GoodsReceiptAopDetail extends Component
 
             $this->items_with_qty = $items_with_qty;
         }
-
-        // dd($items_with_qty);
 
         return view('livewire.goods-receipt.goods-receipt-aop-detail', compact(
             'items_with_qty',
