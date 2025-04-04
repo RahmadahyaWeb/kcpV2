@@ -247,7 +247,7 @@ class GoodsReceiptAopDetail extends Component
                     $other_invoice_qty = $this->find_qty_in_other_invoice($material_number, $spb);
 
                     // Format data asal qty
-                    $item->asal_qty = $other_invoice_qty->map(function ($other) {
+                    $item->asal_qty = collect($other_invoice_qty)->map(function ($other) {
                         return [
                             'qty' => $other->qty,
                             'invoice' => $other->invoiceAop, // Tambahkan invoiceAop
