@@ -11,10 +11,11 @@ use Maatwebsite\Excel\Events\AfterSheet;
 use DateTime;
 use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class LaporanStockExport implements FromCollection, WithMapping, WithTitle, WithColumnFormatting, WithCustomStartCell, WithEvents
+class LaporanStockExport implements FromCollection, WithMapping, WithTitle, WithColumnFormatting, WithCustomStartCell, WithEvents, WithStrictNullComparison
 {
     private $items;
 
