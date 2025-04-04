@@ -248,13 +248,13 @@ class GoodsReceiptAopDetail extends Component
 
                     // Format data asal qty
                     $item->asal_qty = $other_invoice_qty->map(function ($other) {
-                        return (object) [
+                        return [
                             'qty' => $other->qty,
-                            'invoice' => $other->invoiceAop,
+                            'invoice' => $other->invoiceAop, // Tambahkan invoiceAop
                         ];
                     });
                 } else {
-                    $item->asal_qty = collect();
+                    $item->asal_qty = [];
                 }
 
                 return $item;
@@ -263,7 +263,7 @@ class GoodsReceiptAopDetail extends Component
             $this->items_with_qty = $items_with_qty;
         }
 
-        // dd($items_with_qty);
+        dd($items_with_qty);
 
         return view('livewire.goods-receipt.goods-receipt-aop-detail', compact(
             'items_with_qty',
