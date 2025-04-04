@@ -49,9 +49,7 @@
                             <tr>
                                 <td>
                                     <input type="checkbox" wire:model.change="selectedItems"
-                                        value="{{ $item->materialNumber }}" @disabled(
-                                            !($item->qty <= $item->qty_terima - collect($item->asal_qty)->sum(fn($asal) => $asal['qty'])) ||
-                                                $item->status == 'BOSNET') />
+                                        value="{{ $item->materialNumber }}" @disabled(!($item->qty <= $item->qty_terima - ($item->asal_qty ? $item->asal_qty->sum('qty') : 0)) || $item->status == 'BOSNET') />
                                 </td>
                                 <td>{{ $item->materialNumber }}</td>
                                 <td>{{ $item->qty }}</td>
