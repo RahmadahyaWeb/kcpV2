@@ -31,11 +31,11 @@ class DksController extends Controller
         }
 
         // Validasi Toko Aktif
-        $toko_aktif = $this->validateActiveStore($kd_toko);
+        // $toko_aktif = $this->validateActiveStore($kd_toko);
 
-        if (!$toko_aktif) {
-            return $this->redirectBackWithError("Toko dengan kode $kd_toko tidak aktif!");
-        }
+        // if (!$toko_aktif) {
+        //     return $this->redirectBackWithError("Toko dengan kode $kd_toko tidak aktif!");
+        // }
 
         $provinsiToko = DB::connection('kcpinformation')
             ->table('mst_outlet')
@@ -86,13 +86,13 @@ class DksController extends Controller
         }
     }
 
-    private function validateActiveStore($kd_toko)
-    {
-        return DB::table('master_toko')
-            ->where('kd_toko', $kd_toko)
-            ->where('status', 'active')
-            ->first();
-    }
+    // private function validateActiveStore($kd_toko)
+    // {
+    //     return DB::table('master_toko')
+    //         ->where('kd_toko', $kd_toko)
+    //         ->where('status', 'active')
+    //         ->first();
+    // }
 
     private function adjustVisitTime($kd_provinsi)
     {
