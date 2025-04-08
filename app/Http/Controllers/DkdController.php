@@ -31,11 +31,11 @@ class DkdController extends Controller
         }
 
         // Validasi Toko Aktif
-        $toko_aktif = $this->validateActiveStore($kd_toko);
+        // $toko_aktif = $this->validateActiveStore($kd_toko);
 
-        if (!$toko_aktif) {
-            return $this->redirectBackWithError("Toko dengan kode $kd_toko tidak aktif!");
-        }
+        // if (!$toko_aktif) {
+        //     return $this->redirectBackWithError("Toko dengan kode $kd_toko tidak aktif!");
+        // }
 
         $provinsiToko = DB::table('mst_expedition')
             ->where('kd_expedition', $kd_toko)
