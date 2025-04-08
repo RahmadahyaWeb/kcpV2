@@ -34,6 +34,7 @@ use App\Livewire\Invoice\IndexInvoice;
 use App\Livewire\Invoice\IndexInvoiceBosnet;
 use App\Livewire\KelompokPart;
 use App\Livewire\LogViewer;
+use App\Livewire\Lss\IndexLss;
 use App\Livewire\Master\CreateExpedition;
 use App\Livewire\Master\CreateUser;
 use App\Livewire\Master\EditExpedition;
@@ -105,6 +106,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/master/expedition', IndexExpedition::class)->name('expedition.index');
         Route::get('/master/expedition/create', CreateExpedition::class)->name('expedition.create');
         Route::get('/master/expedition/edit/{kd_expedition}', EditExpedition::class)->name('expedition.edit');
+
+        // LSS
+        Route::get('/report-marketing/lss', IndexLss::class)->name('report-marketing.lss');
     });
 
     /**
