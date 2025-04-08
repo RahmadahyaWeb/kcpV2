@@ -114,11 +114,11 @@ return [
                 "route" => "report-marketing.laporan-invoice",
                 "active" => Request::is('report-marketing/laporan-invoice*')
             ],
-            [
-                "label" => "Laporan LSS",
-                "route" => "report-marketing.lss",
-                "active" => Request::is('report-marketing/lss*')
-            ],
+            // [
+            //     "label" => "Laporan LSS",
+            //     "route" => "report-marketing.lss",
+            //     "active" => Request::is('report-marketing/lss*')
+            // ],
         ]
     ],
 
