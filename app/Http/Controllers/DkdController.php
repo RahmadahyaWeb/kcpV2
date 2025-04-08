@@ -107,7 +107,7 @@ class DkdController extends Controller
 
     private function adjustVisitTime($kd_provinsi)
     {
-        return ($kd_provinsi == '6200') ? now()->subHour() : now();
+        return (strval($kd_provinsi) == '6200') ? now()->subHour() : now();
     }
 
     private function processStore($type, $kd_toko, $user, $latitude, $longitude, $keterangan, $waktu_kunjungan, $katalog)
