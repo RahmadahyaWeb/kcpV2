@@ -205,8 +205,6 @@ class GoodsReceiptAopDetail extends Component
             });
 
             $this->items_with_qty = collect($items_grouped);
-
-            dd($this->items_with_qty);
         } else {
             // Ambil SPB dari invoice_aop_header
             $spb = DB::table('invoice_aop_header')
