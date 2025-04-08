@@ -6,7 +6,7 @@
             @php
                 $inOrOut = '';
 
-                if ($check == 1) {
+                if ($check == 'out') {
                     $inOrOut = 'Check Out';
                 } else {
                     $inOrOut = 'Check In';
@@ -180,7 +180,7 @@
             }
 
             function validateForm(event) {
-                const check = {{ $check }};
+                const check = "{{ $check }}";
                 let inOrOut = "{{ $inOrOut }}"
 
                 let confirmAction = confirm(`Apakah Anda yakin ingin melakukan scan ${inOrOut}?`)

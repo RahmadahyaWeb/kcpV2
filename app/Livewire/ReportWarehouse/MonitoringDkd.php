@@ -32,25 +32,19 @@ class MonitoringDkd extends Component
                 'in_data.tgl_kunjungan',
                 'out_data.keterangan',
                 'in_data.kd_toko',
-                'katalog_data.katalog_at',
                 DB::raw('
-                    CASE
-                        WHEN out_data.waktu_kunjungan IS NOT NULL
-                        THEN TIMESTAMPDIFF(MINUTE, in_data.waktu_kunjungan, out_data.waktu_kunjungan)
-                        ELSE NULL
-                    END AS lama_kunjungan')
+                CASE
+                    WHEN out_data.waktu_kunjungan IS NOT NULL
+                    THEN TIMESTAMPDIFF(MINUTE, in_data.waktu_kunjungan, out_data.waktu_kunjungan)
+                    ELSE NULL
+                END AS lama_kunjungan')
             )
             ->leftJoin('trans_dkd AS out_data', function ($join) {
                 $join->on('in_data.user_sales', '=', 'out_data.user_sales')
                     ->whereColumn('in_data.kd_toko', 'out_data.kd_toko')
                     ->whereColumn('in_data.tgl_kunjungan', 'out_data.tgl_kunjungan')
+                    ->whereColumn('out_data.reference', 'in_data.id') // ini bagian yang ditambahkan
                     ->where('out_data.type', '=', 'out');
-            })
-            ->leftJoin('trans_dkd AS katalog_data', function ($join) {
-                $join->on('in_data.user_sales', '=', 'katalog_data.user_sales')
-                    ->whereColumn('in_data.kd_toko', 'katalog_data.kd_toko')
-                    ->whereColumn('in_data.tgl_kunjungan', 'katalog_data.tgl_kunjungan')
-                    ->where('katalog_data.type', '=', 'katalog');
             })
             ->where('in_data.type', 'in')
             ->when($this->fromDate && $this->toDate, function ($query) {
@@ -60,7 +54,7 @@ class MonitoringDkd extends Component
                 return $query->where('in_data.kd_toko', $this->kd_toko);
             })
             ->when($this->user_driver, function ($query) {
-                return $query->where('in_data.user_sales', $this->user_sales);
+                return $query->where('in_data.user_sales', $this->user_driver);
             })
             ->whereDate('in_data.tgl_kunjungan', '>=', $startOfMonth)
             ->orderBy('in_data.created_at', 'desc')

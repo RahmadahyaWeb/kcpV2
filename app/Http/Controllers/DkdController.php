@@ -15,7 +15,6 @@ class DkdController extends Controller
         $longitude  = $request->longitude;
         $keterangan = strtolower($request->keterangan);
         $user       = Auth::user()->username;
-        $katalog    = $request->get('katalog');
         $kd_toko    = $request->kode_toko;
 
         // Validasi Lokasi
@@ -23,19 +22,12 @@ class DkdController extends Controller
             return $this->redirectBackWithError('Lokasi tidak ditemukan!');
         }
 
-        // Validasi Check-In dan Check-Out atau Katalog
+        // Validasi Check-In dan Check-Out
         try {
-            $type = $this->determineCheckType($kd_toko, $user, $katalog);
+            $type = $this->determineCheckType($kd_toko, $user);
         } catch (\Exception $e) {
             return $this->redirectBackWithError($e->getMessage());
         }
-
-        // Validasi Toko Aktif
-        // $toko_aktif = $this->validateActiveStore($kd_toko);
-
-        // if (!$toko_aktif) {
-        //     return $this->redirectBackWithError("Toko dengan kode $kd_toko tidak aktif!");
-        // }
 
         $provinsiToko = DB::table('mst_expedition')
             ->where('kd_expedition', $kd_toko)
@@ -45,7 +37,7 @@ class DkdController extends Controller
         $waktu_kunjungan = $this->adjustVisitTime($provinsiToko);
 
         // Proses Penyimpanan Data
-        return $this->processStore($type, $kd_toko, $user, $latitude, $longitude, $keterangan, $waktu_kunjungan, $katalog);
+        return $this->processStore($type, $kd_toko, $user, $latitude, $longitude, $keterangan, $waktu_kunjungan);
     }
 
     private function redirectBackWithError($message)
@@ -53,56 +45,38 @@ class DkdController extends Controller
         return redirect()->route('daftar-kehadiran-driver.index')->with('error', $message);
     }
 
-    private function determineCheckType($kd_toko, $user, $katalog)
+    public static function determineCheckType($kd_toko, $user)
     {
-        $check = DB::table('trans_dkd')
+        // Mengecek apakah ada check-in yang belum diikuti dengan check-out pada hari yang sama
+        $lastCheckIn = DB::table('trans_dkd')
             ->where('kd_toko', $kd_toko)
             ->where('user_sales', $user)
-            ->where('type', '!=', 'katalog')
             ->whereDate('tgl_kunjungan', now()->toDateString())
-            ->count();
+            ->where('type', 'in') // Hanya mencari 'check-in'
+            ->orderByDesc('created_at') // Mengambil check-in terakhir
+            ->first();
 
-        if ($check == 0) {
-            if ($katalog == 'Y') {
-                throw new \Exception('Tidak dapat scan katalog. Anda belum melakukan check in!');
-            }
+        if (!$lastCheckIn) {
+            // Jika tidak ada check-in sebelumnya pada hari ini, maka absensi pertama adalah 'check-in'
             return 'in';
         }
 
-        if ($check == 2) {
-            if ($katalog == 'Y') {
-                throw new \Exception('Tidak dapat scan katalog. Anda sudah melakukan check out!');
-            }
-            throw new \Exception('Anda sudah melakukan check out!');
+        // Mengecek apakah check-in terakhir sudah ada check-out untuk reference yang sama
+        $lastCheckOut = DB::table('trans_dkd')
+            ->where('kd_toko', $kd_toko)
+            ->where('user_sales', $user)
+            ->whereDate('tgl_kunjungan', now()->toDateString())
+            ->where('reference', $lastCheckIn->id) // Menggunakan reference yang sama dengan check-in terakhir
+            ->where('type', 'out') // Cek apakah ada 'check-out' untuk reference yang sama
+            ->exists();
+
+        if ($lastCheckOut) {
+            // Jika sudah ada check-out, maka absensi berikutnya adalah check-in
+            return 'in';
         }
 
-        if ($check == 1) {
-            if ($katalog == 'Y') {
-                return 'katalog';
-            }
-
-            return 'out';
-        }
-    }
-
-    private function validateActiveStore($kd_toko)
-    {
-        if (strpos($kd_toko, 'E_') !== false) {
-            $toko = DB::connection('mysql')
-                ->table('mst_expedition')
-                ->select(['kd_expedition as kd_outlet', 'nama_expedition as nm_outlet', 'latitude', 'longitude'])
-                ->where('kd_expedition', $kd_toko)
-                ->first();
-        } else {
-            $toko = DB::connection('kcpinformation')
-                ->table('mst_outlet')
-                ->select(['kd_outlet', 'nm_outlet', 'latitude', 'longitude'])
-                ->where('kd_outlet', $kd_toko)
-                ->where('status', 'active')
-                ->first();
-        }
-
-        return $toko;
+        // Jika belum ada check-out, maka absensi berikutnya adalah check-out
+        return 'out';
     }
 
     private function adjustVisitTime($kd_provinsi)
@@ -110,30 +84,62 @@ class DkdController extends Controller
         return (strval($kd_provinsi) == '6200') ? now()->subHour() : now();
     }
 
-    private function processStore($type, $kd_toko, $user, $latitude, $longitude, $keterangan, $waktu_kunjungan, $katalog)
+    private function processStore($type, $kd_toko, $user, $latitude, $longitude, $keterangan, $waktu_kunjungan)
     {
         DB::beginTransaction();
         try {
-            // Data yang akan disimpan
-            $data = [
-                'tgl_kunjungan'     => now(),
-                'user_sales'        => $user,
-                'kd_toko'           => $kd_toko,
-                'waktu_kunjungan'   => $waktu_kunjungan,
-                'type'              => $type,
-                'latitude'          => $latitude,
-                'longitude'         => $longitude,
-                'keterangan'        => $keterangan,
-                'created_by'        => $user,
-                'created_at'        => now(),
-                'updated_at'        => now(),
-            ];
+            // Jika absensi 'check-in', kita harus membuat reference baru
+            $reference = null;
+            if ($type == 'in') {
+                $reference = DB::table('trans_dkd')->insertGetId([
+                    'kd_toko'          => $kd_toko,
+                    'user_sales'       => $user,
+                    'tgl_kunjungan'    => now(),
+                    'type'             => 'in',
+                    'latitude'         => $latitude,
+                    'longitude'        => $longitude,
+                    'keterangan'       => $keterangan,
+                    'created_by'       => $user,
+                    'created_at'       => now(),
+                    'updated_at'       => now(),
+                    'waktu_kunjungan'  => $waktu_kunjungan
+                ]);
+            }
 
-            // Simpan data
-            DB::table('trans_dkd')->insert($data);
+            // Jika absensi 'check-out', kita akan mengambil reference dari check-in terakhir yang belum diikuti check-out
+            if ($type == 'out') {
+                $lastCheckIn = DB::table('trans_dkd')
+                    ->where('kd_toko', $kd_toko)
+                    ->where('user_sales', $user)
+                    ->whereDate('tgl_kunjungan', now()->toDateString())
+                    ->where('type', 'in') // Mengambil check-in terakhir
+                    ->orderByDesc('created_at')
+                    ->first();
+
+                // Menggunakan reference dari check-in terakhir untuk check-out
+                $reference = $lastCheckIn->id;
+
+                // Menyimpan check-out
+                DB::table('trans_dkd')->insert([
+                    'kd_toko'          => $kd_toko,
+                    'user_sales'       => $user,
+                    'tgl_kunjungan'    => now(),
+                    'type'             => 'out',
+                    'latitude'         => $latitude,
+                    'longitude'        => $longitude,
+                    'keterangan'       => $keterangan,
+                    'reference'        => $reference,  // Menggunakan reference dari check-in
+                    'created_by'       => $user,
+                    'created_at'       => now(),
+                    'updated_at'       => now(),
+                    'waktu_kunjungan'  => $waktu_kunjungan
+                ]);
+            }
+
             DB::commit();
 
-            $action = $katalog == 'Y' ? 'scan katalog' : "check $type";
+            // Aksi untuk menampilkan pesan sukses
+            $action = "check $type";
             return redirect()->route('daftar-kehadiran-driver.index')->with('success', "Berhasil melakukan $action");
         } catch (\Exception $e) {
             DB::rollBack();

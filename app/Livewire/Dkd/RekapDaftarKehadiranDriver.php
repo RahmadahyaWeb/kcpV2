@@ -62,7 +62,6 @@ class RekapDaftarKehadiranDriver extends Component
                     'in_data.tgl_kunjungan',
                     'out_data.keterangan',
                     'in_data.kd_toko',
-                    'katalog_data.katalog_at',
                     'users.name',
                     DB::raw('
                         CASE
@@ -71,21 +70,16 @@ class RekapDaftarKehadiranDriver extends Component
                             ELSE NULL
                         END AS lama_kunjungan'),
                     DB::raw('0 AS durasi_perjalanan'),
-                    'in_data.id',
+                    'in_data.id'
                 )
                 ->leftJoin('trans_dkd AS out_data', function ($join) {
                     $join->on('in_data.user_sales', '=', 'out_data.user_sales')
                         ->whereColumn('in_data.kd_toko', 'out_data.kd_toko')
                         ->whereColumn('in_data.tgl_kunjungan', 'out_data.tgl_kunjungan')
+                        ->whereColumn('out_data.reference', 'in_data.id') // Penyesuaian di sini
                         ->where('out_data.type', '=', 'out');
                 })
                 ->leftJoin('users', 'users.username', '=', 'in_data.user_sales')
-                ->leftJoin('trans_dkd AS katalog_data', function ($join) {
-                    $join->on('in_data.user_sales', '=', 'katalog_data.user_sales')
-                        ->whereColumn('in_data.kd_toko', 'katalog_data.kd_toko')
-                        ->whereColumn('in_data.tgl_kunjungan', 'katalog_data.tgl_kunjungan')
-                        ->where('katalog_data.type', '=', 'katalog');
-                })
                 ->whereIn('in_data.tgl_kunjungan', $dates)
                 ->where('in_data.user_sales', $user->username)
                 ->where('in_data.type', 'in')

@@ -32,9 +32,9 @@
                     @enderror
                 </div>
                 <div class="col-md-6">
-                    <label for="user_driver" class="form-label">Sales</label>
+                    <label for="user_driver" class="form-label">Driver</label>
                     <select name="user_driver" id="user_driver" class="form-select" wire:model.change="user_driver">
-                        <option value="" selected>Pilih Sales</option>
+                        <option value="" selected>Pilih Driver</option>
                         @foreach ($driver as $user)
                             <option value="{{ $user->username }}">{{ $user->name }}</option>
                         @endforeach
@@ -55,7 +55,7 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Sales</th>
+                            <th>Driver</th>
                             <th>Tgl. Kunjungan</th>
                             <th>Kode Toko</th>
                             <th>Nama Toko</th>

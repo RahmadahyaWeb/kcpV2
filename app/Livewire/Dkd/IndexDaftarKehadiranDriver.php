@@ -18,7 +18,6 @@ class IndexDaftarKehadiranDriver extends Component
                 'in_data.tgl_kunjungan',
                 'out_data.keterangan',
                 'in_data.kd_toko',
-                'katalog_data.katalog_at',
                 DB::raw('
                 CASE
                     WHEN out_data.waktu_kunjungan IS NOT NULL
@@ -30,13 +29,8 @@ class IndexDaftarKehadiranDriver extends Component
                 $join->on('in_data.user_sales', '=', 'out_data.user_sales')
                     ->whereColumn('in_data.kd_toko', 'out_data.kd_toko')
                     ->whereColumn('in_data.tgl_kunjungan', 'out_data.tgl_kunjungan')
-                    ->where('out_data.type', '=', 'out');
-            })
-            ->leftJoin('trans_dkd AS katalog_data', function ($join) {
-                $join->on('in_data.user_sales', '=', 'katalog_data.user_sales')
-                    ->whereColumn('in_data.kd_toko', 'katalog_data.kd_toko')
-                    ->whereColumn('in_data.tgl_kunjungan', 'katalog_data.tgl_kunjungan')
-                    ->where('katalog_data.type', '=', 'katalog');
+                    ->where('out_data.type', '=', 'out')
+                    ->whereColumn('out_data.reference', 'in_data.id');
             })
             ->where('in_data.type', 'in')
             ->where('in_data.user_sales', Auth::user()->username)
