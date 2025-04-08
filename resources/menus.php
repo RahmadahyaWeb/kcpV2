@@ -8,7 +8,7 @@ return [
         "icon" => "bx bx-home-smile",
         "route" => "dashboard",
         "active" => Request::is('dashboard*'),
-        "roles" => ['super-user', 'admin', 'head-marketing', 'salesman', 'storer', 'head-warehouse', 'inventory', 'finance', 'ar', 'supervisor-area', 'fakturis'],
+        "roles" => ['super-user', 'admin', 'head-marketing', 'salesman', 'storer', 'head-warehouse', 'inventory', 'finance', 'ar', 'supervisor-area', 'fakturis', 'driver'],
         "children" => []
     ],
 
@@ -113,7 +113,12 @@ return [
                 "label" => "Laporan Invoice",
                 "route" => "report-marketing.laporan-invoice",
                 "active" => Request::is('report-marketing/laporan-invoice*')
-            ]
+            ],
+            [
+                "label" => "Laporan LSS",
+                "route" => "report-marketing.lss",
+                "active" => Request::is('report-marketing/lss*')
+            ],
         ]
     ],
 

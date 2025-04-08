@@ -24,6 +24,7 @@ class EditExpedition extends Component
         $this->nama_expedition = $expedition->nama_expedition;
         $this->latitude = $expedition->latitude;
         $this->longitude = $expedition->longitude;
+        $this->kd_prp = $expedition->kd_prp;
     }
 
     public function save()
