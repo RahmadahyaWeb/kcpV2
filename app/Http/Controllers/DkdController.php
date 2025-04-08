@@ -50,7 +50,7 @@ class DkdController extends Controller
 
     private function redirectBackWithError($message)
     {
-        return redirect()->route('dkd.index')->with('error', $message);
+        return redirect()->route('daftar-kehadiran-driver.index')->with('error', $message);
     }
 
     private function determineCheckType($kd_toko, $user, $katalog)
