@@ -108,7 +108,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/master/expedition/edit/{kd_expedition}', EditExpedition::class)->name('expedition.edit');
 
         // LSS
-        // Route::get('/report-marketing/lss', IndexLss::class)->name('report-marketing.lss');
+        Route::get('/report-marketing/lss', IndexLss::class)->name('report-marketing.lss');
     });
 
     /**
@@ -298,7 +298,7 @@ Route::middleware('auth')->group(function () {
      * super-user
      * head-warehouse
      */
-    Route::middleware('role:driver|super-user')->group(function () {
+    Route::middleware('role:head-warehouse|super-user')->group(function () {
         Route::get('/report-warehouse/dkd', MonitoringDkd::class)->name('report-warehouse.dkd');
         Route::get('/report-warehouse/dkd/rekap-punishment', RekapDaftarKehadiranDriver::class)->name('report-warehouse.dkd.rekap-daftar-kehadiran-driver');
     });
