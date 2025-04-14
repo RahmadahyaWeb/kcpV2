@@ -108,7 +108,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/master/expedition/edit/{kd_expedition}', EditExpedition::class)->name('expedition.edit');
 
         // LSS
-        // Route::get('/report-marketing/lss', IndexLss::class)->name('report-marketing.lss');
+        Route::get('/report-marketing/lss', IndexLss::class)->name('report-marketing.lss');
     });
 
     /**
