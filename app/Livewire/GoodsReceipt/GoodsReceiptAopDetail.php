@@ -255,9 +255,9 @@ class GoodsReceiptAopDetail extends Component
                     $item->asal_qty = $other_invoice_qty->map(function ($other) {
                         return [
                             'qty' => $other->qty,
-                            'invoice' => $other->invoiceAop, // Tambahkan invoiceAop
+                            'invoice' => $other->invoiceAop,
                         ];
-                    });
+                    })->toArray();
                 } else {
                     $item->asal_qty = [];
                 }
