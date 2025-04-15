@@ -91,8 +91,6 @@ class GoodsReceiptAopDetail extends Component
             ->where('invoiceAop', $this->invoiceAop)
             ->value('billingDocumentDate');
 
-        dd($bill_date);
-
         if ($bill_date >= '2025-02-28') {
             // Ambil SPB dari invoice_aop_header
             $spb = DB::table('invoice_aop_header')
@@ -270,7 +268,7 @@ class GoodsReceiptAopDetail extends Component
             $this->items_with_qty = $items_with_qty;
         }
 
-        // dd($items_with_qty);
+        dd($items_with_qty);
 
         return view('livewire.goods-receipt.goods-receipt-aop-detail', compact(
             'items_with_qty',
