@@ -91,6 +91,8 @@ class GoodsReceiptAopDetail extends Component
             ->where('invoiceAop', $this->invoiceAop)
             ->value('billingDocumentDate');
 
+        dd($bill_date);
+
         if ($bill_date >= '2025-02-28') {
             // Ambil SPB dari invoice_aop_header
             $spb = DB::table('invoice_aop_header')
