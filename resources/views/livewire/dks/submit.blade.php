@@ -127,6 +127,16 @@
                     fillOpacity: 0.2,
                     radius: radiusToko
                 }).addTo(map);
+            } else if (kd_outlet == 'M9') {
+                tokoLatitude_2 = '-3.3199243966544314';
+                tokoLongitude_2 = '114.6112841956225';
+
+                storeCircle_2 = L.circle([tokoLatitude_2, tokoLongitude_2], {
+                    color: 'red',
+                    fillColor: 'red',
+                    fillOpacity: 0.2,
+                    radius: radiusToko
+                }).addTo(map);
             }
 
             setInterval(function() {
@@ -155,7 +165,7 @@
                 var userLat = userLatLng.lat;
                 var userLng = userLatLng.lng;
 
-                if (kd_outlet == 'TQ' || kd_outlet == '47' || kd_outlet == 'BJ') {
+                if (kd_outlet == 'TQ' || kd_outlet == '47' || kd_outlet == 'BJ' || kd_outlet == 'M9') {
                     var storeLatLng = L.latLng(tokoLatitude, tokoLongitude);
                     var storeLatLng_2 = L.latLng(tokoLatitude_2, tokoLongitude_2);
 
