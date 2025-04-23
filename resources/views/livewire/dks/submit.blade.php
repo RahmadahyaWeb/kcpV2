@@ -239,7 +239,7 @@
                 document.getElementById('longitude').value = userLng;
                 document.getElementById('distance').value = distance;
 
-                if (kd_outlet == 'TQ' || kd_outlet == '47') {
+                if (kd_outlet == 'TQ' || kd_outlet == '47' || kd_outlet == 'BJ' || kd_outlet == 'M9') {
                     var storeLatLng_2 = L.latLng(tokoLatitude_2, tokoLongitude_2);
 
                     var distance_2 = userLatLng.distanceTo(storeLatLng_2);

@@ -95,7 +95,7 @@
                 radius: radiusToko
             }).addTo(map);
 
-            if (kd_outlet == 'TQ') {
+           if (kd_outlet == 'TQ') {
                 tokoLatitude_2 = '-3.290902753103496';
                 tokoLongitude_2 = '114.5975916206663';
 
@@ -108,6 +108,26 @@
             } else if (kd_outlet == '47') {
                 tokoLatitude_2 = '-2.6765782478941156';
                 tokoLongitude_2 = '111.6364410789898';
+
+                storeCircle_2 = L.circle([tokoLatitude_2, tokoLongitude_2], {
+                    color: 'red',
+                    fillColor: 'red',
+                    fillOpacity: 0.2,
+                    radius: radiusToko
+                }).addTo(map);
+            } else if (kd_outlet == 'BJ') {
+                tokoLatitude_2 = '-3.4135240594487217';
+                tokoLongitude_2 = '114.67093914596498';
+
+                storeCircle_2 = L.circle([tokoLatitude_2, tokoLongitude_2], {
+                    color: 'red',
+                    fillColor: 'red',
+                    fillOpacity: 0.2,
+                    radius: radiusToko
+                }).addTo(map);
+            } else if (kd_outlet == 'M9') {
+                tokoLatitude_2 = '-3.3199243966544314';
+                tokoLongitude_2 = '114.6112841956225';
 
                 storeCircle_2 = L.circle([tokoLatitude_2, tokoLongitude_2], {
                     color: 'red',
@@ -143,7 +163,7 @@
                 var userLat = userLatLng.lat;
                 var userLng = userLatLng.lng;
 
-                if (kd_outlet == 'TQ' || kd_outlet == '47') {
+                if (kd_outlet == 'TQ' || kd_outlet == '47' || kd_outlet == 'BJ' || kd_outlet == 'M9') {
                     var storeLatLng = L.latLng(tokoLatitude, tokoLongitude);
                     var storeLatLng_2 = L.latLng(tokoLatitude_2, tokoLongitude_2);
 
@@ -217,7 +237,7 @@
                 document.getElementById('longitude').value = userLng;
                 document.getElementById('distance').value = distance;
 
-                if (kd_outlet == 'TQ' || kd_outlet == '47') {
+                if (kd_outlet == 'TQ' || kd_outlet == '47' || kd_outlet == 'BJ' || kd_outlet == 'M9') {
                     var storeLatLng_2 = L.latLng(tokoLatitude_2, tokoLongitude_2);
 
                     var distance_2 = userLatLng.distanceTo(storeLatLng_2);
