@@ -14,6 +14,7 @@ class IndexStockPart extends Component
     use WithPagination;
 
     public $target = 'search, export';
+    public $selected_suppliers = [], $selected_categories = [];
     public $search;
 
     use WithPagination;
@@ -24,11 +25,17 @@ class IndexStockPart extends Component
 
         // Ambil semua data stok part
         $items = $kcpinformation->table('stock_part as stock')
-            ->join('mst_part as part', 'part.part_no', '=', 'stock.part_no')
-            ->where('part.status', 'Y')
-            // ->where('part.part_no', 'FP-231PA-K0J-2700')
-            ->orderBy('part.nm_part')
-            ->get();
+            ->join('mst_part as part', 'part.part_no', '=', 'stock.part_no');
+
+        if (!empty($this->selected_suppliers)) {
+            $items = $items->whereIn('stock.supplier', $this->selected_suppliers);
+        }
+
+        if (!empty($this->selected_categories)) {
+            $items = $items->whereIn('stock.kategori_part', $this->selected_categories);
+        }
+
+        $items = $items->orderBy('part.nm_part')->get();
 
         // Ambil daftar part_no untuk query kedua
         $partNumbers = $items->pluck('part_no')->toArray();
@@ -81,8 +88,8 @@ class IndexStockPart extends Component
 
             return $firstItem;
         })
-        ->sortBy('part_no')
-        ->values();
+            ->sortBy('part_no')
+            ->values();
 
         $filename = "LAPORAN_STOK_" . date('Y-m-d') . ".xlsx";
 
