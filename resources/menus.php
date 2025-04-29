@@ -116,7 +116,7 @@ return [
             ],
             [
                 "label" => "Laporan LSS",
-                "route" => "report-marketing.lss",
+                "route" => "report-marketing.lss.index",
                 "active" => Request::is('report-marketing/lss*')
             ],
         ]

@@ -34,7 +34,10 @@ use App\Livewire\Invoice\IndexInvoice;
 use App\Livewire\Invoice\IndexInvoiceBosnet;
 use App\Livewire\KelompokPart;
 use App\Livewire\LogViewer;
+use App\Livewire\Lss\DetailLss;
+use App\Livewire\Lss\GenerateLss;
 use App\Livewire\Lss\IndexLss;
+use App\Livewire\Lss\InjectCogs;
 use App\Livewire\Master\CreateExpedition;
 use App\Livewire\Master\CreateUser;
 use App\Livewire\Master\EditExpedition;
@@ -108,7 +111,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/master/expedition/edit/{kd_expedition}', EditExpedition::class)->name('expedition.edit');
 
         // LSS
-        Route::get('/report-marketing/lss', IndexLss::class)->name('report-marketing.lss');
+        Route::get('/report-marketing/lss', IndexLss::class)->name('report-marketing.lss.index');
+        Route::get('/report-marketing/lss/inject', InjectCogs::class)->name('report-marketing.lss.inject');
+        Route::get('/report-marketing/lss/generate', GenerateLss::class)->name('report-marketing.lss.generate');
+        Route::get('/report-marketing/lss/detail', DetailLss::class)->name('report-marketing.lss.detail');
+        Route::post('/report-marketing/lss/upload', [UploadController::class, 'import_cogs'])->name('upload-cogs');
     });
 
     /**

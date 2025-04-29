@@ -2,27 +2,15 @@
 
 namespace App\Livewire\Lss;
 
-use App\Exports\LaporanLssSheet;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
-use Maatwebsite\Excel\Facades\Excel;
 
-class IndexLss extends Component
+class DetailLss extends Component
 {
-    public $target = 'export';
+    public $target = "generateLaporanFifo";
     public $bulan = '01', $tahun = '2025';
     public $part_no;
     public $resultsPerPart = [];
-
-    public function export()
-    {
-        $this->generateLaporanFifo();
-
-        $filename = "LAPORAN_LSS_" . date('Y-m-d') . ".xlsx";
-
-        return Excel::download(new LaporanLssSheet($this->resultsPerPart), $filename);
-    }
 
     public function generateLaporanFifo()
     {
@@ -160,12 +148,10 @@ class IndexLss extends Component
                 'stock_awal' => $stockAwal,
             ];
         }
-
-        $this->reset('part_no');
     }
 
     public function render()
     {
-        return view('livewire.lss.index-lss');
+        return view('livewire.lss.detail-lss');
     }
 }
