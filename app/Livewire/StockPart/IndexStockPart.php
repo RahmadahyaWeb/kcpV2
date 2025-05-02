@@ -25,7 +25,8 @@ class IndexStockPart extends Component
 
         // Ambil semua data stok part
         $items = $kcpinformation->table('stock_part as stock')
-            ->join('mst_part as part', 'part.part_no', '=', 'stock.part_no');
+            ->join('mst_part as part', 'part.part_no', '=', 'stock.part_no')
+            ->where('part.status', 'Y');
 
         if (!empty($this->selected_suppliers)) {
             $items = $items->whereIn('stock.supplier', $this->selected_suppliers);
