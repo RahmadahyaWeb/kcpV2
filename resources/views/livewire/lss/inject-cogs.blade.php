@@ -43,10 +43,9 @@
                         </div>
 
                         <div class="col d-flex justify-content-end">
-                            <button class="btn btn-danger" wire:click="inject" wire:confirm="Yakin ingin inject data cogs?">Inject</button>
+                        <button class="btn btn-danger" wire:click="inject" wire:confirm="Yakin ingin inject data cogs?">Inject</button>
                         </div>
                     </div>
-                </div>
 
                 <div class="card-body">
                     <div class="table-responsive">
@@ -54,6 +53,7 @@
                             <thead>
                                 <tr>
                                     <th>Part No</th>
+                                    <th>QTY</th>
                                     <th>COGS</th>
                                     <th>Bulan</th>
                                     <th>tahun</th>
@@ -64,6 +64,7 @@
                                 @foreach ($items as $item)
                                     <tr>
                                         <td>{{ $item->part_no }}</td>
+                                        <td>{{ $item->qty }}</td>
                                         <td>{{ number_format($item->cogs, 0, ',', '.') }}</td>
                                         <td>{{ $item->periode_bulan }}</td>
                                         <td>{{ $item->periode_tahun }}</td>

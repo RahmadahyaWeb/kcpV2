@@ -47,71 +47,9 @@ class InjectCogs extends Component
         foreach ($merged as $part) {
             $partNo = $part->part_no;
             $hargaPcs = $part->cogs;
+            $qty = $part->qty;
 
-            $cleanedPartNo = str_replace(['-', '/'], '', $partNo);
 
-            $qty = 0;
-
-            try {
-                $stock_awal = $kcpinformation->table('trns_log_stock')
-                    ->selectRaw("
-                        part_no,
-                        kd_gudang,
-                        status,
-                        keterangan,
-                        qty,
-                        debet,
-                        kredit,
-                        stock,
-                        stock - kredit AS stock_awal,
-                        crea_date,
-                        crea_by
-                    ")
-                    ->whereRaw("REPLACE(REPLACE(part_no, '-', ''), '/', '') = ?", [$cleanedPartNo])
-                    ->where('kd_gudang', 'GD1')
-                    ->whereBetween(DB::raw("DATE_FORMAT(crea_date, '%Y-%m-%d')"), ['2025-01-01', '2025-01-31'])
-                    ->orderBy('crea_date')
-                    ->orderBy('id')
-                    ->first();
-
-                if ($stock_awal) {
-                    if (stripos($stock_awal->keterangan, 'TERIMA MUTASI') !== false) {
-                        $qty = $stock_awal->stock - $stock_awal->qty;
-                    } elseif (
-                        stripos($stock_awal->keterangan, 'PENJUALAN') !== false ||
-                        stripos($stock_awal->keterangan, 'PENERIMAAN') !== false
-                    ) {
-                        $qty = $stock_awal->stock + $stock_awal->qty;
-                    } else {
-                        $qty = $stock_awal->stock;
-                    }
-
-                    $successCount++;
-                    Log::info("Inject berhasil dari trns_log_stock: $partNo");
-                } else {
-                    // Cek ke stock_part
-                    $stockPart = $kcpinformation->table('stock_part')
-                        ->select('stock')
-                        ->whereRaw("REPLACE(REPLACE(part_no, '-', ''), '/', '') = ?", [$cleanedPartNo])
-                        ->where('kd_gudang', 'GD1')
-                        ->first();
-
-                    if ($stockPart) {
-                        $qty = $stockPart->stock;
-                        $successCount++;
-                        Log::info("Inject berhasil dari stock_part: $partNo");
-                    } else {
-                        $qty = 0;
-                        $failedCount++;
-                        Log::warning("Data tidak ditemukan di trns_log_stock & stock_part: $partNo");
-                    }
-                }
-            } catch (\Exception $e) {
-                $failedCount++;
-                Log::error("Gagal inject: $partNo | Error: " . $e->getMessage());
-            }
-
-            // Simpan data meskipun gagal atau log tidak ditemukan
             DB::table('stock_awal')->insert([
                 'part_no' => $partNo,
                 'qty' => $qty,
