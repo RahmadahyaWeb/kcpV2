@@ -107,7 +107,7 @@
                         </div>
                         <div class="col-md-3 mb-3">
                             <label class="form-label">Flag Selesai</label>
-                            <select class="form-select" wire:model.change="flag_po">
+                            <select class="form-select" wire:model.change="flag_final">
                                 <option value="">ALL</option>
                                 <option value="Y">SELESAI</option>
                                 <option value="N">BELUM SELESAI</option>
