@@ -2,17 +2,19 @@
 
 namespace App\Livewire\ReportFinance;
 
+use App\Exports\AgingExport;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AgingReport extends Component
 {
     use WithPagination;
 
-    public $target = 'export_to_excel, show_data, search_kd_outlet';
+    public $target = 'export_to_excel, show_data, search_kd_outlet, export_to_excel';
     public $from_date, $to_date, $jenis_laporan;
     public $search_kd_outlet;
 
@@ -34,15 +36,20 @@ class AgingReport extends Component
             'jenis_laporan' => ['required'],
         ]);
 
-        $fromDateFormatted = \Carbon\Carbon::parse($this->from_date)->startOfDay();
-        $toDateFormatted = \Carbon\Carbon::parse($this->to_date)->endOfDay();
-
         if ($this->jenis_laporan == 'aging') {
-            $this->export_aging($fromDateFormatted, $toDateFormatted);
+            return $this->export_aging();
         }
     }
 
-    public function export_aging($from_date, $to_date) {}
+    public function export_aging()
+    {
+        $fromDateFormatted = \Carbon\Carbon::parse($this->from_date)->startOfDay();
+        $toDateFormatted = \Carbon\Carbon::parse($this->to_date)->endOfDay();
+
+        $filename = "LAPORAN_AGING_" . date('Y-m-d', strtotime($toDateFormatted)) . ".xlsx";
+
+        return Excel::download(new AgingExport($this->result), $filename);
+    }
 
     public function show_data()
     {
@@ -127,6 +134,7 @@ class AgingReport extends Component
             $limit_kredit = $invoices->first()->limit_kredit ?? 0;
 
             $result[$kd_outlet] = [
+                'kd_outlet' => $kd_outlet,
                 'nm_outlet' => $nm_outlet, // Nama outlet
                 'limit_kredit' => $limit_kredit, // Limit kredit
                 'sisa_limit_kredit' => $limit_kredit, // Inisialisasi sisa limit kredit

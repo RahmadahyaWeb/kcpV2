@@ -67,7 +67,7 @@
                             </div>
 
                             <div class="col d-flex justify-content-end">
-                                <button class="btn btn-sm btn-success">Export</button>
+                                <button wire:click="export_to_excel" class="btn btn-sm btn-success">Export</button>
                             </div>
                         </div>
                     </div>
