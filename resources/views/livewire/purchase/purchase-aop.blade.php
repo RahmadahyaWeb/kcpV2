@@ -57,64 +57,6 @@
             </div>
         </div>
 
-        @if (session()->has('sync_result'))
-            <div class="col-12">
-                @php
-                    $result = session('sync_result');
-                @endphp
-
-                <div class="card mt-3">
-                    <div class="card-header">
-                        Hasil Sync Intransit
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Berhasil:</strong> {{ $result['success_count'] }}</p>
-                        <p><strong>Gagal:</strong> {{ $result['failed_count'] }}</p>
-                        <p><strong>Diskip:</strong> {{ $result['skipped_count'] }}</p>
-
-                        @if (!empty($result['success_invoices']))
-                            <h5>Invoice Berhasil</h5>
-                            <ul>
-                                @foreach ($result['success_invoices'] as $invoice)
-                                    <li>
-                                        {{ $invoice['invoice'] }} -
-                                        {{ count($invoice['details']) }} item(s)
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @endif
-
-                        @if (!empty($result['failed_invoices']))
-                            <h5>Invoice Gagal</h5>
-                            <ul>
-                                @foreach ($result['failed_invoices'] as $invoice)
-                                    <li>
-                                        {{ $invoice['invoice'] }} - Error: {{ $invoice['error'] }}
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @endif
-
-                        @if (!empty($result['skipped_invoices']))
-                            <h5>Invoice Diskip</h5>
-                            <ul>
-                                @foreach ($result['skipped_invoices'] as $invoice)
-                                    <li>
-                                        {{ $invoice['invoice'] }}
-                                        @if (!empty($invoice['invalid_items']))
-                                            - Tidak valid: {{ implode(', ', $invoice['invalid_items']) }}
-                                        @else
-                                            - Data sudah ada atau tidak perlu di-sync.
-                                        @endif
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        @endif
-
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
@@ -161,6 +103,14 @@
                             <select class="form-select" wire:model.change="flag_po">
                                 <option value="Y">BOSNET</option>
                                 <option value="N">KCP</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Flag Selesai</label>
+                            <select class="form-select" wire:model.change="flag_po">
+                                <option value="">ALL</option>
+                                <option value="Y">SELESAI</option>
+                                <option value="N">BELUM SELESAI</option>
                             </select>
                         </div>
                         <div class="col-md-3 mb-3">

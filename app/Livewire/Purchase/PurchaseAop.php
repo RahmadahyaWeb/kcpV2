@@ -17,22 +17,9 @@ class PurchaseAop extends Component
     use WithPagination, WithoutUrlPagination;
 
     public $target = 'save, invoiceAop, tanggalJatuhTempo, flag_po, billing_doc_date, dn, sync_intransit, customer_to';
-    public $surat_tagihan, $rekap_tagihan, $invoiceAop, $tanggalJatuhTempo, $dn, $billing_doc_date, $customer_to;
+    public $surat_tagihan, $rekap_tagihan, $invoiceAop, $tanggalJatuhTempo, $dn, $billing_doc_date, $customer_to, $flag_final;
 
     public $flag_po = 'N';
-
-    public function sync_intransit()
-    {
-        try {
-            $controller = new SyncController();
-            $result = $controller->sync_intransit();
-
-            session()->flash('sync_result', $result);
-        } catch (\Exception $e) {
-            session()->flash('error', 'Error: ' . $e->getMessage());
-            Log::error('Error: ' . $e->getMessage());
-        }
-    }
 
     public function save()
     {
@@ -513,6 +500,9 @@ class PurchaseAop extends Component
             })
             ->when($this->customer_to, function ($query) {
                 return $query->where('customerTo', $this->customer_to);
+            })
+            ->when($this->flag_final, function ($query) {
+                return $query->where('flag_final', $this->flag_final);
             })
             ->orderBy('invoiceAop', 'desc')
             ->paginate(20);
