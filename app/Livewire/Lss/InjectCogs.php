@@ -19,8 +19,8 @@ class InjectCogs extends Component
         $kcpinformation = DB::connection('kcpinformation');
 
         $parts = $kcpinformation->table('mst_part')
+            ->where('supplier', 'ASTRA OTOPART')
             ->where('status', 'Y')
-            ->whereIn('produk_part', ['ASPIRA TUBE 2W'])
             ->get();
 
         $harga_cogs = DB::table('lss_cogs_temp')->get();
@@ -36,7 +36,8 @@ class InjectCogs extends Component
                 'part_no' => $part_no,
                 'nama_part' => $part->nm_part ?? null,
                 'produk_part' => $part->produk_part ?? null,
-                'cogs' => $cogsByPartNo[$part_no]->cogs ?? null, // ambil cogs jika ada
+                'qty' => $cogsByPartNo[$part_no]->qty,
+                'cogs' => $cogsByPartNo[$part_no]->cogs ?? null,
             ];
         });
 
@@ -55,7 +56,7 @@ class InjectCogs extends Component
                 'qty' => $qty,
                 'harga' => $hargaPcs,
                 'tahun' => 2025,
-                'bulan' => 1,
+                'bulan' => 4,
             ]);
         }
 

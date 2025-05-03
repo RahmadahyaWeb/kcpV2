@@ -3,7 +3,9 @@
 namespace App\Livewire\Lss;
 
 use Carbon\Carbon;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class GenerateLss extends Component
@@ -13,30 +15,34 @@ class GenerateLss extends Component
 
     public function seedFifoLayers()
     {
-        $this->validate([
-            'bulan' => ['required'],
-            'tahun' => ['required']
-        ]);
-
-        $kcpinformation = DB::connection('kcpinformation');
-
         $bulan = $this->bulan;
         $tahun = $this->tahun;
         $periode = "$tahun-$bulan";
+
+        if (!is_numeric($bulan) || !is_numeric($tahun)) {
+            Log::error('Bulan dan tahun tidak valid: ' . json_encode(['bulan' => $bulan, 'tahun' => $tahun]));
+            return;
+        }
+
+        Log::info("FIFO Seeder dimulai untuk periode: $periode");
+
+        $kcpinformation = DB::connection('kcpinformation');
         $tanggalAwal = Carbon::parse("$periode-01")->startOfMonth();
         $tanggalAkhir = Carbon::parse("$periode-01")->endOfMonth();
         $tanggalLayer = $tanggalAwal->toDateString();
 
         $partNumbers = $kcpinformation->table('mst_part')
+            ->where('supplier', 'ASTRA OTOPART')
             ->where('status', 'Y')
-            ->whereIn('produk_part', ['ASPIRA TUBE 2W'])
             ->pluck('part_no');
 
+        Log::info("Jumlah part yang diproses: " . $partNumbers->count());
+
         foreach ($partNumbers as $partNo) {
-            if ((int) $bulan === 1) {
-                $stockAwal = DB::table('stock_awal')
-                    ->where('part_no', $partNo)
-                    ->first();
+            Log::info("Memproses part: $partNo");
+
+            if ((int) $bulan === 4) {
+                $stockAwal = DB::table('stock_awal')->where('part_no', $partNo)->first();
 
                 if ($stockAwal) {
                     DB::table('fifo_layers')->updateOrInsert([
@@ -51,6 +57,8 @@ class GenerateLss extends Component
                         'created_at' => now(),
                         'updated_at' => now(),
                     ]);
+
+                    Log::info("Stock awal dimasukkan untuk part $partNo dengan qty {$stockAwal->qty}");
                 }
             } else {
                 $tanggalBulanLalu = $tanggalAwal->copy()->subMonth();
@@ -82,6 +90,8 @@ class GenerateLss extends Component
                             'created_at' => now(),
                             'updated_at' => now(),
                         ]);
+
+                        Log::info("Carry over ditambahkan untuk part $partNo dari layer ID {$prevLayer->id}");
                     }
                 }
             }
@@ -113,39 +123,49 @@ class GenerateLss extends Component
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
+
+                Log::info("Pembelian dimasukkan untuk part {$row->part_no} dokumen {$row->no_dokumen} qty {$row->qty}");
             }
         }
+
+        Log::info("FIFO Seeder selesai untuk periode: $periode");
     }
 
     public function prosesPenjualanFifo()
     {
-        $this->validate([
-            'bulan' => ['required'],
-            'tahun' => ['required']
-        ]);
-
-        $kcpinformation = DB::connection('kcpinformation');
-
         $bulan = $this->bulan;
         $tahun = $this->tahun;
         $periode = "$tahun-$bulan";
+
+        if (!is_numeric($bulan) || !is_numeric($tahun)) {
+            Log::error('Bulan dan tahun tidak valid: ' . json_encode(['bulan' => $bulan, 'tahun' => $tahun]));
+            return;
+        }
+
+        Log::info("FIFO Seeder dimulai untuk periode: $periode");
+
+        $kcpinformation = DB::connection('kcpinformation');
+
         $tanggalAwal = Carbon::parse("$periode-01")->startOfMonth();
         $tanggalAkhir = Carbon::parse("$periode-01")->endOfMonth();
 
-        // Ambil part number yang akan diproses
+        Log::info("Tanggal proses dari $tanggalAwal sampai $tanggalAkhir");
+
         $partNumbers = $kcpinformation->table('mst_part')
+            ->where('supplier', 'ASTRA OTOPART')
             ->where('status', 'Y')
-            ->whereIn('produk_part', ['ASPIRA TUBE 2W'])
             ->pluck('part_no');
 
-        // Ambil kombinasi sale_id-part_no yang sudah diproses sebelumnya
+        Log::info("Jumlah part yang akan diproses: " . count($partNumbers));
+
         $existingUsages = DB::table('fifo_usages')
             ->select(DB::raw("CONCAT(sale_id, '-', part_no) as usage_key"))
             ->pluck('usage_key')
             ->toArray();
 
         foreach ($partNumbers as $partNo) {
-            // Ambil penjualan dari tabel header + detail
+            Log::info("Proses part_no: $partNo");
+
             $penjualan = $kcpinformation->table('trns_inv_header as header')
                 ->join('trns_inv_details as detail', 'header.noinv', '=', 'detail.noinv')
                 ->whereBetween('header.crea_date', [$tanggalAwal, $tanggalAkhir])
@@ -159,23 +179,28 @@ class GenerateLss extends Component
                 )
                 ->get();
 
+            Log::info("Jumlah transaksi penjualan ditemukan untuk $partNo: " . $penjualan->count());
+
             foreach ($penjualan as $sale) {
                 $usageKey = "{$sale->noinv}-{$sale->part_no}";
 
-                // Cek jika sudah pernah diproses, skip
                 if (in_array($usageKey, $existingUsages)) {
+                    Log::info("Data penjualan $usageKey sudah pernah diproses, dilewati");
                     continue;
                 }
 
+                Log::info("Memproses penjualan: NoInv: {$sale->noinv}, Part: {$sale->part_no}, Qty: {$sale->qty}");
+
                 $qtyDibutuhkan = $sale->qty;
 
-                // Ambil layer FIFO yang masih ada qty_sisa
                 $layers = DB::table('fifo_layers')
                     ->where('part_no', $sale->part_no)
                     ->where('qty_sisa', '>', 0)
                     ->orderBy('tanggal')
                     ->lockForUpdate()
                     ->get();
+
+                Log::info("Ditemukan " . count($layers) . " layer stok untuk part {$sale->part_no}");
 
                 foreach ($layers as $layer) {
                     if ($qtyDibutuhkan <= 0) {
@@ -199,13 +224,20 @@ class GenerateLss extends Component
                         ->where('id', $layer->id)
                         ->decrement('qty_sisa', $pakai);
 
+                    Log::info("Layer ID {$layer->id} terpakai sebanyak $pakai dari qty_sisa {$layer->qty_sisa}");
+
                     $qtyDibutuhkan -= $pakai;
                 }
 
-                // Tambahkan ke daftar yang sudah diproses agar tidak terulang di loop part selanjutnya
+                if ($qtyDibutuhkan > 0) {
+                    Log::warning("Stok tidak cukup untuk NoInv: {$sale->noinv}, Part: {$sale->part_no}. Sisa qty: $qtyDibutuhkan");
+                }
+
                 $existingUsages[] = $usageKey;
             }
         }
+
+        Log::info("FIFO Seeder selesai untuk periode: $periode");
     }
 
     public function render()

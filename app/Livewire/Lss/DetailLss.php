@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Lss;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -21,14 +22,39 @@ class DetailLss extends Component
 
         $kcpinformation = DB::connection('kcpinformation');
 
+        // CEK PEMBELIAN
+        // SELECT SUM(d.qty) FROM invoice_aop_detail d JOIN invoice_aop_header h ON d.invoiceAop = h.invoiceAop WHERE d.materialNumber = '12-2502751700000' AND h.billingDocumentDate BETWEEN '2025-04-01' AND '2025-04-30';
+
+        // CEK PENJUALAN
+        // $bulan = $this->bulan;
+        // $tahun = $this->tahun;
+        // $periode = "$tahun-$bulan";
+
+        // $tanggalAwal = Carbon::parse("$periode-01")->startOfMonth();
+        // $tanggalAkhir = Carbon::parse("$periode-01")->endOfMonth();
+
+        // $penjualan = $kcpinformation->table('trns_inv_header as header')
+        //         ->join('trns_inv_details as detail', 'header.noinv', '=', 'detail.noinv')
+        //         ->whereBetween('header.crea_date', [$tanggalAwal, $tanggalAkhir])
+        //         ->where('detail.part_no', '12-2502751700000')
+        //         ->orderBy('header.crea_date')
+        //         ->select(
+        //             'header.crea_date as tanggal',
+        //             'header.noinv',
+        //             'detail.part_no',
+        //             'detail.qty'
+        //         )
+        //         ->sum('detail.qty');
+
+        // dd($penjualan);
+
         $bulan = $this->bulan;
         $tahun = $this->tahun;
 
         $this->resultsPerPart = [];
 
         $partNumbers = $kcpinformation->table('mst_part')
-            ->where('status', 'Y')
-            ->whereIn('produk_part', ['ASPIRA TUBE 2W']);
+            ->where('status', 'Y');
 
         if ($this->part_no) {
             $partNumbers = $partNumbers->where('part_no', $this->part_no);
