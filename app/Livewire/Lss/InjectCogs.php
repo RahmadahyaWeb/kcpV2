@@ -12,7 +12,7 @@ class InjectCogs extends Component
     use WithPagination;
 
     public $target = "inject";
-    public $file_cogs;
+    public $file_cogs, $part_no;
 
     public function inject()
     {
@@ -67,6 +67,9 @@ class InjectCogs extends Component
     public function render()
     {
         $items = DB::table('lss_cogs_temp')
+            ->when($this->part_no, function ($query) {
+                $query->where('part_no', 'like', '%' . $this->part_no . '%');
+            })
             ->paginate();
 
         return view('livewire.lss.inject-cogs', compact('items'));

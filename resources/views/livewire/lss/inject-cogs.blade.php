@@ -49,6 +49,12 @@
                     </div>
 
                     <div class="card-body">
+                        <div class="row">
+                            <div class="colmd-4">
+                                <input type="search" class="form-control" wire:model.live="part_no">
+                            </div>
+                        </div>
+
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
