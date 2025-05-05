@@ -41,7 +41,7 @@ class GenerateLss extends Component
         foreach ($partNumbers as $partNo) {
             Log::info("Memproses part: $partNo");
 
-            if ((int) $bulan === 4) {
+            if ((int) $bulan === 5) {
                 $stockAwal = DB::table('stock_awal')->where('part_no', $partNo)->first();
 
                 if ($stockAwal) {
