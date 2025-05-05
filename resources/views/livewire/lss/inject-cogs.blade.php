@@ -43,40 +43,42 @@
                         </div>
 
                         <div class="col d-flex justify-content-end">
-                        <button class="btn btn-danger" wire:click="inject" wire:confirm="Yakin ingin inject data cogs?">Inject</button>
+                            <button class="btn btn-danger" wire:click="inject"
+                                wire:confirm="Yakin ingin inject data cogs?">Inject</button>
                         </div>
                     </div>
 
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Part No</th>
-                                    <th>QTY</th>
-                                    <th>COGS</th>
-                                    <th>Bulan</th>
-                                    <th>tahun</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                @foreach ($items as $item)
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
                                     <tr>
-                                        <td>{{ $item->part_no }}</td>
-                                        <td>{{ $item->qty }}</td>
-                                        <td>{{ number_format($item->cogs, 0, ',', '.') }}</td>
-                                        <td>{{ $item->periode_bulan }}</td>
-                                        <td>{{ $item->periode_tahun }}</td>
+                                        <th>Part No</th>
+                                        <th>QTY</th>
+                                        <th>COGS</th>
+                                        <th>Bulan</th>
+                                        <th>tahun</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                                </thead>
 
-                <div class="card-footer">
-                    {{ $items->links() }}
+                                <tbody>
+                                    @foreach ($items as $item)
+                                        <tr>
+                                            <td>{{ $item->part_no }}</td>
+                                            <td>{{ $item->qty }}</td>
+                                            <td>{{ number_format($item->cogs, 2, ',', '.') }}</td>
+                                            <td>{{ $item->periode_bulan }}</td>
+                                            <td>{{ $item->periode_tahun }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        {{ $items->links() }}
+                    </div>
                 </div>
             </div>
         </div>
