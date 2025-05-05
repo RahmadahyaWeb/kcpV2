@@ -19,13 +19,13 @@ class IndexLss extends Component
     {
         $this->generateLaporanFifo();
 
-        $items = usort($this->resultsPerPart, function ($a, $b) {
+        usort($this->resultsPerPart, function ($a, $b) {
             return strcmp($a['produk_part'], $b['produk_part']);
         });
 
         $filename = "LAPORAN_LSS_" . date('Y-m-d') . ".xlsx";
 
-        return Excel::download(new LaporanLssSheet($items), $filename);
+        return Excel::download(new LaporanLssSheet($this->resultsPerPart), $filename);
     }
 
     public function generateLaporanFifo()
