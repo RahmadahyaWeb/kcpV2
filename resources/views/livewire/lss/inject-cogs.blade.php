@@ -49,7 +49,7 @@
                     </div>
 
                     <div class="card-body">
-                        <div class="row">
+                        <div class="row mb-3">
                             <div class="col-md-4">
                                 <label for="part_no">Part Number</label>
                                 <input type="search" class="form-control" wire:model.live="part_no">
