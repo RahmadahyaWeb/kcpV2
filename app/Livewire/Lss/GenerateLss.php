@@ -32,8 +32,7 @@ class GenerateLss extends Component
         $tanggalLayer = $tanggalAwal->toDateString();
 
         $partNumbers = $kcpinformation->table('mst_part')
-            // ->where('supplier', 'ASTRA OTOPART')
-            ->whereIn('supplier', ['SSI', 'KMC', 'ABM'])
+            ->where('supplier', 'ASTRA OTOPART')
             ->where('status', 'Y')
             ->pluck('part_no');
 
