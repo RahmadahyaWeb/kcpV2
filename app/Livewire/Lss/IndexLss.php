@@ -40,7 +40,8 @@ class IndexLss extends Component
 
         $partNumbers = $kcpinformation->table('mst_part')
             ->where('status', 'Y')
-            ->whereIn('produk_part', ['ASPIRA TUBE 2W']);
+            ->where('supplier', 'ASTRA OTOPART');
+            // ->whereIn('produk_part', ['ASPIRA TUBE 2W']);
 
         if ($this->part_no) {
             $partNumbers = $partNumbers->where('part_no', $this->part_no);
