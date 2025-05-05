@@ -17,12 +17,10 @@ class LssCogsImport implements ToCollection, WithSkipDuplicates, WithHeadingRow
     {
         foreach ($rows as $index => $row) {
 
-            if ($row['part_no'] == '6300') {
-                dd($row);
-            }
+            $part_no = (string) $row['part_no'];
 
             $existingData = DB::table('lss_cogs_temp')
-                ->where('part_no', $row['part_no'])
+                ->where('part_no', $part_no)
                 ->where('periode_bulan', 04)
                 ->where('periode_tahun', 2025)
                 ->first();
@@ -33,7 +31,7 @@ class LssCogsImport implements ToCollection, WithSkipDuplicates, WithHeadingRow
             if ($existingData) {
                 // Jika data sudah ada, lakukan update
                 DB::table('lss_cogs_temp')
-                    ->where('part_no', $row['part_no'])
+                    ->where('part_no', $part_no)
                     ->where('periode_bulan', 04)
                     ->where('periode_tahun', 2025)
                     ->update([
@@ -44,7 +42,7 @@ class LssCogsImport implements ToCollection, WithSkipDuplicates, WithHeadingRow
             } else {
                 // Jika data belum ada, lakukan insert
                 DB::table('lss_cogs_temp')->insert([
-                    'part_no'           => $row['part_no'],
+                    'part_no'           => $part_no,
                     'qty'               => $qty,
                     'cogs'              => $cogs,
                     'periode_bulan'     => 04,
