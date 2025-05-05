@@ -16,6 +16,7 @@ class LssCogsImport implements ToCollection, WithSkipDuplicates, WithHeadingRow
     public function collection(Collection $rows)
     {
         foreach ($rows as $index => $row) {
+            dd($row);
             $existingData = DB::table('lss_cogs_temp')
                 ->where('part_no', $row['part_no'])
                 ->where('periode_bulan', 04)
