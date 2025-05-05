@@ -19,7 +19,7 @@ class InjectCogs extends Component
         $kcpinformation = DB::connection('kcpinformation');
 
         $parts = $kcpinformation->table('mst_part')
-            ->whereIn('supplier', ['SSI', 'KMC', 'ABM'])
+            ->where('supplier', 'NON AOP')
             ->where('status', 'Y')
             ->get();
 
