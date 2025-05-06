@@ -199,6 +199,11 @@ return [
                 "route" => "report-finance.aging.index",
                 "active" => Request::is('report-finance/aging*')
             ],
+            [
+                "label" => "Penerimaan Piutang",
+                "route" => "report-finance.penerimaan-piutang.index",
+                "active" => Request::is('report-finance/penerimaan-piutang*')
+            ],
         ]
     ],
 
