@@ -51,6 +51,8 @@ class LaporanInvoiceExport implements FromCollection, WithMapping, WithTitle, Wi
             'TANGGAL INVOICE',
             'TANGGAL JATUH TEMPO',
             'TANGGAL PEMBAYARAN INVOICE',
+            'TOTAL PEMBAYARAN',
+            'SISA PEMBAYARAN',
             'PEMBAYARAN VIA',
             'BANK',
             'TELAT PEMBAYARAN (HARI)'
@@ -117,6 +119,10 @@ class LaporanInvoiceExport implements FromCollection, WithMapping, WithTitle, Wi
 
         $status_pembayaran = $flag_pembayaran_lunas === 'Y' ? 'LUNAS' : ($status_pembayaran ?? 'BELUM LUNAS');
 
+        // TOTAL DAN SISA PEMBAYARAN
+        $total_pembayaran = $row['nominal_potong'];
+        $sisa_pembayaran = $nominal_invoice - $total_pembayaran;
+
         return [
             $noinv,
             $kd_outlet,
@@ -128,6 +134,8 @@ class LaporanInvoiceExport implements FromCollection, WithMapping, WithTitle, Wi
             $tanggal_invoice_excel,
             $tanggal_jatuh_tempo_excel,
             $tanggal_pembayaran_excel,
+            $total_pembayaran,
+            $sisa_pembayaran,
             $pembayaran_via,
             $bank,
             $hari_terlambat

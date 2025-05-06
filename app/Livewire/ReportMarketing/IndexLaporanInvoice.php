@@ -54,6 +54,7 @@ class IndexLaporanInvoice extends Component
                 'tanggal_pembayaran' => null,
                 'pembayaran_via' => null,
                 'bank' => null,
+                'nominal_potong' => null,
             ];
 
             return array_merge((array) $invoice, $parts, $pembayaran);
@@ -131,7 +132,8 @@ class IndexLaporanInvoice extends Component
                 'details.noinv',
                 'details.crea_date as tanggal_pembayaran',
                 'details.pembayaran_via',
-                'details.bank'
+                'details.bank',
+                'details.nominal as nominal_potong'
             ])
             ->get()
             ->mapWithKeys(function ($item) {
@@ -139,6 +141,7 @@ class IndexLaporanInvoice extends Component
                     'tanggal_pembayaran' => $item->tanggal_pembayaran,
                     'pembayaran_via' => $item->pembayaran_via,
                     'bank' => $item->bank,
+                    'nominal_potong' => $item->nominal_potong
                 ]];
             });
     }
