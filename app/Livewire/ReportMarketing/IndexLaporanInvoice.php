@@ -124,9 +124,40 @@ class IndexLaporanInvoice extends Component
 
     public function fetch_tanggal_pembayaran($noinv_list)
     {
-        $kcpapplication = DB::connection('mysql');
+        // Ambil data invoice + total_payment
+        $invoices = DB::connection('kcpinformation')->table('kcpinformation.trns_inv_header AS invoice')
+            ->select(
+                'invoice.noinv',
+                'invoice.area_inv',
+                'invoice.kd_outlet',
+                'invoice.nm_outlet',
+                'invoice.amount_total',
+                'invoice.crea_date',
+                'invoice.tgl_jth_tempo',
+                DB::raw('IFNULL(payment.total_payment, 0) AS total_payment'),
+                DB::raw('(invoice.amount_total - IFNULL(payment.total_payment, 0)) AS remaining_balance')
+            )
+            ->leftJoin(DB::raw('(SELECT
+                payment_details.noinv,
+                SUM(payment_details.nominal) AS total_payment
+            FROM
+                kcpinformation.trns_pembayaran_piutang_header AS payment_header
+            JOIN
+                kcpinformation.trns_pembayaran_piutang AS payment_details
+                ON payment_header.nopiutang = payment_details.nopiutang
+            WHERE
+                payment_header.flag_batal = "N"
+            GROUP BY
+                payment_details.noinv) AS payment'), 'invoice.noinv', '=', 'payment.noinv')
+            ->whereIn(DB::raw("REPLACE(invoice.noinv, '/', '-')"), $noinv_list)
+            ->where('invoice.flag_batal', 'N')
+            ->where('invoice.flag_pembayaran_lunas', 'N')
+            ->whereRaw('invoice.amount_total <> IFNULL(payment.total_payment, 0)')
+            ->get()
+            ->keyBy('noinv');
 
-        return $kcpapplication->table('customer_payment_details as details')
+        // Ambil info tanggal, bank, pembayaran dari MySQL (tanpa nominal)
+        $paymentDetails = DB::connection('mysql')->table('customer_payment_details as details')
             ->join('customer_payment_header as header', 'header.no_piutang', '=', 'details.no_piutang')
             ->whereIn(DB::raw("REPLACE(details.noinv, '/', '-')"), $noinv_list)
             ->whereIn('header.status', ['C', 'O'])
@@ -135,17 +166,23 @@ class IndexLaporanInvoice extends Component
                 'details.crea_date as tanggal_pembayaran',
                 'details.pembayaran_via',
                 'details.bank',
-                'details.nominal as nominal_potong'
             ])
-            ->get()
-            ->mapWithKeys(function ($item) {
-                return [$item->noinv => [
+            ->get();
+
+        // Gabungkan: pakai total_payment dari $invoices sebagai nominal_potong
+        return $paymentDetails->mapWithKeys(function ($item) use ($invoices) {
+            $noinv_normalized = str_replace('/', '-', $item->noinv);
+
+            return [
+                $noinv_normalized => [
                     'tanggal_pembayaran' => $item->tanggal_pembayaran,
-                    'pembayaran_via' => $item->pembayaran_via,
-                    'bank' => $item->bank,
-                    'nominal_potong' => $item->nominal_potong
-                ]];
-            });
+                    'pembayaran_via'     => $item->pembayaran_via,
+                    'bank'               => $item->bank,
+                    'nominal_potong'     => $invoices[$noinv_normalized]->total_payment ?? 0,
+                ]
+            ];
+        });
+
     }
 
     public function render()
