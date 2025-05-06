@@ -10,15 +10,15 @@ use Maatwebsite\Excel\Facades\Excel;
 class IndexLaporanInvoice extends Component
 {
     public $target = 'export_to_excel';
-    public $from_date, $to_date, $selected_stores = [], $type_invoice;
+    public $from_date, $to_date, $selected_stores = [], $type_invoice, $tampilkan_semua_invoice = false;
     public $search_toko;
 
     public function export_to_excel()
     {
         $this->validate([
-            'from_date'     => ['required'],
-            'to_date'       => ['required'],
-            'type_invoice'  => ['required'],
+            'type_invoice' => ['required'],
+            'from_date' => $this->tampilkan_semua_invoice ? 'nullable' : 'required|date',
+            'to_date'   => $this->tampilkan_semua_invoice ? 'nullable' : 'required|date',
         ]);
 
         $kcpinformation = DB::connection('kcpinformation');
@@ -37,7 +37,7 @@ class IndexLaporanInvoice extends Component
             $operator_flag_pembayaran_lunas = "<>";
         }
 
-        $invoices = $this->fetch_invoices($kcpinformation, $fromDateFormatted, $toDateFormatted, $selected_stores, $operator_flag_pembayaran_lunas);
+        $invoices = $this->fetch_invoices($kcpinformation, $fromDateFormatted, $toDateFormatted, $selected_stores, $operator_flag_pembayaran_lunas, $this->tampilkan_semua_invoice);
 
         $product_parts = $this->get_product_parts($kcpinformation, $invoices->pluck('noinv')->toArray());
 
@@ -68,7 +68,7 @@ class IndexLaporanInvoice extends Component
         return Excel::download(new LaporanInvoiceExport($sorted_data), $filename);
     }
 
-    public function fetch_invoices($kcpinformation, $from_date, $to_date, $selected_stores, $operator_flag_pembayaran_lunas)
+    public function fetch_invoices($kcpinformation, $from_date, $to_date, $selected_stores, $operator_flag_pembayaran_lunas, $tampilkan_semua_invoice)
     {
         $query = $kcpinformation->table('trns_inv_header as header')
             ->select([
@@ -83,7 +83,9 @@ class IndexLaporanInvoice extends Component
             ->join('mst_outlet as outlet', 'outlet.kd_outlet', '=', 'header.kd_outlet')
             ->join('trns_inv_details as details', 'details.noinv', '=', 'header.noinv')
             ->join('mst_part as part', 'part.part_no', '=', 'details.part_no')
-            ->whereBetween('header.crea_date', [$from_date, $to_date])
+            ->when(!$tampilkan_semua_invoice, function ($query) use ($from_date, $to_date) {
+                return $query->whereBetween('header.crea_date', [$from_date, $to_date]);
+            })
             ->where('flag_batal', '<>', 'Y')
             ->groupBy('header.noinv');
 
