@@ -100,6 +100,7 @@
                         <table class="table">
                             <thead>
                                 <tr>
+                                    <th>User</th>
                                     <th>Kegiatan</th>
                                     <th>Tanggal</th>
                                     <th>Jam</th>
@@ -109,6 +110,7 @@
 
                             @forelse ($items as $item)
                                 <tr>
+                                    <td><i>{{ $item->crea_by }}</i></td>
                                     <td>{{ $item->kegiatan }}</td>
                                     <td>{{ $item->tanggal }}</td>
                                     <td>{{ \Carbon\Carbon::parse($item->jam)->format('H:i') }}</td>
@@ -124,7 +126,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center">No Data</td>
+                                    <td colspan="5" class="text-center">No Data</td>
                                 </tr>
                             @endforelse
                         </table>
