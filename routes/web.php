@@ -89,9 +89,6 @@ Route::middleware('auth')->group(function () {
     // KELOMPOK PART
     Route::get('/dashboard/kelompok-part', KelompokPart::class)->name('dashboard.kelompok-part');
 
-    // LOGBOOK IT
-    Route::get('/logbook/it', IndexLogbookIt::class)->name('logbook.it.index');
-
     /**
      * super-user
      */
@@ -121,6 +118,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/report-marketing/lss/generate', GenerateLss::class)->name('report-marketing.lss.generate');
         Route::get('/report-marketing/lss/detail', DetailLss::class)->name('report-marketing.lss.detail');
         Route::post('/report-marketing/lss/upload', [UploadController::class, 'import_cogs'])->name('upload-cogs');
+
+        // LOGBOOK IT
+        Route::get('/logbook/it', IndexLogbookIt::class)->name('logbook.it.index');
     });
 
     /**
