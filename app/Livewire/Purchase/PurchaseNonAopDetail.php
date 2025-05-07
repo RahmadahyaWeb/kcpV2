@@ -156,6 +156,7 @@ class PurchaseNonAopDetail extends Component
                     ->table('intransit_details')
                     ->insert([
                         'no_sp_aop'     => $item->invoiceNon,
+                        'delivery_note' => $item->invoiceNon,
                         'kd_gudang_aop' => $item->customerTo,
                         'part_no'       => $item->materialNumber,
                         'qty'           => $item->qty,

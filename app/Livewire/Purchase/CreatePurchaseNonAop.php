@@ -99,6 +99,7 @@ class CreatePurchaseNonAop extends Component
             ->table('intransit_header')
             ->insert([
                 'no_sp_aop'         => $invoiceNon,
+                'delivery_note'     => $invoiceNon,
                 'kd_gudang_aop'     => $this->customerTo,
                 'tgl_packingsheet'  => $this->billingDocumentDate,
                 'status'            => 'I',
