@@ -94,13 +94,21 @@
 
                 <div class="card-body">
                     <div class="row mb-3">
-                        <div class="col-6">
-                            <label for="filter_tanggal_mulai" class="form-label">Dari Tanggal</label>
-                            <input type="date" class="form-control" wire:model.change="filter_tanggal_mulai">
-
+                        <div class="col-md-4">
+                            <label for="user" class="form-label">User</label>
+                            <select name="user" id="user" class="form-select" wire:model.change="user">
+                                <option value="">Pilih User</option>
+                                <option value="rahmadahya">Muhammad Achyadi Rahmat</option>
+                                <option value="khaidir">Muhammad Khaidir</option>
+                            </select>
                         </div>
 
-                        <div class="col-6">
+                        <div class="col-md-4">
+                            <label for="filter_tanggal_mulai" class="form-label">Dari Tanggal</label>
+                            <input type="date" class="form-control" wire:model.change="filter_tanggal_mulai">
+                        </div>
+
+                        <div class="col-md-4">
                             <label for="filter_tanggal_akhir" class="form-label">Sampai Tanggal</label>
                             <input type="date" class="form-control" wire:model.change="filter_tanggal_akhir"
                                 @disabled(!$filter_tanggal_mulai)>
@@ -125,7 +133,7 @@
                                 <tr>
                                     <td><i>{{ $item->crea_by }}</i></td>
                                     <td>{{ $item->kegiatan }}</td>
-                                    <td>{{ $item->tanggal }}</td>
+                                    <td class="text-nowrap">{{ $item->tanggal }}</td>
                                     <td>{{ \Carbon\Carbon::parse($item->jam)->format('H:i') }}</td>
                                     <td>{{ $item->requested_by ?? '-' }}</td>
                                     <td>

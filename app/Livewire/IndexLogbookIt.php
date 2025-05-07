@@ -13,9 +13,9 @@ class IndexLogbookIt extends Component
 {
     use WithFileUploads, WithPagination;
 
-    public $target = "store_logbook, filter_tanggal_akhir";
+    public $target = "store_logbook, filter_tanggal_akhir, user";
 
-    public $kegiatan, $tanggal, $jam, $foto_kegiatan, $filter_tanggal_mulai, $filter_tanggal_akhir, $requested_by;
+    public $kegiatan, $tanggal, $jam, $foto_kegiatan, $filter_tanggal_mulai, $filter_tanggal_akhir, $requested_by, $user;
 
     protected $rules = [
         'kegiatan' => 'required|string|max:255',
@@ -61,6 +61,9 @@ class IndexLogbookIt extends Component
         $items = DB::table('logbook_it')
             ->when($this->filter_tanggal_mulai && $this->filter_tanggal_akhir, function ($query) {
                 return $query->whereBetween('tanggal', [$this->filter_tanggal_mulai, $this->filter_tanggal_akhir]);
+            })
+            ->when($this->user, function ($query) {
+                return $query->where('crea_by', $this->user);
             })
             ->orderByDesc('created_at')
             ->paginate(10);
