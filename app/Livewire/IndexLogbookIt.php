@@ -15,7 +15,7 @@ class IndexLogbookIt extends Component
 
     public $target = "store_logbook, filter_tanggal_akhir";
 
-    public $kegiatan, $tanggal, $jam, $foto_kegiatan, $filter_tanggal_mulai, $filter_tanggal_akhir;
+    public $kegiatan, $tanggal, $jam, $foto_kegiatan, $filter_tanggal_mulai, $filter_tanggal_akhir, $requested_by;
 
     protected $rules = [
         'kegiatan' => 'required|string|max:255',
@@ -39,6 +39,7 @@ class IndexLogbookIt extends Component
                 'kegiatan'          => $this->kegiatan,
                 'tanggal'           => $this->tanggal,
                 'jam'               => $this->jam,
+                'requested_by'      => $this->requested_by,
                 'foto_kegiatan'     => $path ?? '-',
                 'created_at'        => $this->tanggal . ' ' . $this->jam,
                 'crea_by'           => Auth::user()->username,

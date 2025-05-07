@@ -50,6 +50,18 @@
                                 </div>
 
                                 <div class="col-12 mb-3">
+                                    <label for="requested_by" class="form-label">Requested By</label>
+                                    <input type="text" class="form-control @error('requested_by') is-invalid @enderror"
+                                        wire:model="requested_by">
+
+                                    @error('requested_by')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-12 mb-3">
                                     <label for="foto_kegiatan" class="form-label">Foto Kegiatan</label>
                                     <input type="file"
                                         class="form-control @error('foto_kegiatan') is-invalid @enderror"
@@ -104,6 +116,7 @@
                                     <th>Kegiatan</th>
                                     <th>Tanggal</th>
                                     <th>Jam</th>
+                                    <th>Requested By</th>
                                     <th>Foto Kegiatan</th>
                                 </tr>
                             </thead>
@@ -114,6 +127,7 @@
                                     <td>{{ $item->kegiatan }}</td>
                                     <td>{{ $item->tanggal }}</td>
                                     <td>{{ \Carbon\Carbon::parse($item->jam)->format('H:i') }}</td>
+                                    <td>{{ $item->requested_by ?? '-' }}</td>
                                     <td>
                                         @if ($item->foto_kegiatan && $item->foto_kegiatan !== '-')
                                             <a href="{{ Storage::url($item->foto_kegiatan) }}" target="_blank">
@@ -126,7 +140,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center">No Data</td>
+                                    <td colspan="6" class="text-center">No Data</td>
                                 </tr>
                             @endforelse
                         </table>
