@@ -59,6 +59,21 @@ return [
         "children" => []
     ],
 
+    // IT
+    [
+        "label" => "IT",
+        "roles" => ['super-user', 'admin', 'head-marketing', 'salesman', 'storer', 'head-warehouse', 'inventory', 'finance', 'ar', 'supervisor-area', 'fakturis', 'driver'],
+        "header" => true
+    ],
+    [
+        "label" => "Logbook IT",
+        "icon" => "bx bx-book-content",
+        "route" => "logbook.it.index",
+        "active" => Request::is('logbook/it*'),
+        "roles" => ['super-user', 'admin', 'head-marketing', 'salesman', 'storer', 'head-warehouse', 'inventory', 'finance', 'ar', 'supervisor-area', 'fakturis', 'driver'],
+        "children" => []
+    ],
+
     // MARKETING
     [
         "label" => "Marketing",

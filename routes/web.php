@@ -25,6 +25,7 @@ use App\Livewire\GoodsReceipt\GoodsReceiptAop;
 use App\Livewire\GoodsReceipt\GoodsReceiptAopDetail;
 use App\Livewire\GoodsReceipt\GoodsReceiptNonAop;
 use App\Livewire\GoodsReceipt\GoodsReceiptNonAopDetail;
+use App\Livewire\IndexLogbookIt;
 use App\Livewire\Intransit\DetailIntransit;
 use App\Livewire\Intransit\FormUpdateIntransit;
 use App\Livewire\Intransit\IndexIntransit;
@@ -87,6 +88,9 @@ Route::middleware('auth')->group(function () {
 
     // KELOMPOK PART
     Route::get('/dashboard/kelompok-part', KelompokPart::class)->name('dashboard.kelompok-part');
+
+    // LOGBOOK IT
+    Route::get('/logbook/it', IndexLogbookIt::class)->name('logbook.it.index');
 
     /**
      * super-user
