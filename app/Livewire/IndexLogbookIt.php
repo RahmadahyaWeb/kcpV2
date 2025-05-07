@@ -13,9 +13,9 @@ class IndexLogbookIt extends Component
 {
     use WithFileUploads, WithPagination;
 
-    public $target = "store_logbook, filter_tanggal_akhir, user";
+    public $target = "store_logbook, filter_tanggal_akhir, user, keyword";
 
-    public $kegiatan, $tanggal, $jam, $foto_kegiatan, $filter_tanggal_mulai, $filter_tanggal_akhir, $requested_by, $user;
+    public $kegiatan, $tanggal, $jam, $foto_kegiatan, $filter_tanggal_mulai, $filter_tanggal_akhir, $requested_by, $user, $keyword;
 
     protected $rules = [
         'kegiatan' => 'required|string|max:255',
@@ -64,6 +64,9 @@ class IndexLogbookIt extends Component
             })
             ->when($this->user, function ($query) {
                 return $query->where('crea_by', $this->user);
+            })
+            ->when($this->keyword, function ($query) {
+                return $query->where('kegiatan', 'LIKE', '%' . $this->keyword . '%');
             })
             ->orderByDesc('created_at')
             ->paginate(10);

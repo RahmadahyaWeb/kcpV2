@@ -94,7 +94,7 @@
 
                 <div class="card-body">
                     <div class="row mb-3">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label for="user" class="form-label">User</label>
                             <select name="user" id="user" class="form-select" wire:model.change="user">
                                 <option value="">Pilih User</option>
@@ -103,12 +103,17 @@
                             </select>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-3">
+                            <label for="keyword" class="form-label">Kegiatan</label>
+                            <input type="search" class="form-control" wire:model.live.debounce.150ms="keyword">
+                        </div>
+
+                        <div class="col-md-3">
                             <label for="filter_tanggal_mulai" class="form-label">Dari Tanggal</label>
                             <input type="date" class="form-control" wire:model.change="filter_tanggal_mulai">
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label for="filter_tanggal_akhir" class="form-label">Sampai Tanggal</label>
                             <input type="date" class="form-control" wire:model.change="filter_tanggal_akhir"
                                 @disabled(!$filter_tanggal_mulai)>
