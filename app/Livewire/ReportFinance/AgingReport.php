@@ -154,7 +154,8 @@ class AgingReport extends Component
                 $overdue_days = $invoice->overdue_days;
 
                 // Jika invoice adalah retur, masukkan ke kategori retur
-                if (str_contains($invoice->noinv, '%RTU%')) {
+                // Jika invoice adalah retur, masukkan ke kategori retur
+                if (str_starts_with($invoice->noinv, 'RTU-')) {
                     if (!isset($result[$kd_outlet]['retur'])) {
                         $result[$kd_outlet]['retur'] = [
                             'total_amount' => 0,
@@ -167,7 +168,7 @@ class AgingReport extends Component
                     $result[$kd_outlet]['retur']['invoice_count']++;
                     $result[$kd_outlet]['retur']['invoice_numbers'][] = $invoice->noinv;
 
-                    continue; // Lewati proses di bawah agar tidak dihitung dua kali
+                    continue;
                 }
 
                 // Tentukan kategori overdue
