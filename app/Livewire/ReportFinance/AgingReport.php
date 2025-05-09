@@ -139,6 +139,7 @@ class AgingReport extends Component
                 'nm_outlet' => $nm_outlet, // Nama outlet
                 'limit_kredit' => $limit_kredit, // Limit kredit
                 'sisa_limit_kredit' => $limit_kredit, // Inisialisasi sisa limit kredit
+                'retur' => ['total_amount' => 0, 'invoice_count' => 0, 'invoice_numbers' => []],
                 'overdue_1_7' => ['total_amount' => 0, 'invoice_count' => 0, 'invoice_numbers' => []],
                 'overdue_8_20' => ['total_amount' => 0, 'invoice_count' => 0, 'invoice_numbers' => []],
                 'overdue_21_50' => ['total_amount' => 0, 'invoice_count' => 0, 'invoice_numbers' => []],
@@ -148,8 +149,26 @@ class AgingReport extends Component
             ];
 
             // Iterasi setiap invoice untuk outlet yang memiliki piutang
+            // Iterasi setiap invoice untuk outlet yang memiliki piutang
             foreach ($invoices as $invoice) {
                 $overdue_days = $invoice->overdue_days;
+
+                // Jika invoice adalah retur, masukkan ke kategori retur
+                if (str_contains($invoice->noinv, '%RTU%')) {
+                    if (!isset($result[$kd_outlet]['retur'])) {
+                        $result[$kd_outlet]['retur'] = [
+                            'total_amount' => 0,
+                            'invoice_count' => 0,
+                            'invoice_numbers' => [],
+                        ];
+                    }
+
+                    $result[$kd_outlet]['retur']['total_amount'] += $invoice->remaining_balance;
+                    $result[$kd_outlet]['retur']['invoice_count']++;
+                    $result[$kd_outlet]['retur']['invoice_numbers'][] = $invoice->noinv;
+
+                    continue; // Lewati proses di bawah agar tidak dihitung dua kali
+                }
 
                 // Tentukan kategori overdue
                 if ($overdue_days >= 1 && $overdue_days <= 7) {
