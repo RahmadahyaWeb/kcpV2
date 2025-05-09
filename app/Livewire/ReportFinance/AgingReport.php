@@ -120,6 +120,8 @@ class AgingReport extends Component
         // Mapping per outlet dan kategori overdue
         $groupedData = $query->groupBy('kd_outlet');
 
+        dd($groupedData);
+
         // Inisialisasi hasil akhir
         $result = [];
 
@@ -178,8 +180,6 @@ class AgingReport extends Component
             // Hitung sisa limit kredit
             $result[$kd_outlet]['sisa_limit_kredit'] = $result[$kd_outlet]['limit_kredit'] - $result[$kd_outlet]['total_piutang'];
         }
-
-        dd($result);
 
         // Output hasil
         $this->result = $result;
