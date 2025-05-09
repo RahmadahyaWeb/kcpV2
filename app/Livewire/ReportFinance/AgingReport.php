@@ -195,7 +195,7 @@ class AgingReport extends Component
                 $result[$kd_outlet][$category]['invoice_numbers'][] = $invoice->noinv;
 
                 // Tambahkan nilai remaining_balance ke total_piutang
-                $result[$kd_outlet]['total_piutang'] += $invoice->remaining_balance;
+                $result[$kd_outlet]['total_piutang'] -= $invoice->remaining_balance;
             }
 
             // Hitung sisa limit kredit
