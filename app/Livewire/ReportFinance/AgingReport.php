@@ -168,6 +168,9 @@ class AgingReport extends Component
                     $result[$kd_outlet]['retur']['invoice_count']++;
                     $result[$kd_outlet]['retur']['invoice_numbers'][] = $invoice->noinv;
 
+                    // KURANGI total_piutang DENGAN NILAI RETUR
+                    $result[$kd_outlet]['total_piutang'] -= $invoice->remaining_balance;
+
                     continue;
                 }
 
