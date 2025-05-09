@@ -135,6 +135,36 @@
                     fillOpacity: 0.2,
                     radius: radiusToko
                 }).addTo(map);
+            } else if (kd_outlet == '22') {
+                tokoLatitude_2 = '-3.325533455756634';
+                tokoLongitude_2 = '114.62788716596351';
+
+                storeCircle_2 = L.circle([tokoLatitude_2, tokoLongitude_2], {
+                    color: 'red',
+                    fillColor: 'red',
+                    fillOpacity: 0.2,
+                    radius: radiusToko
+                }).addTo(map);
+            } else if (kd_outlet == 'E_AGS') {
+                tokoLatitude_2 = '-3.3499193776273137';
+                tokoLongitude_2 = '114.58941669999673';
+
+                storeCircle_2 = L.circle([tokoLatitude_2, tokoLongitude_2], {
+                    color: 'red',
+                    fillColor: 'red',
+                    fillOpacity: 0.2,
+                    radius: radiusToko
+                }).addTo(map);
+            } else if (kd_outlet == 'E_MAY') {
+                tokoLatitude_2 = '-3.320971334689369';
+                tokoLongitude_2 = '114.58694554838033';
+
+                storeCircle_2 = L.circle([tokoLatitude_2, tokoLongitude_2], {
+                    color: 'red',
+                    fillColor: 'red',
+                    fillOpacity: 0.2,
+                    radius: radiusToko
+                }).addTo(map);
             }
 
             setInterval(function() {
@@ -163,7 +193,7 @@
                 var userLat = userLatLng.lat;
                 var userLng = userLatLng.lng;
 
-                if (kd_outlet == 'TQ' || kd_outlet == '47' || kd_outlet == 'BJ' || kd_outlet == 'M9') {
+                if (kd_outlet == 'TQ' || kd_outlet == '47' || kd_outlet == 'BJ' || kd_outlet == 'M9' || kd_outlet == '22' || kd_outlet == 'E_AGS' || kd_outlet == 'E_MAY') {
                     var storeLatLng = L.latLng(tokoLatitude, tokoLongitude);
                     var storeLatLng_2 = L.latLng(tokoLatitude_2, tokoLongitude_2);
 
@@ -237,7 +267,7 @@
                 document.getElementById('longitude').value = userLng;
                 document.getElementById('distance').value = distance;
 
-                if (kd_outlet == 'TQ' || kd_outlet == '47' || kd_outlet == 'BJ' || kd_outlet == 'M9') {
+                if (kd_outlet == 'TQ' || kd_outlet == '47' || kd_outlet == 'BJ' || kd_outlet == 'M9' || kd_outlet == '22' || kd_outlet == 'E_AGS' || kd_outlet == 'E_MAY') {
                     var storeLatLng_2 = L.latLng(tokoLatitude_2, tokoLongitude_2);
 
                     var distance_2 = userLatLng.distanceTo(storeLatLng_2);

@@ -7,6 +7,7 @@ use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
+use Spatie\Permission\Models\Role;
 
 class IndexUser extends Component
 {
@@ -19,6 +20,8 @@ class IndexUser extends Component
     {
         $search = $this->search;
 
+        $roles = Role::all();
+
         $users = User::with('roles')
             ->when($search, function ($query) use ($search) {
                 return $query->where('username', 'like', '%' . $search . '%')
@@ -29,7 +32,8 @@ class IndexUser extends Component
 
 
         return view('livewire.master.index-user', compact(
-            'users'
+            'users',
+            'roles'
         ));
     }
 }
