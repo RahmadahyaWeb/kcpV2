@@ -169,10 +169,7 @@ class AgingReport extends Component
                     $result[$kd_outlet]['retur']['invoice_numbers'][] = $invoice->noinv;
 
                     // Kurangi total_piutang dengan nilai retur (sudah negatif, cukup dijumlahkan)
-                    $result[$kd_outlet]['total_piutang'] += $invoice->remaining_balance;
-
-                    // Sesuaikan sisa limit kredit dengan mengurangi nilai retur
-                    // $result[$kd_outlet]['sisa_limit_kredit'] += $invoice->remaining_balance;
+                    // $result[$kd_outlet]['total_piutang'] += $invoice->remaining_balance;
 
                     continue;
                 }
