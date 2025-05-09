@@ -202,8 +202,6 @@ class AgingReport extends Component
             $result[$kd_outlet]['sisa_limit_kredit'] = $result[$kd_outlet]['limit_kredit'] - $result[$kd_outlet]['total_piutang'];
         }
 
-        dd($result['8F']);
-
         // Output hasil
         $this->result = $result;
         $this->show = true;

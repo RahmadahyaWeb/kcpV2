@@ -38,6 +38,7 @@ class AgingExport implements FromCollection, WithHeadings, WithMapping, WithEven
             'OVERDUE 8-20',
             'OVERDUE 21-50',
             'OVERDUE > 50',
+            'RETUR',
             'TOTAL PIUTANG'
         ];
     }
@@ -62,6 +63,7 @@ class AgingExport implements FromCollection, WithHeadings, WithMapping, WithEven
                     $sheet->getDelegate()->setCellValueExplicit('H' . $row, $sheet->getCell('H' . $row)->getValue(), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
                     $sheet->getDelegate()->setCellValueExplicit('I' . $row, $sheet->getCell('I' . $row)->getValue(), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
                     $sheet->getDelegate()->setCellValueExplicit('J' . $row, $sheet->getCell('J' . $row)->getValue(), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
+                    $sheet->getDelegate()->setCellValueExplicit('K' . $row, $sheet->getCell('K' . $row)->getValue(), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
                 }
             }
         ];
@@ -79,6 +81,7 @@ class AgingExport implements FromCollection, WithHeadings, WithMapping, WithEven
             $row['overdue_8_20']['total_amount'],
             $row['overdue_21_50']['total_amount'],
             $row['overdue_over_50']['total_amount'],
+            $row['retur']['total_amount'],
             $row['total_piutang']
         ];
     }
