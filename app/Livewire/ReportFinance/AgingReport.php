@@ -89,30 +89,48 @@ class AgingReport extends Component
                 'invoice.amount_total',
                 'invoice.tgl_jth_tempo',
                 'mst_outlet.nm_outlet',
-                'plafond.nominal_plafond_upload AS limit_kredit', // Ambil limit kredit dari tabel plafond
+                'plafond.nominal_plafond_upload AS limit_kredit',
                 DB::raw('IFNULL(payment.total_payment, 0) AS total_payment'),
-                DB::raw('(invoice.amount_total - IFNULL(payment.total_payment, 0)) AS remaining_balance'),
-                DB::raw('DATEDIFF(CURRENT_DATE, invoice.tgl_jth_tempo) AS overdue_days') // Hitung overdue dalam hari
+                DB::raw('IFNULL(retur.total_retur, 0) AS total_retur'), // total retur dari join baru
+                DB::raw('(invoice.amount_total - IFNULL(payment.total_payment, 0) - IFNULL(retur.total_retur, 0)) AS remaining_balance'), // sesuaikan remaining balance
+                DB::raw('DATEDIFF(CURRENT_DATE, invoice.tgl_jth_tempo) AS overdue_days')
             )
             ->leftJoin(DB::raw('(SELECT
-                    payment_details.noinv,
-                    SUM(payment_details.nominal) AS total_payment
-                FROM
-                    kcpinformation.trns_pembayaran_piutang_header AS payment_header
-                JOIN
-                    kcpinformation.trns_pembayaran_piutang AS payment_details
-                    ON payment_header.nopiutang = payment_details.nopiutang
-                WHERE
-                    payment_header.flag_batal = "N"
-                GROUP BY
-            payment_details.noinv) AS payment'), 'invoice.noinv', '=', 'payment.noinv')
+            payment_details.noinv,
+            SUM(payment_details.nominal) AS total_payment
+        FROM
+            kcpinformation.trns_pembayaran_piutang_header AS payment_header
+        JOIN
+            kcpinformation.trns_pembayaran_piutang AS payment_details
+            ON payment_header.nopiutang = payment_details.nopiutang
+        WHERE
+            payment_header.flag_batal = "N"
+        GROUP BY
+            payment_details.noinv
+    ) AS payment'), 'invoice.noinv', '=', 'payment.noinv')
+
+            // JOIN untuk total retur
+            ->leftJoin(DB::raw('(SELECT
+            rh.noinv,
+            SUM(rd.nominal) AS total_retur
+        FROM
+            kcpinformation.trns_retur_header AS rh
+        JOIN
+            kcpinformation.trns_retur_details AS rd
+            ON rh.noretur = rd.noretur
+        WHERE
+            rh.flag_batal = "N"
+        GROUP BY
+            rh.noinv
+    ) AS retur'), 'invoice.noinv', '=', 'retur.noinv')
+
             ->leftJoin('mst_outlet', 'invoice.kd_outlet', '=', 'mst_outlet.kd_outlet')
-            ->leftJoin('trns_plafond AS plafond', 'invoice.kd_outlet', '=', 'plafond.kd_outlet') // Join tabel plafond
+            ->leftJoin('trns_plafond AS plafond', 'invoice.kd_outlet', '=', 'plafond.kd_outlet')
             ->where('invoice.kd_outlet', '8F')
             ->where('invoice.flag_batal', 'N')
             ->where('invoice.flag_pembayaran_lunas', 'N')
             ->whereIn('invoice.kd_outlet', $list_toko->pluck('kd_outlet')->toArray())
-            ->whereRaw('invoice.amount_total <> IFNULL(payment.total_payment, 0)')
+            ->whereRaw('invoice.amount_total <> IFNULL(payment.total_payment, 0) + IFNULL(retur.total_retur, 0)')
             ->whereDate('invoice.crea_date', '<=', $to_date)
             ->where('invoice.noinv', 'NOT LIKE', 'RTU%')
             ->get();
