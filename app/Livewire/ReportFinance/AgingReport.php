@@ -108,7 +108,7 @@ class AgingReport extends Component
             payment_details.noinv) AS payment'), 'invoice.noinv', '=', 'payment.noinv')
             ->leftJoin('mst_outlet', 'invoice.kd_outlet', '=', 'mst_outlet.kd_outlet')
             ->leftJoin('trns_plafond AS plafond', 'invoice.kd_outlet', '=', 'plafond.kd_outlet') // Join tabel plafond
-            // ->where('invoice.kd_outlet', '8F')
+            ->where('invoice.kd_outlet', '8F')
             ->where('invoice.flag_batal', 'N')
             ->where('invoice.flag_pembayaran_lunas', 'N')
             ->whereIn('invoice.kd_outlet', $list_toko->pluck('kd_outlet')->toArray())
@@ -178,6 +178,8 @@ class AgingReport extends Component
             // Hitung sisa limit kredit
             $result[$kd_outlet]['sisa_limit_kredit'] = $result[$kd_outlet]['limit_kredit'] - $result[$kd_outlet]['total_piutang'];
         }
+
+        dd($result);
 
         // Output hasil
         $this->result = $result;
