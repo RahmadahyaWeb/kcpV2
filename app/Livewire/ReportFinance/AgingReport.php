@@ -82,18 +82,17 @@ class AgingReport extends Component
         $list_toko = $list_toko_query->get();
 
         // Ambil semua data invoice
-        $query = $kcpinformation->table('kcpinformation.trns_inv_header AS invoice')
+        $invoiceQuery = DB::table('kcpinformation.trns_inv_header AS invoice')
             ->select(
                 'invoice.noinv',
                 'invoice.kd_outlet',
-                'invoice.amount_total',
-                'invoice.tgl_jth_tempo',
                 'mst_outlet.nm_outlet',
-                'plafond.nominal_plafond_upload AS limit_kredit',
+                DB::raw("'INVOICE' AS jenis_transaksi"),
+                'invoice.amount_total',
+                DB::raw('invoice.tgl_jth_tempo AS tgl_transaksi'),
                 DB::raw('IFNULL(payment.total_payment, 0) AS total_payment'),
-                DB::raw('IFNULL(retur.total_retur, 0) AS total_retur'), // total retur dari join baru
-                DB::raw('(invoice.amount_total - IFNULL(payment.total_payment, 0) - IFNULL(retur.total_retur, 0)) AS remaining_balance'), // sesuaikan remaining balance
-                DB::raw('DATEDIFF(CURRENT_DATE, invoice.tgl_jth_tempo) AS overdue_days')
+                DB::raw('0 AS total_retur'),
+                DB::raw('(invoice.amount_total - IFNULL(payment.total_payment, 0)) AS remaining_balance')
             )
             ->leftJoin(DB::raw('(SELECT
             payment_details.noinv,
@@ -108,37 +107,40 @@ class AgingReport extends Component
         GROUP BY
             payment_details.noinv
     ) AS payment'), 'invoice.noinv', '=', 'payment.noinv')
-
-            // JOIN untuk total retur
-            ->leftJoin(DB::raw('(SELECT
-            rh.noinv,
-            SUM(rd.nominal) AS total_retur
-        FROM
-            kcpinformation.trns_retur_header AS rh
-        JOIN
-            kcpinformation.trns_retur_details AS rd
-            ON rh.noretur = rd.noretur
-        WHERE
-            rh.flag_batal = "N"
-        GROUP BY
-            rh.noinv
-    ) AS retur'), 'invoice.noinv', '=', 'retur.noinv')
-
             ->leftJoin('mst_outlet', 'invoice.kd_outlet', '=', 'mst_outlet.kd_outlet')
-            ->leftJoin('trns_plafond AS plafond', 'invoice.kd_outlet', '=', 'plafond.kd_outlet')
-            ->where('invoice.kd_outlet', '8F')
             ->where('invoice.flag_batal', 'N')
             ->where('invoice.flag_pembayaran_lunas', 'N')
             ->whereIn('invoice.kd_outlet', $list_toko->pluck('kd_outlet')->toArray())
-            ->whereRaw('invoice.amount_total <> IFNULL(payment.total_payment, 0) + IFNULL(retur.total_retur, 0)')
             ->whereDate('invoice.crea_date', '<=', $to_date)
-            ->where('invoice.noinv', 'NOT LIKE', 'RTU%')
-            ->get();
+            ->where('invoice.noinv', 'NOT LIKE', 'RTU%');
 
-        // Mapping per outlet dan kategori overdue
-        $groupedData = $query->groupBy('kd_outlet');
+        $returQuery = DB::table('kcpinformation.trns_retur_header AS retur')
+            ->select(
+                'retur.noretur AS noinv',
+                'retur.kd_outlet',
+                'mst_outlet.nm_outlet',
+                DB::raw("'RETUR' AS jenis_transaksi"),
+                DB::raw('SUM(detail.nominal) AS amount_total'),
+                DB::raw('retur.tgl_retur AS tgl_transaksi'),
+                DB::raw('0 AS total_payment'),
+                DB::raw('SUM(detail.nominal) AS total_retur'),
+                DB::raw('0 AS remaining_balance')
+            )
+            ->join('kcpinformation.trns_retur_details AS detail', 'retur.noretur', '=', 'detail.noretur')
+            ->leftJoin('mst_outlet', 'retur.kd_outlet', '=', 'mst_outlet.kd_outlet')
+            ->where('retur.flag_batal', 'N')
+            ->whereIn('retur.kd_outlet', $list_toko->pluck('kd_outlet')->toArray())
+            ->whereDate('retur.tgl_retur', '<=', $to_date)
+            ->groupBy('retur.noretur', 'retur.kd_outlet', 'retur.tgl_retur', 'mst_outlet.nm_outlet');
 
-        dd($groupedData);
+        $unionQuery = $invoiceQuery->unionAll($returQuery);
+
+        $mainQuery = DB::table(DB::raw("({$unionQuery->toSql()}) AS transaksi"))
+            ->mergeBindings($unionQuery)
+            ->groupBy('transaksi.kd_outlet'); // group langsung di level SQL
+
+
+        dd($mainQuery);
 
         // Inisialisasi hasil akhir
         $result = [];
