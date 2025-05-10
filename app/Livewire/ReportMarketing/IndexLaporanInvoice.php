@@ -81,8 +81,8 @@ class IndexLaporanInvoice extends Component
                 'outlet.nm_outlet'
             ])
             ->join('mst_outlet as outlet', 'outlet.kd_outlet', '=', 'header.kd_outlet')
-            ->join('trns_inv_details as details', 'details.noinv', '=', 'header.noinv')
-            ->join('mst_part as part', 'part.part_no', '=', 'details.part_no')
+            ->leftJoin('trns_inv_details as details', 'details.noinv', '=', 'header.noinv')
+            ->leftJoin('mst_part as part', 'part.part_no', '=', 'details.part_no')
             ->when(!$tampilkan_semua_invoice, function ($query) use ($from_date, $to_date) {
                 return $query->whereBetween('header.crea_date', [$from_date, $to_date]);
             })
@@ -102,9 +102,12 @@ class IndexLaporanInvoice extends Component
 
     public function get_product_parts($kcpinformation, $noinv_list)
     {
-        return $kcpinformation->table('trns_inv_details as details')
+        $noinv_normal = collect($noinv_list)->filter(fn($noinv) => !str_starts_with($noinv, 'RTU'))->values();
+        $noinv_retur  = collect($noinv_list)->filter(fn($noinv) => str_starts_with($noinv, 'RTU'))->values();
+
+        $normal_parts = $kcpinformation->table('trns_inv_details as details')
             ->join('mst_part as part', 'part.part_no', '=', 'details.part_no')
-            ->whereIn('details.noinv', $noinv_list)
+            ->whereIn('details.noinv', $noinv_normal)
             ->groupBy('details.noinv', 'part.produk_part', 'part.supplier', 'part.kelompok_part')
             ->select([
                 'details.noinv',
@@ -112,11 +115,25 @@ class IndexLaporanInvoice extends Component
                 'part.supplier',
                 'part.kelompok_part'
             ])
-            ->get()
+            ->get();
+
+        $retur_parts = $kcpinformation->table('trns_retur_details as details')
+            ->join('mst_part as part', 'part.part_no', '=', 'details.part_no')
+            ->whereIn('details.noretur', $noinv_retur)
+            ->groupBy('details.noretur', 'part.produk_part', 'part.supplier', 'part.kelompok_part')
+            ->select([
+                'details.noretur as noinv',
+                'part.produk_part',
+                'part.supplier',
+                'part.kelompok_part'
+            ])
+            ->get();
+
+        return $normal_parts->merge($retur_parts)
             ->mapWithKeys(function ($item) {
                 return [$item->noinv => [
-                    'product_part' => $item->produk_part,
-                    'supplier'     => $item->supplier,
+                    'product_part'  => $item->produk_part,
+                    'supplier'      => $item->supplier,
                     'kelompok_part' => $item->kelompok_part
                 ]];
             });
@@ -182,7 +199,6 @@ class IndexLaporanInvoice extends Component
                 ]
             ];
         });
-
     }
 
     public function render()
